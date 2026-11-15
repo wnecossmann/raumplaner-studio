@@ -1,6 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}.idea-panel{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:18px}.idea-types{border:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}.idea-types legend{margin-bottom:8px}.idea-types label{font-size:12px}.idea-card{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.idea-card img{width:70px;height:105px;object-fit:contain;background:var(--paper,#f5f3ed);border-radius:8px;padding:6px}.idea-card h5{font-size:14px;margin:0 0 7px}.idea-card p{margin:7px 0}.idea-card a{display:block;font-size:12px;margin:10px 0}.idea-card .btn{white-space:normal;height:auto;text-align:left}#idea-results section{margin-bottom:12px}
-
-</style></head><body><title>Raumplaner Studio</title>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Raumplaner Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -456,8 +454,6 @@ details.best[open]>summary h4::before{content:"\25BE  "}
   .brand-name small{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-.idea-panel{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:18px}.idea-types{border:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}.idea-types legend{margin-bottom:8px}.idea-types label{font-size:12px}.idea-card{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.idea-card img{width:70px;height:105px;object-fit:contain;background:var(--paper,#f5f3ed);border-radius:8px;padding:6px}.idea-card h5{font-size:14px;margin:0 0 7px}.idea-card p{margin:7px 0}.idea-card a{display:block;font-size:12px;margin:10px 0}.idea-card .btn{white-space:normal;height:auto;text-align:left}#idea-results section{margin-bottom:12px}
-
 </style>
 
 <header class="topbar">
@@ -1107,6 +1103,35 @@ function makeKonrad() {
 /* Konkrete Produkte (Recherche 15.11.2026): ersetzen die Richtwert-Platzhalter im Nachher-Plan */
 const KONRAD_PRODUCTS = [{"key": "bett", "cat": "Bett", "name": "STORKLINTA Bettgestell + Mittelbalken, Eichenachbildung, 140x200 cm (Art. 706.156.08)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/storklinta-bettgestell-mittelbalken-eichenachbildung-70615608/", "price": 149.0, "qty": 1, "color": "#CDB27A", "role": "main", "replaces": "Bett 140x200 (niedrig) unter der Dachschräge", "why": "Außenmaß 149x209 cm, Seiten/Fußteil nur 39 cm hoch; das Kopfteil (101 cm) an die Seitenwand stellen und das Bett ca. 10-15 cm von der Kniestockwand abrücken, damit die Kopfteilecke unter der Schräge frei bleibt.", "checkedAt": "2026-11-15", "dims": {"w": 149, "d": 209, "h": 101}, "img": ""}, {"key": "lattenrost", "cat": "Bett", "name": "LURÖY Federholzrahmen, 140x200 cm (2 x 70 cm)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/luroey-federholzrahmen-s09481354/", "price": 50.0, "qty": 1, "color": "#D9C49A", "role": "main", "replaces": "Lattenrost 140x200", "why": "Von IKEA für STORKLINTA empfohlen, liegt im Rahmen und ist nicht sichtbar.", "checkedAt": "2026-11-15", "dims": {"w": 140, "d": 200, "h": 4}, "img": ""}, {"key": "matratze", "cat": "Bett", "name": "VESTERÖY Taschenfederkernmatratze, mittelfest/hellblau, 140x200 cm", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/vesteroey-taschenfederkernmatratze-mittelfest-hellblau-00450615/", "price": 199.0, "qty": 1, "color": "#E9EEF2", "role": "main", "replaces": "Matratze 140x200 mittelfest", "why": "Mittelfeste Taschenfederkernmatratze mit 10 Jahren Garantie, aktuell reduziert (vorher 249 €).", "checkedAt": "2026-11-15", "dims": {"w": 140, "d": 200, "h": 20}, "img": ""}, {"key": "schrank", "cat": "Kleiderschrank", "name": "PAX / MEHAMN/AULI Schrankkombination mit Schiebetüren, Eicheneff wlas doppelseitig / Eicheneff wlas Spiegelglas, 200x66x236 cm (Art. 895.613.61)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/pax-mehamn-auli-schrankkombination-eicheneff-wlas-doppelseitig-eicheneff-wlas-spiegelglas-s89561361/", "price": 640.0, "qty": 1, "color": "#D8C8AE", "role": "main", "replaces": "Kleiderschrank ~200 cm mit Schiebetüren", "why": "Schiebetüren lösen den Türkonflikt, dieselbe weiß lasierte Eichenoptik wie das KALLAX, eine Tür mit Spiegel; mit Innenausstattung, braucht 240 cm Raumhöhe (vorhanden: 250 cm, nur an voller Wandhöhe).", "checkedAt": "2026-11-15", "dims": {"w": 200, "d": 66, "h": 236.4}, "img": ""}, {"key": "schreibtisch", "cat": "Tisch", "name": "MITTZON Schreibtisch sitz/steh, elektrisch, Eichenfurnier/schwarz, 140x80 cm", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/mittzon-schreibtisch-sitz-steh-elektrisch-eichenfurnier-schwarz-s69513955/", "price": 429.0, "qty": 1, "color": "#C9A777", "role": "main", "replaces": "Höhenverstellbarer Schreibtisch 140x80", "why": "Elektrisch von 62 bis 126 cm verstellbar, echtes Eichenfurnier auf schwarzem Gestell, genau der Stil Eiche + Schwarz (h = Minimalhöhe).", "checkedAt": "2026-11-15", "dims": {"w": 140, "d": 80, "h": 75}, "img": ""}, {"key": "stuhl", "cat": "Stuhl", "name": "MARKUS Drehstuhl, Vissle dunkelgrau, Mittelgroß (Art. 702.611.50)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/markus-drehstuhl-vissle-dunkelgrau-70261150/", "price": 149.0, "qty": 1, "color": "#2B2B2B", "role": "main", "replaces": "Schreibtischstuhl", "why": "Bewährter ergonomischer Stuhl mit schwarzem Netzrücken und Kopfstütze, aktuell reduziert (vorher 179 €); für deutlich über 1,80 m gibt es die Größe Groß für 179 €.", "checkedAt": "2026-11-15", "dims": {"w": 62, "d": 60, "h": 129}, "img": ""}, {"key": "lowboard", "cat": "Regal", "name": "KALLAX Regal, Eicheneff wlas, 77x147 cm, liegend als Lowboard (Art. 003.245.18)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/kallax-regal-eicheneff-wlas-00324518/", "price": 59.99, "qty": 1, "color": "#D8C8AE", "role": "main", "replaces": "Lowboard unter der Kniestockwand", "why": "Liegend nur 76,5 cm hoch und damit unter der Schräge, gleiche Oberfläche wie das vorhandene KALLAX 5x5; die 33-cm-Fächer passen für Schallplatten und Konsole, der Plattenspieler steht obendrauf. Aktuell reduziert (vorher 74,99 €).", "checkedAt": "2026-11-15", "dims": {"w": 146.5, "d": 39, "h": 76.5}, "img": ""}, {"key": "lowboard_tueren", "cat": "Regal", "name": "KALLAX Einsatz mit Tür, schwarzbraun, 33x33 cm", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/kallax-einsatz-mit-tuer-schwarzbraun-60278170/", "price": 15.0, "qty": 2, "color": "#2E2925", "role": "main", "replaces": "Türen für das Lowboard", "why": "Zwei geschlossene Fächer für Kabel und Controller, schwarzbraun wie die Einsätze im bestehenden KALLAX.", "checkedAt": "2026-11-15", "dims": {"w": 33, "d": 37, "h": 33}, "img": ""}, {"key": "nachttisch", "cat": "Regal", "name": "KALLAX Regal, Eicheneff wlas, 77x41 cm, liegend als Ablage am Bettkopf (Art. 403.958.77)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/kallax-regal-eicheneff-wlas-40395877/", "price": 24.99, "qty": 1, "color": "#D8C8AE", "role": "main", "replaces": "Regal am Bettkopf", "why": "Statt eines hohen Regals eine nur 41 cm hohe Ablage neben dem Kopfteil für Handy, Licht und Bücher, passt unter die Schräge und zur KALLAX-Optik; aktuell reduziert (vorher 34,99 €).", "checkedAt": "2026-11-15", "dims": {"w": 76.5, "d": 39, "h": 41}, "img": ""}, {"key": "teppich", "cat": "Teppich", "name": "STOENSE Teppich Kurzflor, blassgrün, 170x240 cm (Art. 206.291.51)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/stoense-teppich-kurzflor-blassgruen-20629151/", "price": 89.99, "qty": 1, "color": "#8A9A8C", "role": "main", "replaces": "Teppich 160x230 in Akzentfarbe", "why": "Salbeigrüner Akzent in der nächsten verfügbaren Größe (160x230 gibt es in dieser Farbe nicht, 170x240 passt in den Raum); laut Bewertungen eher graugrün.", "checkedAt": "2026-11-15", "dims": {"w": 170, "d": 240, "h": 1.8}, "img": ""}, {"key": "sitzsack", "cat": "Sessel", "name": "icon Kingston Sitzsack Cord mit Füllung, Salbeigrün", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B0DY8745XF", "price": 79.99, "qty": 1, "color": "#6E8B5E", "role": "main", "replaces": "Sitzsack am Fenster", "why": "Cord-Sitzsack in Salbeigrün, 85x85x50 cm, niedrig genug für die Fensterecke, wiederholt die Akzentfarbe des Teppichs.", "checkedAt": "2026-11-15", "dims": {"w": 85, "d": 85, "h": 50}, "img": ""}, {"key": "schreibtischlampe", "cat": "Beleuchtung", "name": "FORSÅ Arbeitsleuchte, schwarz (Art. 001.467.76)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/forsa-arbeitsleuchte-schwarz-00146776/", "price": 19.99, "qty": 1, "color": "#1A1A1A", "role": "main", "replaces": "Schreibtischlampe schwarz", "why": "Klassische schwarze Gelenkleuchte aus Stahl, passt zum schwarzen Tischgestell; das Leuchtmittel wird separat gekauft.", "checkedAt": "2026-11-15", "dims": {"w": 15, "d": 15, "h": 35}, "img": ""}, {"key": "leuchtmittel", "cat": "Beleuchtung", "name": "SOLHETTA LED-Leuchtmittel E14 470 lm, kerzenförmig/opalweiß, 2er-Pack", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/solhetta-led-leuchtmittel-e14-470-lm-kerzenfoermig-opalweiss-20584015/", "price": 2.99, "qty": 1, "color": "#F5F5F0", "role": "main", "replaces": "Leuchtmittel für FORSÅ", "why": "Von IKEA für FORSÅ empfohlene E14-LED mit 2700 K; die Höhe der Birne steht nicht auf der Seite (h=0 heißt unbekannt).", "checkedAt": "2026-11-15", "dims": {"w": 3.5, "d": 3.5, "h": null}, "img": ""}, {"key": "lautsprecher", "cat": "Audio", "name": "Edifier R1855DB Bluetooth-Lautsprechersystem 2.0, Schwarz (Paar)", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B08GJCLKW3", "price": 159.99, "qty": 1, "color": "#1C1C1C", "role": "main", "replaces": "Aktive Stereolautsprecher", "why": "Bluetooth, optisch, koaxial und zwei Cinch-Eingänge (PC, Konsole, Plattenspieler) plus Subwoofer-Ausgang, schwarz; Maße je Box laut Edifier 155x223x254 mm, Amazon meldete nur noch 1 Stück auf Lager.", "checkedAt": "2026-11-15", "dims": {"w": 15.5, "d": 22.3, "h": 25.4}, "img": ""}, {"key": "lautsprecher_pads", "cat": "Audio", "name": "Adam Hall Stands PAD ECO 1 Absorberplatte 170x300 mm, anthrazit (Paar)", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B008PCBGKS", "price": 19.89, "qty": 1, "color": "#3A3A3A", "role": "main", "replaces": "Lautsprecher-Pads", "why": "Entkoppeln die Boxen vom Schreibtisch, damit die Tischplatte nicht mitdröhnt; 17x30 cm passt zur Grundfläche der R1855DB (15,5x22,3 cm), als Paar geliefert.", "checkedAt": "2026-11-15", "dims": {"w": 17, "d": 30, "h": 4}, "img": ""}, {"key": "rollo", "cat": "Sonstiges", "name": "FRIDANS Verdunklungsrollo, grau, 160x195 cm (Art. 503.969.23)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/fridans-verdunklungsrollo-grau-50396923/", "price": 44.99, "qty": 1, "color": "#7D7F80", "role": "main", "replaces": "Verdunkelungsrollo für 1,51-m-Fenster", "why": "Mit 160 cm Stoffbreite deckt es das 151 cm breite Fenster mit Überstand, Montage über dem Fenster oder an der Decke, schnurlos; die Tiefe steht nicht auf der Seite.", "checkedAt": "2026-11-15", "dims": {"w": 165, "d": null, "h": 195}, "img": ""}, {"key": "led_strip", "cat": "Beleuchtung", "name": "Govee LED Strip RGBIC LED-Streifen 5 m, Musik-Sync, Segmentsteuerung", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B093PRYW1D", "price": 25.99, "qty": 1, "color": "#FFFFFF", "role": "main", "replaces": "Ambientebeleuchtung", "why": "Indirektes Licht hinter Schreibtisch oder Lowboard, per App auf Salbeigrün einstellbar, Musik-Sync passt zu den Lautsprechern; Breite und Höhe des Streifens stehen nicht auf der Seite.", "checkedAt": "2026-11-15", "dims": {"w": 500, "d": null, "h": null}, "img": ""}, {"key": "lego_regal", "cat": "Regal", "name": "LACK Wandregal, schwarzbraun, 110x26 cm (Art. 401.036.33)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/lack-wandregal-schwarzbraun-40103633/", "price": 12.99, "qty": 2, "color": "#2E2925", "role": "main", "replaces": "Wandregal für Lego-Modelle", "why": "26 cm Tiefe reicht für große Technic-Modelle, bis 10 kg je Board, schwarzbraun wie die KALLAX-Einsätze; nur an Wänden mit voller Höhe montieren. Aktuell reduziert (vorher 14,99 €).", "checkedAt": "2026-11-15", "dims": {"w": 110, "d": 26, "h": 5}, "img": ""}, {"key": "alt_bett_neiden", "cat": "Bett", "name": "NEIDEN Bettgestell, Kiefer, 140x200 cm (Art. 703.952.39)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/neiden-bettgestell-kiefer-70395239/", "price": 90.0, "qty": 1, "color": "#E3C99A", "role": "alternative", "replaces": "Bett 140x200 (niedrig)", "why": "Günstiger und niedriger (Kopfteil 65 cm, Fußteil 30 cm), passt problemlos unter die Schräge, ist aber Kiefer statt Eichenoptik.", "checkedAt": "2026-11-15", "dims": {"w": 144, "d": 205, "h": 65}, "img": ""}, {"key": "alt_schrank_mehamn", "cat": "Kleiderschrank", "name": "PAX / MEHAMN Kleiderschrank mit Schiebetüren, weiß / doppelseitig Eichenachbildung, 200x66x236 cm (Art. 396.088.70)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/pax-mehamn-kleiderschrank-mit-schiebetueren-weiss-weiss-doppelseitig-eichenachbildung-s39608870/", "price": 670.0, "qty": 1, "color": "#CDB27A", "role": "alternative", "replaces": "Kleiderschrank ~200 cm mit Schiebetüren", "why": "Variante ohne Spiegel mit zwei Türen in Eichenoptik und mehr Böden und Körben; 30 € teurer.", "checkedAt": "2026-11-15", "dims": {"w": 200, "d": 66, "h": 236.4}, "img": ""}, {"key": "alt_lautsprecher_r1280dbs", "cat": "Audio", "name": "Edifier R1280DBs Aktive Bluetooth-Regallautsprecher, Schwarz (Paar)", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B087CP66WB", "price": 131.82, "qty": 1, "color": "#1C1C1C", "role": "alternative", "replaces": "Aktive Stereolautsprecher", "why": "Günstiger und kompakter, ebenfalls mit Bluetooth, optisch, koaxial, Cinch und Subwoofer-Ausgang; Amazon nennt 14,6T x 19,6B x 23,4H cm, die Achsen sind dort wohl vertauscht.", "checkedAt": "2026-11-15", "dims": {"w": 14.6, "d": 19.6, "h": 23.4}, "img": ""}, {"key": "opt_subwoofer_t5s", "cat": "Audio", "name": "Edifier T5s Aktiv-Subwoofer, 8 Zoll, 70 W", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B0F6NH4373", "price": 129.0, "qty": 1, "color": "#1C1C1C", "role": "alternative", "replaces": "Optionaler Subwoofer", "why": "Passt an den Subwoofer-Ausgang der R1855DB oder R1280DBs und steht unter dem Schreibtisch; Maße laut Amazon 37T x 44B x 40H cm, vom Hersteller nicht bestätigt.", "checkedAt": "2026-11-15", "dims": {"w": 44, "d": 37, "h": 40}, "img": ""}, {"key": "alt_stehlampe_govee", "cat": "Beleuchtung", "name": "Govee RGBIC LED-Stehlampe, WiFi, 1000 lm, dimmbar, Schwarz", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B09TZZXSK2", "price": 85.49, "qty": 1, "color": "#1A1A1A", "role": "alternative", "replaces": "Ambientebeleuchtung", "why": "Schwarze Ecklampe statt oder zusätzlich zum LED-Streifen; 136 cm hoch, daher nur im Bereich voller Raumhöhe aufstellen.", "checkedAt": "2026-11-15", "dims": {"w": 20, "d": 20, "h": 136}, "img": ""}];
 const KONRAD_SHORT = { bett: 'Bett STORKLINTA', schrank: 'PAX Schiebetüren', schreibtisch: 'MITTZON', stuhl: 'MARKUS', lowboard: 'KALLAX Lowboard', nachttisch: 'KALLAX 1×2', teppich: 'Teppich STOENSE', sitzsack: 'Sitzsack', lego_regal: 'LACK', lautsprecher: 'Edifier', schreibtischlampe: 'FORSÅ', alt_bett_neiden: 'Bett NEIDEN', alt_schrank_mehamn: 'PAX MEHAMN', alt_lautsprecher_r1280dbs: 'Edifier R1280', opt_subwoofer_t5s: 'Subwoofer', alt_stehlampe_govee: 'Stehlampe' };
+const KONRAD_SKIP = new Set(['sitzsack']);
+/* Anordnung wie in der ersten Nachher-Planung: Kleiderschrank an der Wand zum Nachbarzimmer,
+   Schreibtisch an der Treppenwand, Bett unter der Schräge mit Kopf an der Giebelwand, Lowboard unter dem Drempel. */
+function layoutKonradProducts(r) {
+  r.productsV2 = true;
+  const after = r.photos.find(p => p.plan && !p.plan.before);
+  if (!after) return;
+  const drop = new Set(r.items.filter(i => i.pkey && KONRAD_SKIP.has(i.pkey)).map(i => i.id));
+  r.items = r.items.filter(i => !drop.has(i.id));
+  r.photos.forEach(ph => { ph.placements = ph.placements.filter(q => !drop.has(q.itemId)); });
+  const by = {}; r.items.forEach(i => { if (i.pkey) by[i.pkey] = i; });
+  const kallax = r.items.find(i => i.bestand && /^Würfelregal 5 × 5/.test(i.name));
+  const mine = new Set([...Object.values(by).map(i => i.id), kallax && kallax.id].filter(Boolean));
+  after.placements = after.placements.filter(q => !mine.has(q.itemId));
+  const P = after.plan; let z = Math.max(0, ...after.placements.map(q => q.z || 0)) + 1;
+  const put = (it, xc, yc, rot = 0, elev = 0) => { if (!it) return; const [x, y] = relFromCm(after, xc, yc); after.placements.push({ id: uid(), itemId: it.id, x, y, w: itemDims(it).w * P.ppc / after.w, rot, flip: false, op: 1, bri: 100, shadow: false, z: z++, elev }); };
+  const W = P.w;
+  put(by.teppich, 130, 190);
+  put(by.schrank, 100, 33);
+  put(by.schreibtisch, W - 40, 205, 90);
+  put(by.stuhl, W - 111, 205, -90);
+  put(by.lautsprecher, W - 11, 145, 90, 75); put(by.lautsprecher, W - 11, 265, 90, 75);
+  put(by.schreibtischlampe, W - 11, 172, 0, 75);
+  put(by.nachttisch, 19.5, 257, -90);
+  put(by.bett, 104.5, 371, -90);
+  put(by.lowboard, 283.25, 438, 180);
+  put(by.lego_regal, W - 13, 345, 90, 100); put(by.lego_regal, W - 13, 345, 90, 135);
+  after.audio = { ...AUD_DEF(), on: false, mode: 'cinema', system: '2.0', front: 'right', listener: [W - 111, 205], height: 75, ov: { FL: [W - 11, 145], FR: [W - 11, 265] } };
+}
 const KONRAD_PALETTE = [{ name: 'Eiche warm', hex: '#C9A777' }, { name: 'Eiche weiß lasiert', hex: '#D8C8AE' }, { name: 'Schwarz', hex: '#1C1C1C' }, { name: 'Schwarzbraun', hex: '#2E2925' }, { name: 'Salbeigrün', hex: '#8A9A8C' }, { name: 'Hell', hex: '#F2EFE9' }];
 function addKonradProducts(r) {
   r.productsV1 = true;
@@ -1117,27 +1142,13 @@ function addKonradProducts(r) {
   r.photos.forEach(ph => { ph.placements = ph.placements.filter(q => !old.has(q.itemId)); });
   const by = {};
   for (const x of KONRAD_PRODUCTS) {
+    if (KONRAD_SKIP.has(x.key)) continue;
     const it = { id: uid(), name: x.name, cat: x.cat, price: x.price, qty: x.qty || 1, retailer: x.retailer, url: x.url, img: x.img || null,
       dims: { w: x.dims.w, d: x.dims.d, h: x.dims.h }, status: x.role === 'main' ? 'favorit' : 'idee', counts: x.role === 'main',
       note: (x.why || '') + ` Preis vom ${x.checkedAt ? x.checkedAt.split('-').reverse().join('.') : '15.11.2026'}, vor dem Kauf prüfen.`, color: x.color || null, pkey: x.key };
     it.short = KONRAD_SHORT[x.key] || undefined; by[x.key] = it; r.items.push(it);
   }
-  const P = after.plan; let z = Math.max(0, ...after.placements.map(q => q.z || 0)) + 1;
-  const put = (it, xc, yc, rot = 0, elev = 0) => { if (!it) return; const [x, y] = relFromCm(after, xc, yc); after.placements.push({ id: uid(), itemId: it.id, x, y, w: itemDims(it).w * P.ppc / after.w, rot, flip: false, op: 1, bri: 100, shadow: false, z: z++, elev }); };
-  const kallax = r.items.find(i => i.bestand && /^Würfelregal 5 × 5/.test(i.name));
-  if (kallax && !after.placements.some(q => q.itemId === kallax.id)) put(kallax, P.w - 19.5, 197, 90);
-  put(by.teppich, 215, 250, 90);
-  put(by.schrank, 100, 33);
-  put(by.schreibtisch, 40, 145, -90);
-  put(by.stuhl, 118, 145, 90);
-  put(by.lautsprecher, 16, 88, -90, 75); put(by.lautsprecher, 16, 202, -90, 75);
-  put(by.schreibtischlampe, 16, 122, 0, 75);
-  put(by.nachttisch, 19.5, 257, -90);
-  put(by.bett, 104.5, 371, -90);
-  put(by.lowboard, 283.25, 438, 180);
-  put(by.sitzsack, 265, 345);
-  put(by.lego_regal, P.w - 13, 345, 90, 100); put(by.lego_regal, P.w - 13, 345, 90, 135);
-  after.audio = { ...AUD_DEF(), on: false, mode: 'cinema', system: '2.0', front: 'left', listener: [118, 145], height: 75, ov: { FL: [16, 202], FR: [16, 88] } };
+  layoutKonradProducts(r);
   r.palette = KONRAD_PALETTE;
   r.furnish = { style: 'Schwarz / Eiche', wanted: ['Bett', 'Kleiderschrank', 'Schreibtisch', 'Stuhl', 'Sideboard', 'Teppich', 'Leuchte', 'Lautsprecher'] };
 }
@@ -1343,7 +1354,7 @@ function plHTML(p) {
     const dm = itemDims(it), warn = fitIssues(p).length;
     return `<div class="pl${sel ? ' sel' : ''}${warn ? ' warn' : ''}" data-pid="${p.id}" style="${plStyle(p)}">
       <img src="${planSrc(it)}" alt="${esc(it.name)}" draggable="false" style="${imgStyle(p)}">
-      ${sel || Math.min(dm.w, dm.d) >= 60 ? `<span class="pl-lbl" style="transform:translate(-50%,-50%) rotate(${-(p.rot || 0)}deg)">${esc(shortName(it))}${sel ? `<br><span class="mono">${dm.w} × ${dm.d} cm</span>` : ''}</span>` : ''}
+      ${sel || Math.min(dm.w, dm.d) >= 66 ? `<span class="pl-lbl" style="transform:translate(-50%,-50%) rotate(${-(p.rot || 0)}deg)">${esc(shortName(it))}${sel ? `<br><span class="mono">${dm.w} × ${dm.d} cm</span>` : ''}</span>` : ''}
       ${sel ? '<span class="hd rot" data-h="rotate" title="Drehen"></span>' : ''}
     </div>`;
   }
@@ -1542,427 +1553,11 @@ const styleWord = () => furnishOf().style.replace(/\s*\/\s*/g, ' ');
 function furnishHTML() {
   const f = furnishOf();
   return `<section class="furnish"><h4>Welche Einrichtung möchtest du?</h4>
-    <label class="field"><span>Möbelstil</span><select class="input" id="fu-style" aria-label="Möbelstil"><option value="">Alle Stile / noch offen</option>${STYLES.map(x => `<option ${x === f.style ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>
+    <label class="field"><span>Möbelstil</span><select class="input" id="fu-style"><option value="">Alle Stile / noch offen</option>${STYLES.map(x => `<option ${x === f.style ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>
     <div class="field"><span>Gewünschte Möbelarten</span><div class="chips">${WANT.map(([k]) => `<button type="button" class="chip" data-act="fu-want" data-k="${esc(k)}" aria-pressed="${f.wanted.includes(k)}">${esc(k)}</button>`).join('')}</div></div>
     ${f.wanted.length ? `<div class="chips">${f.wanted.map(k => `<button type="button" class="btn sm" data-act="fu-search" data-k="${esc(k)}">${esc(k)} suchen →</button>`).join('')}</div>` : ''}
     <p class="fine">Der Stil ergänzt die Shop-Suche. Bereits gewählte Möbel bleiben unverändert.</p></section>`;
 }
-const PRODUCT_IDEAS = [
-  {
-    "id": "kleppstad",
-    "name": "KLEPPSTAD Kleiderschrank mit 2 Türen weiß",
-    "category": "Kleiderschrank",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Skandinavisch"
-    ],
-    "estimate": 129,
-    "size": "79 × 176 × 55 cm",
-    "detail": "Schlichter Schrank für kleine Räume.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=KLEPPSTAD%20Kleiderschrank%20mit%202%20T%C3%BCren%20wei%C3%9F",
-    "cat": "Kleiderschrank"
-  },
-  {
-    "id": "brimnes-wardrobe",
-    "name": "BRIMNES Kleiderschrank mit 3 Türen weiß",
-    "category": "Kleiderschrank",
-    "styles": [
-      "Modern",
-      "Klassisch",
-      "Minimalistisch"
-    ],
-    "estimate": 199,
-    "size": "117 × 190 × 50 cm",
-    "detail": "Mehr Stauraum und eine Spiegeltür.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=BRIMNES%20Kleiderschrank%20mit%203%20T%C3%BCren%20wei%C3%9F",
-    "cat": "Kleiderschrank"
-  },
-  {
-    "id": "idanas-wardrobe",
-    "name": "IDANÄS Kleiderschrank weiß",
-    "category": "Kleiderschrank",
-    "styles": [
-      "Landhaus",
-      "Klassisch"
-    ],
-    "estimate": 349,
-    "size": "121 × 211 × 59 cm",
-    "detail": "Rahmentüren für einen klassischen Eindruck.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=IDAN%C3%84S%20Kleiderschrank%20wei%C3%9F",
-    "cat": "Kleiderschrank"
-  },
-  {
-    "id": "malm",
-    "name": "MALM Kommode mit 3 Schubladen weiß",
-    "category": "Kommode",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Skandinavisch"
-    ],
-    "estimate": 89,
-    "size": "80 × 78 × 48 cm",
-    "detail": "Geschlossene Aufbewahrung ohne sichtbare Griffe.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=MALM%20Kommode%20mit%203%20Schubladen%20wei%C3%9F",
-    "cat": "Kommode"
-  },
-  {
-    "id": "hemnes",
-    "name": "HEMNES Kommode mit 3 Schubladen weiß gebeizt",
-    "category": "Kommode",
-    "styles": [
-      "Landhaus",
-      "Klassisch"
-    ],
-    "estimate": 179,
-    "size": "108 × 96 × 50 cm",
-    "detail": "Traditionelle Form mit sichtbaren Griffen.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=HEMNES%20Kommode%20mit%203%20Schubladen%20wei%C3%9F%20gebeizt",
-    "cat": "Kommode"
-  },
-  {
-    "id": "rast",
-    "name": "RAST Kommode mit 3 Schubladen Kiefer",
-    "category": "Kommode",
-    "styles": [
-      "Boho",
-      "Skandinavisch"
-    ],
-    "estimate": 59,
-    "size": "62 × 70 × 30 cm",
-    "detail": "Naturholz lässt sich gut mit Körben kombinieren.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=RAST%20Kommode%20mit%203%20Schubladen%20Kiefer",
-    "cat": "Kommode"
-  },
-  {
-    "id": "billy",
-    "name": "BILLY Bücherregal weiß",
-    "category": "Regal",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Klassisch"
-    ],
-    "estimate": 79,
-    "size": "80 × 202 × 28 cm",
-    "detail": "Schmales Bücherregal mit verstellbaren Böden.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=BILLY%20B%C3%BCcherregal%20wei%C3%9F",
-    "cat": "Regal"
-  },
-  {
-    "id": "kallax",
-    "name": "KALLAX Regal schwarzbraun",
-    "category": "Regal",
-    "styles": [
-      "Industrial",
-      "Schwarz / Eiche",
-      "Modern"
-    ],
-    "estimate": 79,
-    "size": "77 × 147 × 39 cm",
-    "detail": "Dunkles Würfelregal für Bücher und Boxen.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=KALLAX%20Regal%20schwarzbraun",
-    "cat": "Regal"
-  },
-  {
-    "id": "ivar",
-    "name": "IVAR Regal Kiefer",
-    "category": "Regal",
-    "styles": [
-      "Boho",
-      "Skandinavisch"
-    ],
-    "estimate": 99,
-    "size": "89 × 179 × 30 cm",
-    "detail": "Offenes Naturholzregal.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=IVAR%20Regal%20Kiefer",
-    "cat": "Regal"
-  },
-  {
-    "id": "tarva",
-    "name": "TARVA Bettgestell Kiefer 140x200",
-    "category": "Bett",
-    "styles": [
-      "Boho",
-      "Skandinavisch"
-    ],
-    "estimate": 149,
-    "size": "Liegefläche 140 × 200 cm",
-    "detail": "Naturholz; Lattenrost und Matratze separat prüfen.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=TARVA%20Bettgestell%20Kiefer%20140x200",
-    "cat": "Bett"
-  },
-  {
-    "id": "malm-bed",
-    "name": "MALM Bettgestell weiß 140x200",
-    "category": "Bett",
-    "styles": [
-      "Modern",
-      "Minimalistisch"
-    ],
-    "estimate": 199,
-    "size": "Liegefläche 140 × 200 cm",
-    "detail": "Geradliniges Bett; Zubehör und Außenmaße prüfen.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=MALM%20Bettgestell%20wei%C3%9F%20140x200",
-    "cat": "Bett"
-  },
-  {
-    "id": "hemnes-night",
-    "name": "HEMNES Nachttisch weiß gebeizt",
-    "category": "Nachttisch",
-    "styles": [
-      "Landhaus",
-      "Klassisch",
-      "Skandinavisch"
-    ],
-    "estimate": 69,
-    "size": "46 × 70 × 35 cm",
-    "detail": "Schublade und offene Ablage.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=HEMNES%20Nachttisch%20wei%C3%9F%20gebeizt",
-    "cat": "Kommode"
-  },
-  {
-    "id": "lack-night",
-    "name": "LACK Beistelltisch schwarzbraun",
-    "category": "Nachttisch",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 15,
-    "size": "55 × 45 × 55 cm",
-    "detail": "Einfache Alternative zum Nachttisch ohne Schublade.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=LACK%20Beistelltisch%20schwarzbraun",
-    "cat": "Kommode"
-  },
-  {
-    "id": "micke",
-    "name": "MICKE Schreibtisch weiß",
-    "category": "Schreibtisch",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Skandinavisch"
-    ],
-    "estimate": 79,
-    "size": "105 × 75 × 50 cm",
-    "detail": "Kompakter Arbeitsplatz mit Kabeldurchlass.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=MICKE%20Schreibtisch%20wei%C3%9F",
-    "cat": "Tisch"
-  },
-  {
-    "id": "fjallbo-desk",
-    "name": "FJÄLLBO Laptoptisch schwarz",
-    "category": "Schreibtisch",
-    "styles": [
-      "Industrial",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 99,
-    "size": "100 × 75 × 36 cm",
-    "detail": "Metallrahmen und Holzplatte; wenig Tiefe.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=FJ%C3%84LLBO%20Laptoptisch%20schwarz",
-    "cat": "Tisch"
-  },
-  {
-    "id": "stefan",
-    "name": "STEFAN Stuhl Kiefer",
-    "category": "Stuhl",
-    "styles": [
-      "Boho",
-      "Skandinavisch",
-      "Landhaus"
-    ],
-    "estimate": 35,
-    "size": "Sitzhöhe etwa 45 cm",
-    "detail": "Schlichter Holzstuhl.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=STEFAN%20Stuhl%20Kiefer",
-    "cat": "Stuhl"
-  },
-  {
-    "id": "adde",
-    "name": "ADDE Stuhl schwarz",
-    "category": "Stuhl",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Industrial",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 15,
-    "size": "Sitzhöhe etwa 45 cm",
-    "detail": "Leichter Stuhl mit Metallgestell.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=ADDE%20Stuhl%20schwarz",
-    "cat": "Stuhl"
-  },
-  {
-    "id": "klippan",
-    "name": "KLIPPAN 2er-Sofa",
-    "category": "Sofa",
-    "styles": [
-      "Modern",
-      "Minimalistisch"
-    ],
-    "estimate": 299,
-    "size": "180 × 66 × 88 cm",
-    "detail": "Kompaktes Sofa; Bezug und Variante beachten.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=KLIPPAN%202er-Sofa",
-    "cat": "Sofa"
-  },
-  {
-    "id": "ektorp",
-    "name": "EKTORP 2er-Sofa",
-    "category": "Sofa",
-    "styles": [
-      "Landhaus",
-      "Klassisch",
-      "Skandinavisch"
-    ],
-    "estimate": 399,
-    "size": "179 × 88 × 88 cm",
-    "detail": "Weiche, traditionelle Form.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=EKTORP%202er-Sofa",
-    "cat": "Sofa"
-  },
-  {
-    "id": "lack-table",
-    "name": "LACK Couchtisch schwarzbraun",
-    "category": "Couchtisch",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 30,
-    "size": "90 × 45 × 55 cm",
-    "detail": "Einfacher Couchtisch mit Ablage.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=LACK%20Couchtisch%20schwarzbraun",
-    "cat": "Couchtisch"
-  },
-  {
-    "id": "fjallbo-table",
-    "name": "FJÄLLBO Couchtisch schwarz",
-    "category": "Couchtisch",
-    "styles": [
-      "Industrial",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 79,
-    "size": "90 × 46 × 46 cm",
-    "detail": "Dunkler Metallrahmen und Holzoberfläche.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=FJ%C3%84LLBO%20Couchtisch%20schwarz",
-    "cat": "Couchtisch"
-  },
-  {
-    "id": "fjallbo-tv",
-    "name": "FJÄLLBO TV-Bank schwarz",
-    "category": "TV-Schrank",
-    "styles": [
-      "Industrial",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 149,
-    "size": "150 × 54 × 36 cm",
-    "detail": "Offene Metalloptik für Mediengeräte.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=FJ%C3%84LLBO%20TV-Bank%20schwarz",
-    "cat": "Kommode"
-  },
-  {
-    "id": "besta",
-    "name": "BESTÅ TV-Bank weiß",
-    "category": "TV-Schrank",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Skandinavisch"
-    ],
-    "estimate": 99,
-    "size": "120 × 38 × 40 cm",
-    "detail": "Modulares System; Türen und Zubehör variieren.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=BEST%C3%85%20TV-Bank%20wei%C3%9F",
-    "cat": "Kommode"
-  },
-  {
-    "id": "havsta",
-    "name": "HAVSTA Sideboard weiß",
-    "category": "Sideboard",
-    "styles": [
-      "Landhaus",
-      "Klassisch"
-    ],
-    "estimate": 299,
-    "size": "121 × 89 × 47 cm",
-    "detail": "Klassische Aufbewahrung mit Rahmentüren.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=HAVSTA%20Sideboard%20wei%C3%9F",
-    "cat": "Kommode"
-  },
-  {
-    "id": "besta-side",
-    "name": "BESTÅ Aufbewahrung mit Türen schwarzbraun",
-    "category": "Sideboard",
-    "styles": [
-      "Modern",
-      "Minimalistisch",
-      "Schwarz / Eiche"
-    ],
-    "estimate": 199,
-    "size": "120 × 74 × 42 cm",
-    "detail": "Schlichte Fronten; Konfiguration im Shop auswählen.",
-    "merchant": "IKEA",
-    "url": "https://www.ikea.com/de/de/search/?q=BEST%C3%85%20Aufbewahrung%20mit%20T%C3%BCren%20schwarzbraun",
-    "cat": "Kommode"
-  }
-];
-/* Local editorial examples, guide prices only; no live offer or measured dimensions. */
-function ideaPreferences(r = S.room) { return r.furnish || { style: '', wanted: [] }; }
-function concreteIdeas(r, prefs, min, max) {
-  const cost = calc(r), remaining = r.budget == null ? Infinity : Math.max(0, r.budget - cost.total);
-  if (min != null && max != null && min > max) return [];
-  return prefs.wanted.map(cat => {
-    const budgetCat = ({Schreibtisch:'Tisch',Nachttisch:'Kommode',Sideboard:'Kommode','TV-Schrank':'Kommode',Leuchte:'Beleuchtung',Lautsprecher:'Audio'})[cat] || cat;
-    const categoryCap = r.catBudgets[budgetCat] == null ? Infinity : Math.max(0, r.catBudgets[budgetCat] - (cost.byCat.get(budgetCat) || 0));
-    const cap = Math.min(remaining, max ?? Infinity, categoryCap);
-    const products = PRODUCT_IDEAS.filter(p => (cat === 'Tisch' ? p.cat === cat : p.category === cat) && (!prefs.style || p.styles.includes(prefs.style)) && p.estimate >= (min ?? 0) && p.estimate <= cap).slice(0,3);
-    return {cat, products};
-  });
-}
-function concreteIdeasHTML() {
- const r=S.room, prefs=ideaPreferences(r), min=num(S.search.min), max=num(S.search.max);
- if (min != null && max != null && min > max) return '<p role="alert">Preis ab darf nicht über Preis bis liegen.</p>';
- if (!prefs.wanted.length) return '<p class="hint">Wähle mindestens eine Möbelart für konkrete Vorschläge.</p>';
- return concreteIdeas(r,prefs,min,max).map(group=>`<section aria-label="Vorschläge für ${esc(group.cat)}"><h4>${esc(group.cat)}</h4>${group.products.length ? group.products.map(p=>`<article class="idea-card"><img src="${silhouette(p.cat, prefs.style==='Industrial'||prefs.style==='Schwarz / Eiche'?'#a47b52':null)}" alt="${esc(p.category)} · schematische Zeichnung, kein Produktfoto"><div><h5>${esc(p.name)}</h5><strong>Richtpreis ca. ${eur(p.estimate)}</strong><p class="hint">${esc(p.detail)}</p><p class="fine">Beispielvariante: ${esc(p.size)}. Maße und Zubehör im Shop prüfen.</p><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Genaues Modell bei ${esc(p.merchant)} finden ↗</a><button class="btn sm primary" data-act="idea-use" data-id="${p.id}">Vorschlag prüfen und übernehmen</button></div></article>`).join('') : '<p class="hint">Kein hinterlegtes Modell für diesen Stil innerhalb deiner Preisgrenzen. Weitere Modelle findest du über die Shop-Suche unten.</p>'}</section>`).join('');
-}
-function refreshIdeas() { const el=$('#idea-results'); if(el && S.room)el.innerHTML=concreteIdeasHTML(); }
-function furnishingIdeasHTML() {
- return `<section class="idea-panel" aria-label="Konkrete Möbelvorschläge"><h3>Konkrete Möbelvorschläge</h3><p class="hint">Lokaler Beispielkatalog, keine Live-Angebote. Richtpreise ohne Versand werden mit deinen Preisgrenzen sowie dem bekannten Rest- und Kategorienbudget verglichen. Einzelvorschläge sind Alternativen, kein gemeinsam geprüftes Möbelset. Preis, Variante und Verfügbarkeit im Shop prüfen.</p><div id="idea-results" aria-live="polite">${concreteIdeasHTML()}</div></section>`;
-}
-
 function sideFinden() {
   const s = S.search;
   return `${furnishHTML()}
@@ -1972,7 +1567,6 @@ function sideFinden() {
       <label class="field"><span>Preis ab</span><div class="money"><input class="input" id="s-min" inputmode="decimal" value="${esc(s.min)}" placeholder="offen"><em>€</em></div></label>
       <label class="field"><span>Preis bis</span><div class="money"><input class="input" id="s-max" inputmode="decimal" value="${esc(s.max)}" placeholder="offen"><em>€</em></div></label>
     </div>
-    ${furnishingIdeasHTML()}
     <p class="hint">${s.kw || styleWord() ? `Suche: <strong>${esc([s.kw || catOf(s.cat).q, styleWord(), s.term].filter(Boolean).join(' '))}</strong>. ` : ''}Die Suche öffnet sich direkt im Shop. Gefällt dir etwas, kopiere den Produktlink und füge ihn unten ein.</p>
     <div class="shops" id="shop-links">${shopLinksHTML()}</div>
     <div class="paste-box">
@@ -2189,7 +1783,7 @@ async function composeCanvas(ph, furn = true) {
       }
       g.drawImage(img, -w / 2, -h / 2, w, h);
       g.restore();
-      if (ph.plan && Math.min(itemDims(it).w, itemDims(it).d) >= 60) {
+      if (ph.plan && Math.min(itemDims(it).w, itemDims(it).d) >= 66) {
         const t = shortName(it);
         g.save(); g.font = `600 ${Math.round(W * .012)}px "Instrument Sans", system-ui, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
         g.lineWidth = 4; g.strokeStyle = 'rgba(255,255,255,.85)'; g.fillStyle = '#1d2622';
@@ -3281,7 +2875,6 @@ async function importBackup(file) {
 /* ================= Events ================= */
 const ACT = {
   home(t, e) { e.preventDefault(); go(null); },
-  'idea-use'(t) { const p=PRODUCT_IDEAS.find(p=>p.id===t.dataset.id); if(!p)return; itemDialog(null,{name:p.name,cat:p.cat,retailer:p.merchant,url:p.url,price:null,dims:{},note:'Vorschlag aus lokalem Katalog. Richtpreis ca. '+eur(p.estimate)+', nicht live geprüft. Preis, Maße und Variante im Shop bestätigen.'}); },
   'new-room'() { newRoomDialog(); },
   'open-room'(t, e) { if (e.target.closest('.room-actions')) return; const r = S.rooms.find(x => x.id === t.dataset.id); if (r) go(r); },
   async 'dup-room'(t, e) {
@@ -3425,7 +3018,7 @@ document.addEventListener('input', e => {
   if (t.id === 'aud-spread') { const ph = activePhoto(); if (ph && ph.audio) { ph.audio.spread = +t.value; $('#aud-sv').textContent = t.value + '°'; refreshOverlay(); touch(); } return; }
   if (t.id === 's-term' || t.id === 's-min' || t.id === 's-max') {
     S.search[t.id.slice(2)] = t.value; LS.set('search', S.search);
-    $('#shop-links').innerHTML = shopLinksHTML(); refreshIdeas();
+    $('#shop-links').innerHTML = shopLinksHTML();
   }
 });
 document.addEventListener('change', async e => {
@@ -3445,10 +3038,10 @@ document.addEventListener('change', async e => {
   if (t.id === 'room-name') { r.name = t.value.trim() || r.type; t.value = r.name; document.title = r.name + ' · Raumplaner Studio'; touch(); return; }
   if (t.id === 'fu-style') { r.furnish = { ...furnishOf(r), style: t.value }; touch(); renderSide(); return; }
   if (t.id === 's-cat') { S.search.cat = t.value; S.search.kw = ''; LS.set('search', S.search); $('#shop-links').innerHTML = shopLinksHTML(); return; }
-  if (t.id === 'b-total') { r.budget = num(t.value); touch(); renderBudget(); renderMini(); refreshIdeas(); return; }
+  if (t.id === 'b-total') { r.budget = num(t.value); touch(); renderBudget(); renderMini(); return; }
   if (t.id === 'b-addcat' && t.value) { r.catBudgets[t.value] = null; touch(); renderBudget(); setTimeout(() => $(`[data-catmax="${CSS.escape(t.value)}"]`)?.focus(), 0); return; }
-  if (t.dataset.catmax !== undefined) { const v = num(t.value); if (v == null && !r.items.some(i => i.cat === t.dataset.catmax)) delete r.catBudgets[t.dataset.catmax]; else r.catBudgets[t.dataset.catmax] = v; touch(); renderBudget(); refreshIdeas(); return; }
-  if (t.dataset.ship !== undefined) { const v = num(t.value); if (v == null) delete r.shipping[t.dataset.ship]; else r.shipping[t.dataset.ship] = v; touch(); renderBudget(); renderMini(); refreshIdeas(); return; }
+  if (t.dataset.catmax !== undefined) { const v = num(t.value); if (v == null && !r.items.some(i => i.cat === t.dataset.catmax)) delete r.catBudgets[t.dataset.catmax]; else r.catBudgets[t.dataset.catmax] = v; touch(); renderBudget(); return; }
+  if (t.dataset.ship !== undefined) { const v = num(t.value); if (v == null) delete r.shipping[t.dataset.ship]; else r.shipping[t.dataset.ship] = v; touch(); renderBudget(); renderMini(); return; }
 });
 document.addEventListener('paste', e => {
   const file = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'))?.getAsFile();
@@ -3491,6 +3084,9 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
     if (r.seed === 'konrad' && !r.productsV1 && KONRAD_PRODUCTS.length) {
       try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {}
       addKonradProducts(r);
+      S.storage && await DB.put(r);
+    } else if (r.seed === 'konrad' && r.productsV1 && !r.productsV2) {
+      layoutKonradProducts(r);
       S.storage && await DB.put(r);
     }
   }
