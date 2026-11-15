@@ -368,6 +368,23 @@ dialog.dlg::backdrop{background:rgb(10 16 13 / .5)}
 .pg-th{display:block;min-height:120px;background:var(--surface-2);border-radius:4px}
 .pg-th img{width:100%;height:auto;display:block}
 .num-in{width:84px;min-height:30px;padding:3px 8px}
+.furnish{display:grid;gap:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);margin-bottom:6px}
+.furnish h4{font-size:14px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 11px;font-size:12.5px;cursor:pointer;min-height:30px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+dialog.dlg:has(.dlg-in.wide){width:min(1080px, calc(100vw - 24px))}
+.mb-pal{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--ink)}
+.mb-pal i{display:inline-block;width:18px;height:18px;border-radius:50%;margin-right:6px;vertical-align:-4px;border:1px solid rgb(0 0 0 / .15)}
+.mb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.mb-card{display:grid;grid-template-rows:auto 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);color:var(--ink);text-decoration:none}
+.mb-card:hover{border-color:var(--accent)}
+.mb-img{display:grid;place-items:center;aspect-ratio:1.15;padding:10px;background-color:#fff}
+.mb-img img{max-width:100%;max-height:100%;object-fit:contain}
+.mb-t{display:grid;gap:2px;padding:9px 11px 11px;font-size:12.5px}
+.mb-t strong{font-size:13px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mb-t span{color:var(--muted)}
+.mb-t b{color:var(--accent);font-size:14px}
 /* Vorher / Nachher */
 .ptab.cmp-tab{color:var(--ink);font-weight:500;padding-right:12px}
 .ptab.cmp-tab svg{width:15px;height:15px;color:var(--accent)}
@@ -536,6 +553,7 @@ const CATS = [
   { k:'Beleuchtung', q:'Lampe', sil:'lampe', col:'#d8c9a8', w:.07, dd:[30,30,150] },
   { k:'Teppich', q:'Teppich', sil:'teppich', col:'#c7b49a', w:.45, dd:[160,230,1] },
   { k:'Deko & Pflanzen', q:'Deko', sil:'pflanze', col:'#5f7d5a', w:.09, dd:[40,40,100] },
+  { k:'Audio', q:'Lautsprecher', sil:'speaker', col:'#2b2b2b', w:.06, dd:[18,25,30] },
   { k:'Sonstiges', q:'', sil:'box', col:'#9a9a92', w:.12, dd:[60,60,60] },
 ];
 const catOf = k => CATS.find(c => c.k === k) || CATS[CATS.length - 1];
@@ -562,6 +580,7 @@ const SIL = {
   lampe: c => [60, 200, `<path d="M12 0h36l10 46H2Z" fill="${c}"/><path d="M2 46h56" stroke="${shade(c,-.2)}" stroke-width="2"/><rect x="28" y="46" width="4" height="144" fill="#3b3a37"/><ellipse cx="30" cy="194" rx="20" ry="5" fill="#2e2d2b"/>`],
   teppich: c => [240, 70, `<path d="M30 0h180l30 70H0Z" fill="${c}"/><path d="M38 6h164l22 58H16Z" fill="none" stroke="${shade(c,.3)}" stroke-width="3"/><path d="M50 14h140l15 42H35Z" fill="none" stroke="${shade(c,-.15)}" stroke-width="1.5"/>`],
   pflanze: c => [80, 140, `<ellipse cx="40" cy="44" rx="13" ry="34" fill="${c}" transform="rotate(-8 40 44)"/><ellipse cx="22" cy="58" rx="10" ry="28" fill="${shade(c,-.15)}" transform="rotate(-32 22 58)"/><ellipse cx="58" cy="58" rx="10" ry="28" fill="${shade(c,.12)}" transform="rotate(30 58 58)"/><ellipse cx="40" cy="70" rx="8" ry="22" fill="${shade(c,-.25)}"/><path d="M18 92h44l-6 48H24Z" fill="#c9b8a3"/><path d="M18 92h44v6H18Z" fill="#b7a58e"/>`],
+  speaker: c => [60, 100, `<rect x="0" y="0" width="60" height="100" rx="5" fill="${c}"/><circle cx="30" cy="66" r="20" fill="${shade(c,-.3)}" stroke="${shade(c,.35)}" stroke-width="3"/><circle cx="30" cy="66" r="7" fill="${shade(c,.25)}"/><circle cx="30" cy="22" r="9" fill="${shade(c,-.3)}" stroke="${shade(c,.35)}" stroke-width="2"/>`],
   box: c => [100, 100, `<rect x="0" y="0" width="100" height="100" rx="8" fill="${c}"/><rect x="8" y="8" width="84" height="84" rx="5" fill="none" stroke="${shade(c,.25)}" stroke-width="2"/>`],
 };
 const silCache = new Map();
@@ -604,6 +623,7 @@ function topview(cat, color, w, d) {
       break; }
     case 'tisch': b = R(0, 0, w, d, L, 2) + Ln(w * .05, d - 7, w * .95, d - 7, 'stroke-opacity=".35"'); break;
     case 'couchtisch': b = R(0, 0, w, d, L, mn * .12); break;
+    case 'speaker': b = R(0, 0, w, d, M, mn * .12) + R(w * .2, d - Math.max(2, d * .14), w * .6, Math.max(1.5, d * .1), D, 1); break;
     case 'stuhl': b = R(w * .08, d * .2, w * .84, d * .74, L, mn * .18) + R(w * .12, 0, w * .76, d * .2, M, 4); break;
     case 'sofa': case 'sessel': {
       const a = Math.min(w * .14, 20);
@@ -623,7 +643,7 @@ const planSrc = it => { const m = itemDims(it); return topview(it.cat, it.color,
 
 /* ================= Shops ================= */
 const SHOPHOSTS = [['ikea.','IKEA'],['otto.de','OTTO'],['amazon.','Amazon'],['home24.','home24'],['wayfair.','Wayfair'],['xxxlutz.','XXXLutz'],['moemax.','mömax'],['poco.de','POCO'],['hoeffner.','Höffner'],['westwing.','Westwing'],['moebel-kraft','Möbel Kraft'],['roller.de','ROLLER'],['segmueller','Segmüller'],['depot-online','DEPOT'],['jysk.','JYSK'],['kleinanzeigen.','Kleinanzeigen'],['ebay.','eBay'],['porta.de','porta'],['butlers','Butlers'],['obi.de','OBI'],['hornbach','Hornbach'],['bauhaus','BAUHAUS'],['tchibo','Tchibo'],['maisonsdumonde','Maisons du Monde'],['hm.com','H&M Home'],['zarahome','Zara Home'],['connox','Connox'],['ambientedirect','AmbienteDirect'],['urbanara','URBANARA'],['bonprix','bonprix'],['baur.de','BAUR'],['lampenwelt','Lampenwelt'],['benuta','benuta'],['kare-design','KARE'],['dehner','Dehner'],['lidl.','Lidl'],['moebel.de','moebel.de'],['sofa.de','sofa.de'],['made.com','MADE']];
-const CAT_WORDS = [[/kleiderschrank|schwebet|drehtür/,'Kleiderschrank'],[/sofa|couch|ecksofa|schlafsofa/,'Sofa'],[/sessel/,'Sessel'],[/bett|boxspring|futon/,'Bett'],[/kommode|sideboard|highboard|lowboard|tv-?board/,'Kommode'],[/vitrine/,'Vitrine'],[/regal|bücher/,'Regal'],[/couchtisch|beistelltisch|sofatisch/,'Couchtisch'],[/tisch|schreibtisch/,'Tisch'],[/stuhl|hocker|bank/,'Stuhl'],[/lampe|leuchte|licht|pendel/,'Beleuchtung'],[/teppich|läufer/,'Teppich'],[/pflanze|vase|deko|spiegel|kissen|bild|poster|topf/,'Deko & Pflanzen'],[/schrank/,'Kleiderschrank']];
+const CAT_WORDS = [[/lautsprecher|speaker|subwoofer|soundbar|regalboxen|aktivboxen/,'Audio'],[/kleiderschrank|schwebet|drehtür/,'Kleiderschrank'],[/sofa|couch|ecksofa|schlafsofa/,'Sofa'],[/sessel/,'Sessel'],[/bett|boxspring|futon/,'Bett'],[/kommode|sideboard|highboard|lowboard|tv-?board/,'Kommode'],[/vitrine/,'Vitrine'],[/regal|bücher/,'Regal'],[/couchtisch|beistelltisch|sofatisch/,'Couchtisch'],[/tisch|schreibtisch/,'Tisch'],[/stuhl|hocker|bank/,'Stuhl'],[/lampe|leuchte|licht|pendel/,'Beleuchtung'],[/teppich|läufer/,'Teppich'],[/pflanze|vase|deko|spiegel|kissen|bild|poster|topf/,'Deko & Pflanzen'],[/schrank/,'Kleiderschrank']];
 function guessCat(text) { const t = (text || '').toLowerCase(); const m = CAT_WORDS.find(([re]) => re.test(t)); return m ? m[1] : null; }
 function parseProductUrl(raw) {
   let url;
@@ -644,7 +664,7 @@ function parseProductUrl(raw) {
 }
 function shopLinks(s) {
   const c = catOf(s.cat);
-  const q = [c.q, s.term].filter(Boolean).join(' ').trim() || 'Möbel';
+  const q = [s.kw || c.q, s.style, s.term].filter(Boolean).join(' ').trim() || 'Möbel';
   const e = encodeURIComponent(q);
   const min = num(s.min), max = num(s.max);
   const hasP = min != null || max != null;
@@ -1076,7 +1096,46 @@ function makeKonrad() {
   put(shelf, 20.5, 264.5, -90);
   put(low, 280, 436.5, 180);
   addKonradBefore(r);
+  addKonradProducts(r);
   return r;
+}
+
+/* Konkrete Produkte (Recherche 15.11.2026): ersetzen die Richtwert-Platzhalter im Nachher-Plan */
+const KONRAD_PRODUCTS = [{"key": "bett", "cat": "Bett", "name": "STORKLINTA Bettgestell + Mittelbalken, Eichenachbildung, 140x200 cm (Art. 706.156.08)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/storklinta-bettgestell-mittelbalken-eichenachbildung-70615608/", "price": 149.0, "qty": 1, "color": "#CDB27A", "role": "main", "replaces": "Bett 140x200 (niedrig) unter der Dachschräge", "why": "Außenmaß 149x209 cm, Seiten/Fußteil nur 39 cm hoch; das Kopfteil (101 cm) an die Seitenwand stellen und das Bett ca. 10-15 cm von der Kniestockwand abrücken, damit die Kopfteilecke unter der Schräge frei bleibt.", "checkedAt": "2026-11-15", "dims": {"w": 149, "d": 209, "h": 101}, "img": ""}, {"key": "lattenrost", "cat": "Bett", "name": "LURÖY Federholzrahmen, 140x200 cm (2 x 70 cm)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/luroey-federholzrahmen-s09481354/", "price": 50.0, "qty": 1, "color": "#D9C49A", "role": "main", "replaces": "Lattenrost 140x200", "why": "Von IKEA für STORKLINTA empfohlen, liegt im Rahmen und ist nicht sichtbar.", "checkedAt": "2026-11-15", "dims": {"w": 140, "d": 200, "h": 4}, "img": ""}, {"key": "matratze", "cat": "Bett", "name": "VESTERÖY Taschenfederkernmatratze, mittelfest/hellblau, 140x200 cm", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/vesteroey-taschenfederkernmatratze-mittelfest-hellblau-00450615/", "price": 199.0, "qty": 1, "color": "#E9EEF2", "role": "main", "replaces": "Matratze 140x200 mittelfest", "why": "Mittelfeste Taschenfederkernmatratze mit 10 Jahren Garantie, aktuell reduziert (vorher 249 €).", "checkedAt": "2026-11-15", "dims": {"w": 140, "d": 200, "h": 20}, "img": ""}, {"key": "schrank", "cat": "Kleiderschrank", "name": "PAX / MEHAMN/AULI Schrankkombination mit Schiebetüren, Eicheneff wlas doppelseitig / Eicheneff wlas Spiegelglas, 200x66x236 cm (Art. 895.613.61)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/pax-mehamn-auli-schrankkombination-eicheneff-wlas-doppelseitig-eicheneff-wlas-spiegelglas-s89561361/", "price": 640.0, "qty": 1, "color": "#D8C8AE", "role": "main", "replaces": "Kleiderschrank ~200 cm mit Schiebetüren", "why": "Schiebetüren lösen den Türkonflikt, dieselbe weiß lasierte Eichenoptik wie das KALLAX, eine Tür mit Spiegel; mit Innenausstattung, braucht 240 cm Raumhöhe (vorhanden: 250 cm, nur an voller Wandhöhe).", "checkedAt": "2026-11-15", "dims": {"w": 200, "d": 66, "h": 236.4}, "img": ""}, {"key": "schreibtisch", "cat": "Tisch", "name": "MITTZON Schreibtisch sitz/steh, elektrisch, Eichenfurnier/schwarz, 140x80 cm", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/mittzon-schreibtisch-sitz-steh-elektrisch-eichenfurnier-schwarz-s69513955/", "price": 429.0, "qty": 1, "color": "#C9A777", "role": "main", "replaces": "Höhenverstellbarer Schreibtisch 140x80", "why": "Elektrisch von 62 bis 126 cm verstellbar, echtes Eichenfurnier auf schwarzem Gestell, genau der Stil Eiche + Schwarz (h = Minimalhöhe).", "checkedAt": "2026-11-15", "dims": {"w": 140, "d": 80, "h": 75}, "img": ""}, {"key": "stuhl", "cat": "Stuhl", "name": "MARKUS Drehstuhl, Vissle dunkelgrau, Mittelgroß (Art. 702.611.50)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/markus-drehstuhl-vissle-dunkelgrau-70261150/", "price": 149.0, "qty": 1, "color": "#2B2B2B", "role": "main", "replaces": "Schreibtischstuhl", "why": "Bewährter ergonomischer Stuhl mit schwarzem Netzrücken und Kopfstütze, aktuell reduziert (vorher 179 €); für deutlich über 1,80 m gibt es die Größe Groß für 179 €.", "checkedAt": "2026-11-15", "dims": {"w": 62, "d": 60, "h": 129}, "img": ""}, {"key": "lowboard", "cat": "Regal", "name": "KALLAX Regal, Eicheneff wlas, 77x147 cm, liegend als Lowboard (Art. 003.245.18)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/kallax-regal-eicheneff-wlas-00324518/", "price": 59.99, "qty": 1, "color": "#D8C8AE", "role": "main", "replaces": "Lowboard unter der Kniestockwand", "why": "Liegend nur 76,5 cm hoch und damit unter der Schräge, gleiche Oberfläche wie das vorhandene KALLAX 5x5; die 33-cm-Fächer passen für Schallplatten und Konsole, der Plattenspieler steht obendrauf. Aktuell reduziert (vorher 74,99 €).", "checkedAt": "2026-11-15", "dims": {"w": 146.5, "d": 39, "h": 76.5}, "img": ""}, {"key": "lowboard_tueren", "cat": "Regal", "name": "KALLAX Einsatz mit Tür, schwarzbraun, 33x33 cm", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/kallax-einsatz-mit-tuer-schwarzbraun-60278170/", "price": 15.0, "qty": 2, "color": "#2E2925", "role": "main", "replaces": "Türen für das Lowboard", "why": "Zwei geschlossene Fächer für Kabel und Controller, schwarzbraun wie die Einsätze im bestehenden KALLAX.", "checkedAt": "2026-11-15", "dims": {"w": 33, "d": 37, "h": 33}, "img": ""}, {"key": "nachttisch", "cat": "Regal", "name": "KALLAX Regal, Eicheneff wlas, 77x41 cm, liegend als Ablage am Bettkopf (Art. 403.958.77)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/kallax-regal-eicheneff-wlas-40395877/", "price": 24.99, "qty": 1, "color": "#D8C8AE", "role": "main", "replaces": "Regal am Bettkopf", "why": "Statt eines hohen Regals eine nur 41 cm hohe Ablage neben dem Kopfteil für Handy, Licht und Bücher, passt unter die Schräge und zur KALLAX-Optik; aktuell reduziert (vorher 34,99 €).", "checkedAt": "2026-11-15", "dims": {"w": 76.5, "d": 39, "h": 41}, "img": ""}, {"key": "teppich", "cat": "Teppich", "name": "STOENSE Teppich Kurzflor, blassgrün, 170x240 cm (Art. 206.291.51)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/stoense-teppich-kurzflor-blassgruen-20629151/", "price": 89.99, "qty": 1, "color": "#8A9A8C", "role": "main", "replaces": "Teppich 160x230 in Akzentfarbe", "why": "Salbeigrüner Akzent in der nächsten verfügbaren Größe (160x230 gibt es in dieser Farbe nicht, 170x240 passt in den Raum); laut Bewertungen eher graugrün.", "checkedAt": "2026-11-15", "dims": {"w": 170, "d": 240, "h": 1.8}, "img": ""}, {"key": "sitzsack", "cat": "Sessel", "name": "icon Kingston Sitzsack Cord mit Füllung, Salbeigrün", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B0DY8745XF", "price": 79.99, "qty": 1, "color": "#6E8B5E", "role": "main", "replaces": "Sitzsack am Fenster", "why": "Cord-Sitzsack in Salbeigrün, 85x85x50 cm, niedrig genug für die Fensterecke, wiederholt die Akzentfarbe des Teppichs.", "checkedAt": "2026-11-15", "dims": {"w": 85, "d": 85, "h": 50}, "img": ""}, {"key": "schreibtischlampe", "cat": "Beleuchtung", "name": "FORSÅ Arbeitsleuchte, schwarz (Art. 001.467.76)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/forsa-arbeitsleuchte-schwarz-00146776/", "price": 19.99, "qty": 1, "color": "#1A1A1A", "role": "main", "replaces": "Schreibtischlampe schwarz", "why": "Klassische schwarze Gelenkleuchte aus Stahl, passt zum schwarzen Tischgestell; das Leuchtmittel wird separat gekauft.", "checkedAt": "2026-11-15", "dims": {"w": 15, "d": 15, "h": 35}, "img": ""}, {"key": "leuchtmittel", "cat": "Beleuchtung", "name": "SOLHETTA LED-Leuchtmittel E14 470 lm, kerzenförmig/opalweiß, 2er-Pack", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/solhetta-led-leuchtmittel-e14-470-lm-kerzenfoermig-opalweiss-20584015/", "price": 2.99, "qty": 1, "color": "#F5F5F0", "role": "main", "replaces": "Leuchtmittel für FORSÅ", "why": "Von IKEA für FORSÅ empfohlene E14-LED mit 2700 K; die Höhe der Birne steht nicht auf der Seite (h=0 heißt unbekannt).", "checkedAt": "2026-11-15", "dims": {"w": 3.5, "d": 3.5, "h": null}, "img": ""}, {"key": "lautsprecher", "cat": "Audio", "name": "Edifier R1855DB Bluetooth-Lautsprechersystem 2.0, Schwarz (Paar)", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B08GJCLKW3", "price": 159.99, "qty": 1, "color": "#1C1C1C", "role": "main", "replaces": "Aktive Stereolautsprecher", "why": "Bluetooth, optisch, koaxial und zwei Cinch-Eingänge (PC, Konsole, Plattenspieler) plus Subwoofer-Ausgang, schwarz; Maße je Box laut Edifier 155x223x254 mm, Amazon meldete nur noch 1 Stück auf Lager.", "checkedAt": "2026-11-15", "dims": {"w": 15.5, "d": 22.3, "h": 25.4}, "img": ""}, {"key": "lautsprecher_pads", "cat": "Audio", "name": "Adam Hall Stands PAD ECO 1 Absorberplatte 170x300 mm, anthrazit (Paar)", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B008PCBGKS", "price": 19.89, "qty": 1, "color": "#3A3A3A", "role": "main", "replaces": "Lautsprecher-Pads", "why": "Entkoppeln die Boxen vom Schreibtisch, damit die Tischplatte nicht mitdröhnt; 17x30 cm passt zur Grundfläche der R1855DB (15,5x22,3 cm), als Paar geliefert.", "checkedAt": "2026-11-15", "dims": {"w": 17, "d": 30, "h": 4}, "img": ""}, {"key": "rollo", "cat": "Sonstiges", "name": "FRIDANS Verdunklungsrollo, grau, 160x195 cm (Art. 503.969.23)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/fridans-verdunklungsrollo-grau-50396923/", "price": 44.99, "qty": 1, "color": "#7D7F80", "role": "main", "replaces": "Verdunkelungsrollo für 1,51-m-Fenster", "why": "Mit 160 cm Stoffbreite deckt es das 151 cm breite Fenster mit Überstand, Montage über dem Fenster oder an der Decke, schnurlos; die Tiefe steht nicht auf der Seite.", "checkedAt": "2026-11-15", "dims": {"w": 165, "d": null, "h": 195}, "img": ""}, {"key": "led_strip", "cat": "Beleuchtung", "name": "Govee LED Strip RGBIC LED-Streifen 5 m, Musik-Sync, Segmentsteuerung", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B093PRYW1D", "price": 25.99, "qty": 1, "color": "#FFFFFF", "role": "main", "replaces": "Ambientebeleuchtung", "why": "Indirektes Licht hinter Schreibtisch oder Lowboard, per App auf Salbeigrün einstellbar, Musik-Sync passt zu den Lautsprechern; Breite und Höhe des Streifens stehen nicht auf der Seite.", "checkedAt": "2026-11-15", "dims": {"w": 500, "d": null, "h": null}, "img": ""}, {"key": "lego_regal", "cat": "Regal", "name": "LACK Wandregal, schwarzbraun, 110x26 cm (Art. 401.036.33)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/lack-wandregal-schwarzbraun-40103633/", "price": 12.99, "qty": 2, "color": "#2E2925", "role": "main", "replaces": "Wandregal für Lego-Modelle", "why": "26 cm Tiefe reicht für große Technic-Modelle, bis 10 kg je Board, schwarzbraun wie die KALLAX-Einsätze; nur an Wänden mit voller Höhe montieren. Aktuell reduziert (vorher 14,99 €).", "checkedAt": "2026-11-15", "dims": {"w": 110, "d": 26, "h": 5}, "img": ""}, {"key": "alt_bett_neiden", "cat": "Bett", "name": "NEIDEN Bettgestell, Kiefer, 140x200 cm (Art. 703.952.39)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/neiden-bettgestell-kiefer-70395239/", "price": 90.0, "qty": 1, "color": "#E3C99A", "role": "alternative", "replaces": "Bett 140x200 (niedrig)", "why": "Günstiger und niedriger (Kopfteil 65 cm, Fußteil 30 cm), passt problemlos unter die Schräge, ist aber Kiefer statt Eichenoptik.", "checkedAt": "2026-11-15", "dims": {"w": 144, "d": 205, "h": 65}, "img": ""}, {"key": "alt_schrank_mehamn", "cat": "Kleiderschrank", "name": "PAX / MEHAMN Kleiderschrank mit Schiebetüren, weiß / doppelseitig Eichenachbildung, 200x66x236 cm (Art. 396.088.70)", "retailer": "IKEA Deutschland", "url": "https://www.ikea.com/de/de/p/pax-mehamn-kleiderschrank-mit-schiebetueren-weiss-weiss-doppelseitig-eichenachbildung-s39608870/", "price": 670.0, "qty": 1, "color": "#CDB27A", "role": "alternative", "replaces": "Kleiderschrank ~200 cm mit Schiebetüren", "why": "Variante ohne Spiegel mit zwei Türen in Eichenoptik und mehr Böden und Körben; 30 € teurer.", "checkedAt": "2026-11-15", "dims": {"w": 200, "d": 66, "h": 236.4}, "img": ""}, {"key": "alt_lautsprecher_r1280dbs", "cat": "Audio", "name": "Edifier R1280DBs Aktive Bluetooth-Regallautsprecher, Schwarz (Paar)", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B087CP66WB", "price": 131.82, "qty": 1, "color": "#1C1C1C", "role": "alternative", "replaces": "Aktive Stereolautsprecher", "why": "Günstiger und kompakter, ebenfalls mit Bluetooth, optisch, koaxial, Cinch und Subwoofer-Ausgang; Amazon nennt 14,6T x 19,6B x 23,4H cm, die Achsen sind dort wohl vertauscht.", "checkedAt": "2026-11-15", "dims": {"w": 14.6, "d": 19.6, "h": 23.4}, "img": ""}, {"key": "opt_subwoofer_t5s", "cat": "Audio", "name": "Edifier T5s Aktiv-Subwoofer, 8 Zoll, 70 W", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B0F6NH4373", "price": 129.0, "qty": 1, "color": "#1C1C1C", "role": "alternative", "replaces": "Optionaler Subwoofer", "why": "Passt an den Subwoofer-Ausgang der R1855DB oder R1280DBs und steht unter dem Schreibtisch; Maße laut Amazon 37T x 44B x 40H cm, vom Hersteller nicht bestätigt.", "checkedAt": "2026-11-15", "dims": {"w": 44, "d": 37, "h": 40}, "img": ""}, {"key": "alt_stehlampe_govee", "cat": "Beleuchtung", "name": "Govee RGBIC LED-Stehlampe, WiFi, 1000 lm, dimmbar, Schwarz", "retailer": "Amazon.de", "url": "https://www.amazon.de/dp/B09TZZXSK2", "price": 85.49, "qty": 1, "color": "#1A1A1A", "role": "alternative", "replaces": "Ambientebeleuchtung", "why": "Schwarze Ecklampe statt oder zusätzlich zum LED-Streifen; 136 cm hoch, daher nur im Bereich voller Raumhöhe aufstellen.", "checkedAt": "2026-11-15", "dims": {"w": 20, "d": 20, "h": 136}, "img": ""}];
+const KONRAD_SHORT = { bett: 'Bett STORKLINTA', schrank: 'PAX Schiebetüren', schreibtisch: 'MITTZON', stuhl: 'MARKUS', lowboard: 'KALLAX Lowboard', nachttisch: 'KALLAX 1×2', teppich: 'Teppich STOENSE', sitzsack: 'Sitzsack', lego_regal: 'LACK', lautsprecher: 'Edifier', schreibtischlampe: 'FORSÅ', alt_bett_neiden: 'Bett NEIDEN', alt_schrank_mehamn: 'PAX MEHAMN', alt_lautsprecher_r1280dbs: 'Edifier R1280', opt_subwoofer_t5s: 'Subwoofer', alt_stehlampe_govee: 'Stehlampe' };
+const KONRAD_PALETTE = [{ name: 'Eiche warm', hex: '#C9A777' }, { name: 'Eiche weiß lasiert', hex: '#D8C8AE' }, { name: 'Schwarz', hex: '#1C1C1C' }, { name: 'Schwarzbraun', hex: '#2E2925' }, { name: 'Salbeigrün', hex: '#8A9A8C' }, { name: 'Hell', hex: '#F2EFE9' }];
+function addKonradProducts(r) {
+  r.productsV1 = true;
+  const after = r.photos.find(p => p.plan && !p.plan.before);
+  if (!after || !KONRAD_PRODUCTS.length) return;
+  const old = new Set(r.items.filter(i => !i.bestand && /Richtwert/.test(i.note || '')).map(i => i.id));
+  r.items = r.items.filter(i => !old.has(i.id));
+  r.photos.forEach(ph => { ph.placements = ph.placements.filter(q => !old.has(q.itemId)); });
+  const by = {};
+  for (const x of KONRAD_PRODUCTS) {
+    const it = { id: uid(), name: x.name, cat: x.cat, price: x.price, qty: x.qty || 1, retailer: x.retailer, url: x.url, img: x.img || null,
+      dims: { w: x.dims.w, d: x.dims.d, h: x.dims.h }, status: x.role === 'main' ? 'favorit' : 'idee', counts: x.role === 'main',
+      note: (x.why || '') + ` Preis vom ${x.checkedAt ? x.checkedAt.split('-').reverse().join('.') : '15.11.2026'}, vor dem Kauf prüfen.`, color: x.color || null, pkey: x.key };
+    it.short = KONRAD_SHORT[x.key] || undefined; by[x.key] = it; r.items.push(it);
+  }
+  const P = after.plan; let z = Math.max(0, ...after.placements.map(q => q.z || 0)) + 1;
+  const put = (it, xc, yc, rot = 0, elev = 0) => { if (!it) return; const [x, y] = relFromCm(after, xc, yc); after.placements.push({ id: uid(), itemId: it.id, x, y, w: itemDims(it).w * P.ppc / after.w, rot, flip: false, op: 1, bri: 100, shadow: false, z: z++, elev }); };
+  const kallax = r.items.find(i => i.bestand && /^Würfelregal 5 × 5/.test(i.name));
+  if (kallax && !after.placements.some(q => q.itemId === kallax.id)) put(kallax, P.w - 19.5, 197, 90);
+  put(by.teppich, 215, 250, 90);
+  put(by.schrank, 100, 33);
+  put(by.schreibtisch, 40, 145, -90);
+  put(by.stuhl, 118, 145, 90);
+  put(by.lautsprecher, 16, 88, -90, 75); put(by.lautsprecher, 16, 202, -90, 75);
+  put(by.schreibtischlampe, 16, 122, 0, 75);
+  put(by.nachttisch, 19.5, 257, -90);
+  put(by.bett, 104.5, 371, -90);
+  put(by.lowboard, 283.25, 438, 180);
+  put(by.sitzsack, 265, 345);
+  put(by.lego_regal, P.w - 13, 345, 90, 100); put(by.lego_regal, P.w - 13, 345, 90, 135);
+  after.audio = { ...AUD_DEF(), on: false, mode: 'cinema', system: '2.0', front: 'left', listener: [118, 145], height: 75, ov: { FL: [16, 202], FR: [16, 88] } };
+  r.palette = KONRAD_PALETTE;
+  r.furnish = { style: 'Schwarz / Eiche', wanted: ['Bett', 'Kleiderschrank', 'Schreibtisch', 'Stuhl', 'Sideboard', 'Teppich', 'Leuchte', 'Lautsprecher'] };
 }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
@@ -1194,6 +1253,7 @@ function openRoom(room) {
         <input id="room-name" class="name-input" value="${esc(room.name)}" aria-label="Name des Raums" maxlength="60">
       </div>
       <div class="ed-mini" id="ed-mini"></div>
+      <button class="btn" data-act="moodboard">${I('image')} <span class="hide-sm">Moodboard</span></button>
       <button class="btn" data-act="shopping-list">${I('cart')} Einkaufsliste</button>
     </div>
     <div class="ed-grid">
@@ -1254,7 +1314,7 @@ function renderToolbar() {
       : `<button class="btn sm ghost" data-act="measure" aria-pressed="${!!S.measure}" ${ph ? '' : 'disabled'} title="Maßstab aus einer bekannten Strecke setzen">${I('ruler')} Maßstab</button>`}
     ${ph && !ph.plan ? `<button class="btn sm ghost" data-act="roof-find" title="Lange diagonale Kanten als mögliche Dachschräge vorschlagen">${I('roof')} <span class="hide-sm">Dachkanten</span></button>` : ''}
     <button class="btn sm ghost" data-act="toggle-furn" aria-pressed="${S.hideFurn}" ${ph && !(ph.plan && S.v3d) ? '' : 'disabled'} title="Raum ohne Möbel zeigen">${I(S.hideFurn ? 'eyeoff' : 'eye')} ${ph && ph.plan ? 'Leer' : 'Vorher'}</button>
-    <span class="tip">${ph ? (ph.plan && S.v3d ? 'Ziehen dreht die Ansicht · Mausrad zoomt · Antippen wählt ein Möbel' : ph.plan ? 'Ziehen verschiebt · oberer Punkt dreht · Taste R dreht um 90°' : 'Ziehen verschiebt · Ecken skalieren · oberer Punkt dreht') : ''}</span>
+    <span class="tip">${ph ? (ph.plan && S.v3d ? 'Möbel ziehen verschiebt · freie Fläche ziehen dreht · Mausrad zoomt' : ph.plan ? 'Ziehen verschiebt · oberer Punkt dreht · Taste R dreht um 90°' : 'Ziehen verschiebt · Ecken skalieren · oberer Punkt dreht') : ''}</span>
     <button class="btn sm" data-act="export-png" ${ph ? '' : 'disabled'}>${I('download')} <span class="hide-sm">Bild speichern</span></button>`;
 }
 function isPlan(ph = activePhoto()) { return !!(ph && ph.plan); }
@@ -1263,7 +1323,7 @@ function effW(p, ph = activePhoto()) {
   return p.w;
 }
 function plCm(p, ph) { return [p.x * ph.w / ph.plan.ppc - plOX(ph.plan), p.y * ph.h / ph.plan.ppc - plOY(ph.plan)]; }
-const shortName = it => (it.name || it.cat).split(/[,(]/)[0].trim().slice(0, 28);
+const shortName = it => it.short || (it.name || it.cat).split(/[,(]/)[0].trim().slice(0, 28);
 function plFilter(p) { if (isPlan()) return 'none'; return `brightness(${(p.bri ?? 100) / 100})` + (p.shadow !== false ? ' drop-shadow(0 6px 7px rgba(0,0,0,.28))' : ''); }
 function plStyle(p) { return `left:${p.x * 100}%;top:${p.y * 100}%;width:${effW(p) * 100}%;transform:translate(-50%,-50%) rotate(${p.rot || 0}deg);z-index:${p.z || 1}`; }
 function imgStyle(p) { const t = (p.flip ? 'scaleX(-1) ' : '') + (!isPlan() && p.skew ? `skewX(${p.skew}deg) ` : '') + (!isPlan() && (p.sy ?? 100) !== 100 ? `scaleY(${p.sy / 100})` : ''); return `opacity:${p.op ?? 1};filter:${plFilter(p)};transform:${t || 'none'};transform-origin:50% 100%`; }
@@ -1348,7 +1408,7 @@ function renderInspector() {
     const sl = ph.plan.slope && ph.plan.slope.side !== 'none';
     if (!p || !it) {
       if (ph.audio && ph.audio.on && !S.v3d) { el.innerHTML = audioPanel(ph); return; }
-      el.innerHTML = `<div class="insp-empty"><span class="grow"><strong>${S.v3d ? '3D-Ansicht:' : ph.plan.scan ? 'Hausplan im Maßstab:' : 'Grundriss im Maßstab:'}</strong> ${S.v3d ? 'Ziehen dreht die Kamera, Mausrad oder zwei Finger zoomen. Möbel antippen, um Drehung und Höhe über dem Boden einzustellen; verschieben geht im 2D-Plan.' : 'Möbel erscheinen in ihren echten Maßen (Breite × Tiefe). Zum Drehen den oberen Punkt ziehen oder R drücken.'}${sl ? ' Blau getönt ist die Dachschräge; zu hohe Möbel werden rot markiert.' : ''}</span>
+      el.innerHTML = `<div class="insp-empty"><span class="grow"><strong>${S.v3d ? '3D-Ansicht:' : ph.plan.scan ? 'Hausplan im Maßstab:' : 'Grundriss im Maßstab:'}</strong> ${S.v3d ? 'Möbel direkt anfassen und auf dem Boden verschieben, freie Fläche ziehen dreht die Kamera, Mausrad oder zwei Finger zoomen. Antippen zeigt Drehung und Höhe über dem Boden.' : 'Möbel erscheinen in ihren echten Maßen (Breite × Tiefe). Zum Drehen den oberen Punkt ziehen oder R drücken.'}${sl ? ' Blau getönt ist die Dachschräge; zu hohe Möbel werden rot markiert.' : ''}</span>
         <button class="btn sm" data-act="edit-plan">${I('ruler')} Grundriss bearbeiten</button></div>`;
       return;
     }
@@ -1447,6 +1507,7 @@ function sideAuswahl() {
           <p class="it-price">${i.price == null ? '<span class="open">Preis offen</span>' : ((i.qty || 1) > 1 ? `${i.qty} × ${eur(i.price)} = <strong>${eur(i.price * i.qty)}</strong>` : `<strong>${eur(i.price)}</strong>`)}</p>
           <div class="it-actions">
             <button class="btn sm ${n ? '' : 'primary'}" data-act="place" data-id="${i.id}" ${ph ? '' : 'disabled title="Zuerst ein Raumfoto hinzufügen"'}>${n ? `${I('check')} Im Foto${n > 1 ? ' ×' + n : ''}` : `${I('plus')} Ins Foto`}</button>
+            <button class="btn sm ghost" data-act="to3d" data-id="${i.id}" title="Im 3D-Raum zeigen und bewegen">${I('cube')}<span class="hide-sm"> 3D</span></button>
             <button class="icon-btn sm" data-act="edit-item" data-id="${i.id}" aria-label="Bearbeiten" title="Bearbeiten">${I('edit')}</button>
             ${i.url ? `<a class="icon-btn sm" href="${esc(i.url)}" target="_blank" rel="noopener" aria-label="Im Shop öffnen" title="Im Shop öffnen">${I('ext')}</a>` : ''}
             <button class="btn sm ghost" data-act="toggle-count" data-id="${i.id}" title="${alt ? 'Wieder ins Budget aufnehmen' : 'Als Alternative führen, zählt nicht ins Budget'}">${alt ? 'Ins Budget' : 'Als Alternative'}</button>
@@ -1470,16 +1531,28 @@ function sideAuswahl() {
   }
   return html;
 }
+const STYLES = ['Modern', 'Skandinavisch', 'Industrial', 'Minimalistisch', 'Landhaus', 'Boho', 'Klassisch', 'Schwarz / Eiche'];
+const WANT = [['Kleiderschrank', 'Kleiderschrank', 'Kleiderschrank'], ['Kommode', 'Kommode', 'Kommode'], ['Regal', 'Regal', 'Regal'], ['Bett', 'Bett', 'Bett'], ['Nachttisch', 'Kommode', 'Nachttisch'], ['Schreibtisch', 'Tisch', 'Schreibtisch'], ['Stuhl', 'Stuhl', 'Schreibtischstuhl'], ['Sofa', 'Sofa', 'Sofa'], ['Couchtisch', 'Couchtisch', 'Couchtisch'], ['TV-Schrank', 'Kommode', 'TV-Schrank'], ['Sideboard', 'Kommode', 'Sideboard'], ['Teppich', 'Teppich', 'Teppich'], ['Leuchte', 'Beleuchtung', 'Lampe'], ['Lautsprecher', 'Audio', 'Lautsprecher']];
+const furnishOf = (r = S.room) => r && r.furnish || { style: '', wanted: [] };
+const styleWord = () => furnishOf().style.replace(/\s*\/\s*/g, ' ');
+function furnishHTML() {
+  const f = furnishOf();
+  return `<section class="furnish"><h4>Welche Einrichtung möchtest du?</h4>
+    <label class="field"><span>Möbelstil</span><select class="input" id="fu-style"><option value="">Alle Stile / noch offen</option>${STYLES.map(x => `<option ${x === f.style ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>
+    <div class="field"><span>Gewünschte Möbelarten</span><div class="chips">${WANT.map(([k]) => `<button type="button" class="chip" data-act="fu-want" data-k="${esc(k)}" aria-pressed="${f.wanted.includes(k)}">${esc(k)}</button>`).join('')}</div></div>
+    ${f.wanted.length ? `<div class="chips">${f.wanted.map(k => `<button type="button" class="btn sm" data-act="fu-search" data-k="${esc(k)}">${esc(k)} suchen →</button>`).join('')}</div>` : ''}
+    <p class="fine">Der Stil ergänzt die Shop-Suche. Bereits gewählte Möbel bleiben unverändert.</p></section>`;
+}
 function sideFinden() {
   const s = S.search;
-  return `
+  return `${furnishHTML()}
     <label class="field"><span>Kategorie</span><select class="input" id="s-cat">${CATS.map(c => `<option ${c.k === s.cat ? 'selected' : ''}>${esc(c.k)}</option>`).join('')}</select></label>
     <label class="field"><span>Stil, Farbe oder Material</span><input class="input" id="s-term" value="${esc(s.term)}" placeholder="z. B. Eiche schwarz, Bouclé, skandinavisch"></label>
     <div class="row2">
       <label class="field"><span>Preis ab</span><div class="money"><input class="input" id="s-min" inputmode="decimal" value="${esc(s.min)}" placeholder="offen"><em>€</em></div></label>
       <label class="field"><span>Preis bis</span><div class="money"><input class="input" id="s-max" inputmode="decimal" value="${esc(s.max)}" placeholder="offen"><em>€</em></div></label>
     </div>
-    <p class="hint">Die Suche öffnet sich direkt im Shop. Gefällt dir etwas, kopiere den Produktlink und füge ihn unten ein.</p>
+    <p class="hint">${s.kw || styleWord() ? `Suche: <strong>${esc([s.kw || catOf(s.cat).q, styleWord(), s.term].filter(Boolean).join(' '))}</strong>. ` : ''}Die Suche öffnet sich direkt im Shop. Gefällt dir etwas, kopiere den Produktlink und füge ihn unten ein.</p>
     <div class="shops" id="shop-links">${shopLinksHTML()}</div>
     <div class="paste-box">
       <label class="lbl" for="s-url">${'Produktlink einfügen'}</label>
@@ -1488,7 +1561,7 @@ function sideFinden() {
     </div>`;
 }
 function shopLinksHTML() {
-  return shopLinks(S.search).map(l => `<a class="shop" href="${esc(l.u)}" target="_blank" rel="noopener"><strong>${esc(l.n)} ${I('ext')}</strong><span class="${l.used ? 'tagline' : ''}">${esc(l.d)}</span></a>`).join('');
+  return shopLinks({ ...S.search, style: S.room ? styleWord() : '' }).map(l => `<a class="shop" href="${esc(l.u)}" target="_blank" rel="noopener"><strong>${esc(l.n)} ${I('ext')}</strong><span class="${l.used ? 'tagline' : ''}">${esc(l.d)}</span></a>`).join('');
 }
 
 /* ---------- Budget ---------- */
@@ -1898,7 +1971,7 @@ async function render3D() {
   disposeV3();
   const ph = activePhoto();
   stageEl.innerHTML = `<div class="v3-wrap"><canvas class="v3" id="v3" aria-label="3D-Ansicht des Raums. Ziehen dreht, Mausrad zoomt, Antippen wählt ein Möbel."></canvas>
-    <div class="v3-legend"><span><i style="background:#2f7a48"></i>passt</span><span><i style="background:#c0392b"></i>Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>Standardmaße, bitte messen</span><span class="hide-sm">· ziehen dreht, Mausrad zoomt</span></div>
+    <div class="v3-legend"><span><i style="background:#2f7a48"></i>passt</span><span><i style="background:#c0392b"></i>Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>Standardmaße, bitte messen</span><span class="hide-sm">· Möbel ziehen verschiebt, freie Fläche ziehen dreht, Mausrad zoomt</span></div>
     <p class="v3-msg" id="v3-msg">3D-Ansicht wird geladen …</p></div>`;
   let T;
   try { T = await loadThree(); } catch { const m = $('#v3-msg'); if (m) m.textContent = 'Die 3D-Ansicht braucht eine Internetverbindung, um Three.js zu laden. Der Grundriss funktioniert auch ohne.'; return; }
@@ -1968,8 +2041,10 @@ async function render3D() {
       const it = getItem(p.itemId); if (!it) continue;
       const dm = itemDims(it), h = Math.max(1, dm.h), [x, y] = plCm(p, ph), col = it.color || catOf(it.cat).col || '#b98d5e';
       const side = new T.MeshStandardMaterial({ color: col, roughness: .8 });
-      const top = new T.MeshStandardMaterial({ map: loadTex('it:' + it.id + ':' + dm.w + 'x' + dm.d + ':' + (it.color || ''), planSrc(it)), roughness: .8 });
+      const flatImg = isFlat(it) && it.img;
+      const top = new T.MeshStandardMaterial({ map: loadTex('it:' + it.id + ':' + dm.w + 'x' + dm.d + ':' + (it.color || '') + (flatImg ? ':img' : ''), flatImg ? it.img : planSrc(it)), roughness: .8 });
       const mats = [side, side.clone(), top, side.clone(), side.clone(), side.clone()];
+      if (it.img && !isFlat(it) && h >= 8) frontTexSrc(it).then(src => { if (!src || !V3) return; mats[4].map = loadTex('front:' + it.id + ':' + dm.w + 'x' + dm.h + ':' + it.img.length, src); mats[4].color.set('#ffffff'); mats[4].needsUpdate = true; V3.draw(); });
       if (S.sel === p.id) mats.forEach(m => { m.emissive = new T.Color('#2c5a4b'); m.emissiveIntensity = .45; });
       const g = new T.BoxGeometry(dm.w, h, dm.d), mesh = new T.Mesh(g, mats);
       mesh.position.set(x, (p.elev || 0) + h / 2, y); mesh.rotation.y = -(p.rot || 0) * Math.PI / 180; mesh.userData.pid = p.id;
@@ -1995,27 +2070,38 @@ async function render3D() {
   };
   const resize = () => { const r = cv.parentElement.getBoundingClientRect(); if (!r.width) return; renderer.setSize(r.width, r.height, false); cam.aspect = r.width / r.height; cam.updateProjectionMatrix(); draw(); };
   const ro = new ResizeObserver(resize); ro.observe(cv.parentElement);
-  // Steuerung: ziehen dreht, Mausrad/zwei Finger zoomen, Antippen wählt
-  const ptr = new Map(); let moved = false, pinch = 0;
-  cv.addEventListener('pointerdown', e => { try { cv.setPointerCapture(e.pointerId); } catch {} ptr.set(e.pointerId, [e.clientX, e.clientY]); moved = false; if (ptr.size === 2) { const [a, b] = [...ptr.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+  // Steuerung: Möbel ziehen verschiebt auf dem Boden, freie Fläche ziehen dreht, Mausrad/zwei Finger zoomen, Antippen wählt
+  const ptr = new Map(); let moved = false, pinch = 0, dragO = null;
+  const rayAt = e => { const r = cv.getBoundingClientRect(), ray = new T.Raycaster(); ray.setFromCamera(new T.Vector2((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), cam); return ray; };
+  const hitMesh = e => { let o = rayAt(e).intersectObjects(pick, false)[0]; o = o && o.object; while (o && !o.userData.pid) o = o.parent; return o; };
+  const floor0 = new T.Plane(new T.Vector3(0, 1, 0), 0), floorAt = e => rayAt(e).ray.intersectPlane(floor0, new T.Vector3());
+  cv.addEventListener('pointerdown', e => {
+    try { cv.setPointerCapture(e.pointerId); } catch {}
+    ptr.set(e.pointerId, [e.clientX, e.clientY]); moved = false;
+    if (ptr.size === 2) { dragO = null; const [a, b] = [...ptr.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); return; }
+    const m = hitMesh(e), f = m && floorAt(e);
+    dragO = m && f ? { m, pid: m.userData.pid, off: [m.position.x - f.x, m.position.z - f.z], snap: false } : null;
+  });
   cv.addEventListener('pointermove', e => {
-    if (!ptr.has(e.pointerId)) return;
+    if (!ptr.has(e.pointerId)) { cv.style.cursor = hitMesh(e) ? 'move' : 'grab'; return; }
     const prev = ptr.get(e.pointerId), dx = e.clientX - prev[0], dy = e.clientY - prev[1];
     ptr.set(e.pointerId, [e.clientX, e.clientY]);
     if (Math.abs(dx) + Math.abs(dy) > 1) moved = true;
     if (ptr.size === 2) { const [a, b] = [...ptr.values()], dd = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch) C.R = clamp(C.R * pinch / dd, 150, 8000); pinch = dd; }
-    else { C.th -= dx * .008; C.ph = clamp(C.ph - dy * .008, .12, 1.5); }
+    else if (dragO && moved) {
+      const f = floorAt(e);
+      if (f) { if (!dragO.snap) { snapshot(); dragO.snap = true; } dragO.m.position.x = f.x + dragO.off[0]; dragO.m.position.z = f.z + dragO.off[1]; }
+    } else if (!dragO) { C.th -= dx * .008; C.ph = clamp(C.ph - dy * .008, .12, 1.5); }
     draw();
   });
   const up = e => {
-    const wasOne = ptr.size === 1; ptr.delete(e.pointerId); pinch = 0;
-    if (wasOne && !moved && e.type === 'pointerup') {
-      const r = cv.getBoundingClientRect(), ray = new T.Raycaster();
-      ray.setFromCamera(new T.Vector2((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), cam);
-      let hit = ray.intersectObjects(pick, false)[0], o = hit && hit.object;
-      while (o && !o.userData.pid) o = o.parent;
-      S.sel = o ? o.userData.pid : null; renderInspector(); update3D();
+    const one = ptr.size === 1; ptr.delete(e.pointerId); pinch = 0;
+    const d = dragO; dragO = null;
+    if (d && d.snap) {
+      if (e.type === 'pointerup') { const p = ph.placements.find(q => q.id === d.pid); if (p) [p.x, p.y] = relFromCm(ph, d.m.position.x, d.m.position.z); touch(); }
+      S.sel = d.pid; renderInspector(); update3D(); return;
     }
+    if (one && !moved && e.type === 'pointerup') { const o = hitMesh(e); S.sel = o ? o.userData.pid : null; renderInspector(); update3D(); }
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('wheel', e => { e.preventDefault(); C.R = clamp(C.R * Math.exp(e.deltaY * .001), 150, 8000); draw(); }, { passive: false });
@@ -2240,6 +2326,70 @@ function cutoutEditor(src) {
     $('#ce-ok').onclick = () => { done = true; const out = cv.toDataURL('image/png'); closeDlg(dlg2); res(out); };
     dlg2.addEventListener('close', () => { dlg2.classList.add('narrow'); if (!done) res(null); }, { once: true });
   });
+}
+
+/* ================= Moodboard: ausgewählte Produkte als Bild ================= */
+function moodItems(r = S.room) { return r.items.filter(i => !i.bestand && i.counts !== false); }
+function moodboardDialog() {
+  const r = S.room, items = moodItems(r), pal = r.palette || [], c = calc(r);
+  const card = i => `<a class="mb-card" ${i.url ? `href="${esc(i.url)}" target="_blank" rel="noopener"` : ''}>
+      <span class="mb-img"><img src="${itemSrc(i)}" alt="" loading="lazy"></span>
+      <span class="mb-t"><strong>${esc(i.name)}</strong><span>${esc(i.retailer || 'Händler offen')}${(i.qty || 1) > 1 ? ' · ' + i.qty + '×' : ''}</span><b>${i.price == null ? 'Preis offen' : eur((i.price || 0) * (i.qty || 1))}</b></span></a>`;
+  openDlg(dlg, `<div class="dlg-h"><div><p class="eyebrow">${esc(r.name)}${r.furnish && r.furnish.style ? ' · ' + esc(r.furnish.style) : ''}</p><h2>Moodboard</h2></div><button type="button" class="icon-btn flat" data-close aria-label="Schließen">${I('x')}</button></div>
+    <div class="dlg-b">
+      ${pal.length ? `<div class="mb-pal">${pal.map(p => `<span><i style="background:${esc(p.hex)}"></i>${esc(p.name)}</span>`).join('')}</div>` : ''}
+      ${items.length ? `<div class="mb-grid">${items.map(card).join('')}</div>` : '<p class="muted">Noch keine Möbel im Budget.</p>'}
+      <div class="list-total"><span class="muted">${items.length} Produkte${c.shipOpen ? ' · Versand noch offen' : ' inkl. Versand'}${c.missing ? ` · ${c.missing} Preis${c.missing > 1 ? 'e' : ''} offen` : ''}</span><span class="big" style="font-size:26px">${eur(c.total)}</span></div>
+      <p class="fine">Preise und Verfügbarkeit vom Recherchetag – vor dem Kauf im Shop prüfen. Produktbilder © der jeweiligen Händler, nur zur privaten Planung.</p>
+    </div>
+    <div class="dlg-f"><span class="grow"></span><button class="btn" data-close>Schließen</button>${items.length ? `<button class="btn primary" id="mb-save">${I('download')} Als Bild speichern</button>` : ''}</div>`);
+  dlg.querySelector('.dlg-in').classList.add('wide');
+  $('#mb-save') && ($('#mb-save').onclick = () => exportMoodboard());
+}
+async function exportMoodboard() {
+  const r = S.room, items = moodItems(r), pal = r.palette || [], c = calc(r);
+  const COLS = 4, CW = 420, IH = 330, TH = 118, G = 22, PAD = 48, HEAD = 150 + (pal.length ? 64 : 0), rows = Math.ceil(items.length / COLS);
+  const cv = document.createElement('canvas'); cv.width = PAD * 2 + COLS * CW + (COLS - 1) * G; cv.height = HEAD + rows * (IH + TH + G) + 90;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#f3f2ec'; g.fillRect(0, 0, cv.width, cv.height);
+  g.fillStyle = '#18261f'; g.font = '600 54px Fraunces, Georgia, serif'; g.fillText(r.name + ' · Moodboard', PAD, 92);
+  g.fillStyle = '#56655d'; g.font = '500 24px "Instrument Sans", system-ui, sans-serif';
+  g.fillText(`${r.furnish && r.furnish.style ? r.furnish.style + ' · ' : ''}${items.length} Produkte · gesamt ${eur(c.total)}`, PAD, 130);
+  let px = PAD;
+  for (const p of pal) { g.fillStyle = p.hex; g.beginPath(); g.arc(px + 18, HEAD - 50, 18, 0, 7); g.fill(); g.strokeStyle = 'rgba(0,0,0,.15)'; g.stroke(); g.fillStyle = '#18261f'; g.font = '500 20px "Instrument Sans", system-ui, sans-serif'; g.fillText(p.name, px + 46, HEAD - 43); px += 70 + g.measureText(p.name).width; }
+  const fit = (t, w) => { if (g.measureText(t).width <= w) return t; while (t.length > 3 && g.measureText(t + '…').width > w) t = t.slice(0, -1); return t + '…'; };
+  for (let k = 0; k < items.length; k++) {
+    const it = items[k], x = PAD + (k % COLS) * (CW + G), y = HEAD + Math.floor(k / COLS) * (IH + TH + G);
+    g.fillStyle = '#ffffff'; g.fillRect(x, y, CW, IH + TH);
+    try {
+      const im = await loadImg(itemSrc(it)), s = Math.min((CW - 40) / im.naturalWidth, (IH - 40) / im.naturalHeight);
+      g.drawImage(im, x + (CW - im.naturalWidth * s) / 2, y + (IH - im.naturalHeight * s) / 2, im.naturalWidth * s, im.naturalHeight * s);
+    } catch {}
+    g.fillStyle = '#e6e9e4'; g.fillRect(x, y + IH, CW, 1);
+    g.fillStyle = '#18261f'; g.font = '600 21px "Instrument Sans", system-ui, sans-serif'; g.fillText(fit(it.name, CW - 32), x + 16, y + IH + 36);
+    g.fillStyle = '#56655d'; g.font = '500 18px "Instrument Sans", system-ui, sans-serif'; g.fillText(fit(it.retailer || 'Händler offen', CW - 32), x + 16, y + IH + 64);
+    g.fillStyle = '#2c5a4b'; g.font = '600 22px "Instrument Sans", system-ui, sans-serif'; g.fillText(it.price == null ? 'Preis offen' : eur((it.price || 0) * (it.qty || 1)), x + 16, y + IH + 98);
+  }
+  g.fillStyle = '#7d8a83'; g.font = '500 17px "Instrument Sans", system-ui, sans-serif';
+  g.fillText('Preise vom Recherchetag, vor dem Kauf prüfen · Raumplaner Studio', PAD, cv.height - 36);
+  const blob = await new Promise(res => cv.toBlob(res, 'image/jpeg', .9));
+  await saveFile(`${slug(r.name)}-moodboard.jpg`, blob, 'image/jpeg');
+}
+/* Produktfoto als Front-Textur im Seitenverhältnis des Maßkörpers */
+const frontCache = new Map();
+function frontTexSrc(it) {
+  if (!it.img) return Promise.resolve(null);
+  const dm = itemDims(it), key = it.id + '|' + dm.w + 'x' + dm.h + '|' + it.img.length;
+  if (frontCache.has(key)) return frontCache.get(key);
+  const pr = loadImg(it.img).then(im => {
+    const H = 512, W = Math.max(64, Math.round(H * dm.w / Math.max(1, dm.h))), c = document.createElement('canvas'); c.width = Math.min(W, 2048); c.height = H;
+    const g = c.getContext('2d'); g.fillStyle = it.color || catOf(it.cat).col || '#cccccc'; g.fillRect(0, 0, c.width, H);
+    const s = Math.min(c.width / im.naturalWidth, H / im.naturalHeight);
+    g.drawImage(im, (c.width - im.naturalWidth * s) / 2, H - im.naturalHeight * s, im.naturalWidth * s, im.naturalHeight * s);
+    return c.toDataURL('image/jpeg', .85);
+  }).catch(() => null);
+  frontCache.set(key, pr);
+  return pr;
 }
 
 /* ================= Vorher / Nachher ================= */
@@ -2737,6 +2887,18 @@ const ACT = {
   'aud-count'(t) { audSet(a => { a.count = +t.dataset.n; }, true); },
   'aud-sys'(t) { audSet(a => { a.system = t.dataset.n; }, true); },
   'aud-reset'() { audSet(a => { a.listener = null; }, true); },
+  'to3d'(t) {
+    const r = S.room, ap = activePhoto();
+    const ph = ap && ap.plan && !ap.plan.before ? ap : r.photos.find(p => p.plan && !p.plan.before) || r.photos.find(p => p.plan);
+    if (!ph) { toast('Für die 3D-Ansicht zuerst einen Grundriss oder Hausplan anlegen.'); planDialog(null); return; }
+    r.activePhoto = ph.id; S.cmp = false;
+    let p = ph.placements.find(q => q.itemId === t.dataset.id);
+    if (!p) { placeItem(t.dataset.id); p = getPl(S.sel); }
+    S.v3d = true; S.sel = p ? p.id : null; touch(); renderEditorAll();
+    stageEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  },
+  'fu-want'(t) { const r = S.room, f = furnishOf(r), k = t.dataset.k; r.furnish = { ...f, wanted: f.wanted.includes(k) ? f.wanted.filter(x => x !== k) : [...f.wanted, k] }; touch(); renderSide(); },
+  'fu-search'(t) { const w = WANT.find(x => x[0] === t.dataset.k); if (!w) return; S.search.cat = w[1]; S.search.kw = w[2]; LS.set('search', S.search); renderSide(); },
   'roof-find'() { const ph = activePhoto(); if (ph && !ph.plan) roofDialog(ph.src); },
   'photo-tab'(t, e) { if (e.target.closest('[data-act="photo-del"]')) return; S.room.activePhoto = t.dataset.id; S.sel = null; S.measure = null; S.cmp = false; touch(); renderEditorAll(); },
   'cmp-tab'() { S.cmp = true; S.sel = null; S.measure = null; renderEditorAll(); },
@@ -2781,6 +2943,7 @@ const ACT = {
     itemDialog(null, { url: info.url, cat: info.cat || S.search.cat });
   },
   'shopping-list'() { shoppingList(); },
+  moodboard() { moodboardDialog(); },
   ...Object.fromEntries(Object.entries(PL_ACTS).map(([k, f]) => [k, f])),
 };
 document.addEventListener('click', e => {
@@ -2858,7 +3021,8 @@ document.addEventListener('change', async e => {
   if (!S.room) return;
   const r = S.room;
   if (t.id === 'room-name') { r.name = t.value.trim() || r.type; t.value = r.name; document.title = r.name + ' · Raumplaner Studio'; touch(); return; }
-  if (t.id === 's-cat') { S.search.cat = t.value; LS.set('search', S.search); $('#shop-links').innerHTML = shopLinksHTML(); return; }
+  if (t.id === 'fu-style') { r.furnish = { ...furnishOf(r), style: t.value }; touch(); renderSide(); return; }
+  if (t.id === 's-cat') { S.search.cat = t.value; S.search.kw = ''; LS.set('search', S.search); $('#shop-links').innerHTML = shopLinksHTML(); return; }
   if (t.id === 'b-total') { r.budget = num(t.value); touch(); renderBudget(); renderMini(); return; }
   if (t.id === 'b-addcat' && t.value) { r.catBudgets[t.value] = null; touch(); renderBudget(); setTimeout(() => $(`[data-catmax="${CSS.escape(t.value)}"]`)?.focus(), 0); return; }
   if (t.dataset.catmax !== undefined) { const v = num(t.value); if (v == null && !r.items.some(i => i.cat === t.dataset.catmax)) delete r.catBudgets[t.dataset.catmax]; else r.catBudgets[t.dataset.catmax] = v; touch(); renderBudget(); return; }
@@ -2900,6 +3064,11 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
     if (r.seed === 'konrad' && !r.beforeV1) {
       try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {}
       addKonradBefore(r);
+      S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && !r.productsV1 && KONRAD_PRODUCTS.length) {
+      try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {}
+      addKonradProducts(r);
       S.storage && await DB.put(r);
     }
   }
