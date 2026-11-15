@@ -1,0 +1,12 @@
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const code=html.slice(html.indexOf('const PRODUCT_IDEAS ='),html.indexOf('function sideFinden()'));
+const cost=html.slice(html.indexOf('function calc(r)'),html.indexOf('function catColors(r)'));
+const ctx=vm.createContext({});vm.runInContext(cost+code+'\nglobalThis.recommend=concreteIdeas;globalThis.products=PRODUCT_IDEAS;',ctx);
+const room=()=>({budget:400,catBudgets:{},shipping:{},items:[]});
+test('matches concrete models to style and category',()=>{const g=ctx.recommend(room(),{style:'Industrial',wanted:['Tisch','Kleiderschrank']},null,null);assert.equal(g[0].products[0].id,'fjallbo-desk');assert.equal(g[1].products.length,0);});
+test('uses euro limits, remaining budget, category cap, excludes Bestand',()=>{const r=room();r.catBudgets.Regal=90;assert.equal(ctx.recommend(r,{style:'Boho',wanted:['Regal']},null,null)[0].products.length,0);r.catBudgets.Regal=150;r.items=[{cat:'Regal',price:75,qty:1,bestand:true}];assert.equal(ctx.recommend(r,{style:'Boho',wanted:['Regal']},80,110)[0].products[0].id,'ivar');r.items[0].bestand=false;assert.equal(ctx.recommend(r,{style:'Boho',wanted:['Regal']},80,110)[0].products.length,0);assert.equal(ctx.recommend(r,{style:'',wanted:['Regal']},200,100).length,0);r.items=[];r.budget=50;assert.equal(ctx.recommend(r,{style:'Boho',wanted:['Regal']},null,null)[0].products.length,0);});
+test('all suggestions are named model searches and no fake measured dimensions',()=>{assert.equal(ctx.products.length,25);for(const p of ctx.products){assert.equal(new URL(p.url).hostname,'www.ikea.com');assert.equal(new URL(p.url).searchParams.get('q'),p.name);assert.equal(p.dims,undefined);}});

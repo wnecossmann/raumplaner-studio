@@ -20,3 +20,18 @@ Möbel ausprobieren, bevor man sie kauft: Raumfoto hochladen oder einen maßstä
 ## Nutzung
 
 `index.html` im Browser öffnen – keine Installation nötig. Alle Räume werden nur lokal im Browser gespeichert (IndexedDB).
+
+## Konkrete Möbelvorschläge
+
+Im Bereich **Möbel finden** lassen sich jetzt ein Möbelstil und mehrere gewünschte Möbelarten auswählen. Darunter erscheinen automatisch konkrete Modelle aus einem lokalen Beispielkatalog mit 25 Einträgen: mit der vorhandenen Möbelgrafik, Modellname, Händler, Richtpreis und Modellsuchlink beim Händler. Es werden keine externen APIs benötigt.
+
+Die Vorschläge berücksichtigen „Preis ab/bis“, das bekannte Restbudget und verbleibende Kategorienbudgets. Bestandsmöbel und ausgeschlossene Alternativen belasten das Budget weiterhin nicht. Stil und gewünschte Möbelarten werden pro Raum gespeichert und mit einer Sicherung exportiert. Der Stil ergänzt auch die vorhandenen Shop-Suchlinks.
+
+**Vorschlag prüfen und übernehmen** öffnet das bestehende Möbelformular. Der Modellname und Händlerlink sind vorbelegt; tatsächlicher Preis und bestätigte Maße werden bewusst selbst eingetragen. Richtpreise sind keine Live-Angebote, Beispielgrößen keine bestätigten Außenmaße. Die Links führen zur Suche des benannten Modells, nicht zu einer live geprüften verfügbaren Variante. Mehrere Vorschläge sind Alternativen, kein gemeinsam budgetgeprüftes Set. Für nicht im Katalog vertretene Kombinationen bleibt die normale Shop-Suche verfügbar.
+
+### Entwicklung prüfen
+
+Die App bleibt eine einzelne HTML-Datei ohne Installation. Optionale Entwicklerprüfungen:
+
+- `node --test tests/recommendations.test.mjs` prüft Stil, Kategorie, Preisgrenzen, Budget und Modelllinks ohne zusätzliche Pakete.
+- `node tests/browser-smoke.mjs` prüft Auswahl, Filter, Übernahme, Speicherung und mobile Ansicht mit installiertem Playwright/Chromium. Bei Bedarf lassen sich `PLAYWRIGHT_MODULE` und `CHROMIUM_PATH` für vorhandene Installationen setzen.
