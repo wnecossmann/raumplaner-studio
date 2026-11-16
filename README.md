@@ -55,3 +55,7 @@ Prüfungen: `node --test tests/recommendations.test.mjs` prüft Stile, Händlerv
 ### Zusätzliche Komplettvorschläge
 
 18 neue Kombinationen für Konrads Zimmer: Japandi, Boho, Mid-Century, Minimalistisch, Vintage und Soft Modern, jeweils Budget, Mittel und Premium. Die Kombinationen verwenden reale Produkte aus dem bestehenden Katalog mit unveränderten Preisen und Maßen. Sie sind stilistische Annäherungen. Die gesamte Aufstellung muss nach dem Übernehmen mit der Passprüfung geprüft werden; es gibt keine pauschale Passgarantie. Karten zeigen Überschreitungen des Raumbudgets ohne Versand. Prüfung: `node tests/sets.test.mjs`.
+
+### HiFi und Kabelplanung
+
+Im Grundriss „Audio“ öffnen: Stereo-Hörplatz, vier verteilte Boxen oder 5.1-Heimkino vorschlagen lassen. Die Stilpalette beeinflusst den HiFi-Möbelentwurf; seine Maße und Preise müssen eingetragen werden. Verstärkername, unabhängige Kanalzahl, X/Y-Position, Anschlusshöhe und Kabelreserve werden pro Plan gespeichert. Kabelwege zeigen den kürzeren Weg entlang des rechteckigen Raumrahmens mit Anschlussstrecken. Höhen und Reserve fließen in die Längenliste ein. Türen, Nischen und Hindernisse werden nicht umgangen. Subwoofer gelten als aktiv und sind nicht in der Passivkabelliste. Kanalzahl ist keine elektrische Kompatibilitätsprüfung. Keine gemessene Schallabdeckung. Test: `node tests/audio-cables.test.mjs`.

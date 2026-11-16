@@ -1879,7 +1879,7 @@ function layoutKonradSet(r, keep = new Set()) {
     else { const h = m.h || 3, sp = Math.max(h + 1, 36), n = Math.min(by.regal.qty || 1, 1 + Math.floor((90 - h) / sp)); for (let i = 0; i < n; i++) put(by.regal, x, y, 90, 62.5 + i * sp); }
   }
   if (roll) put(roll, 330.5, 322.5, 90);
-  if (!(spk && keep.has(spk.id) && placed.has(spk.id))) after.audio = spk ? { ...AUD_DEF(), on: false, mode: 'cinema', system: '2.0', front: 'right', listener: [chairX, cy], height: se, ov: { FL: [sx, cy - off], FR: [sx, cy + off] } } : after.audio;
+  if (!(spk && keep.has(spk.id) && placed.has(spk.id))) after.audio = spk ? { ...AUD_DEF(), amp:after.audio?.amp, cables:after.audio?.cables, on: false, mode: 'cinema', system: '2.0', front: 'right', listener: [chairX, cy], height: se, ov: { FL: [sx, cy - off], FR: [sx, cy + off] } } : after.audio;
 }
 function applyKonradSet(r, id, migrate = false) {
   const set = KONRAD_SETS.find(s => s.id === id), after = r.photos.find(p => p.plan && !p.plan.before);
@@ -2297,6 +2297,36 @@ function fitHTML(p, it, ph = activePhoto()) {
 
 /* ================= Audio-Planung ================= */
 const AUD_DEF = () => ({ on: true, mode: 'coverage', count: 4, system: '5.1', front: 'top', listener: null, spread: 90, show: true, height: 120, ov: {} });
+function ampOf(ph) { return {name:'',channels:2,x:ph.plan.w/2,y:20,height:60,reserve:15,...ph.audio.amp}; }
+function audioCables(ph) {
+  const a=ampOf(ph), W=ph.plan.w,D=ph.plan.d,P=2*(W+D);
+  const project=([x,y])=>{const options=[[x,[x,0]],[W+y,[W,y]],[W+D+W-x,[x,D]],[P-y,[0,y]]];return options.sort((u,v)=>Math.hypot(x-u[1][0],y-u[1][1])-Math.hypot(x-v[1][0],y-v[1][1]))[0];};
+  const from=[clamp(+a.x||0,0,W),clamp(+a.y||0,0,D)], f=project(from);
+  return speakers(ph).spk.filter(sp=>sp.kind!=='sub').map(sp=>{
+    const to=[clamp(sp.x,0,W),clamp(sp.y,0,D)],t=project(to);
+    const forward=(t[0]-f[0]+P)%P, backward=P-forward;
+    const corners=[[0,[0,0]],[W,[W,0]],[W+D,[W,D]],[2*W+D,[0,D]]];
+    const clockwise=forward<=backward, travel=clockwise?forward:backward;
+    const between=corners.map(([v,pt])=>({distance:clockwise?(v-f[0]+P)%P:(f[0]-v+P)%P,pt})).filter(c=>c.distance>0&&c.distance<travel).sort((a,b)=>a.distance-b.distance);
+    const points=[from,f[1],...between.map(c=>c.pt),t[1],to];
+    const horizontal=points.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-points[i][0],p[1]-points[i][1]),0);
+    const metres=(horizontal+Math.max(0,+a.height||0)+Math.max(0,+ph.audio.height||0))/100;
+    return {id:sp.id,label:sp.label,points,metres:Math.ceil(metres*(1+(+a.reserve||0)/100)*10)/10};
+  });
+}
+function audioEquipmentHTML(ph) {
+  const a=ampOf(ph),routes=audioCables(ph),style=furnishOf().style||'Minimalistisch',meta=STYLE_META[style]||STYLE_META.Minimalistisch;
+  return `<h4>Einrichtung mit Audio · ${esc(style)}</h4><p class="fine">${esc(meta.desc)} Für die Anlage: offenes HiFi-Fach mit Herstellerabständen zur Belüftung, stabile Boxenständer und ein Teppich zwischen Lautsprechern und Hörplatz.</p>
+    <div class="chips">${[['listen','Musik-Hörplatz · 2.0'],['room','Musik im ganzen Raum · 4 Boxen'],['movie','Heimkino · 5.1']].map(([id,label])=>`<button class="btn sm" data-act="audio-preset" data-preset="${id}">${label}</button>`).join('')}<button class="btn sm" data-act="audio-rack">HiFi-Möbel im Stil planen</button></div>
+    <p class="fine">Presets ersetzen die Audio-Positionen. Möbel bleiben stehen; Laufwege und freie Stellflächen anschließend prüfen.</p>
+    <h4>Verstärker / HiFi-Anlage</h4><div class="aud-grid">
+    <label class="field"><span>Modell / Bezeichnung</span><input class="input" data-amp="name" value="${esc(a.name)}" placeholder="z. B. vorhandener Stereo-Verstärker"></label>
+    ${[['channels','Unabhängige Verstärkerkanäle',1,16],['x','Position X ab links (cm)',0,ph.plan.w],['y','Position Y ab oben (cm)',0,ph.plan.d],['height','Anschlusshöhe Verstärker (cm)',0,300],['reserve','Kabelreserve (%)',0,100]].map(([k,label,min,max])=>`<label class="field"><span>${label}</span><input class="input" type="number" data-amp="${k}" min="${min}" max="${max}" step="1" value="${a[k]}"></label>`).join('')}</div>
+    <label class="check"><input type="checkbox" id="aud-cables" ${ph.audio.cables?'checked':''}> Kabelwege für Passivboxen zeigen</label>
+    <p class="fine">${routes.length} passive Lautsprecherkanäle geplant · ${a.channels} Verstärkerkanäle angegeben. ${a.channels<routes.length?'Zusätzliche geeignete Verstärkerkanäle erforderlich.':''} A/B-Klemmen sind meist keine zusätzlichen Kanäle. Impedanz und Anschlussmöglichkeiten laut Gerätehandbuch prüfen; keine automatische Freigabe für Parallelschaltung. Ein Subwoofer wird hier als aktiv mit eigener Stromversorgung und Signalkabel behandelt.</p>
+    <h4>Kabelliste · Sockelleistenweg</h4><p class="fine">${routes.map(r=>`${esc(r.label)}: ${r.metres.toFixed(1)} m`).join(' · ')}<br>Gesamt: ${routes.reduce((n,r)=>n+r.metres,0).toFixed(1)} m einschließlich Höhen und ${a.reserve}% Reserve.</p>
+    <p class="fine">Geschätzter kürzester Weg an den Wänden des rechteckigen Raumrahmens. Türen, Nischen, Möbel und Durchbrüche werden nicht umgangen; Verlauf vor Ort anpassen. Leitungsquerschnitt nach Länge, Impedanz und Herstellerangaben wählen. Grüne Flächen sind keine Akustiksimulation.</p>`;
+}
 function audFrame(pl, front) { const v = front === 'top' || front === 'bottom'; return { FW: v ? pl.w : pl.d, FL: v ? pl.d : pl.w }; }
 function audToPlan(pl, front, u, v) { return ({ top: [u, v], bottom: [pl.w - u, pl.d - v], left: [v, pl.d - u], right: [pl.w - v, u] })[front]; }
 function audToFrame(pl, front, x, y) { return ({ top: [x, y], bottom: [pl.w - x, pl.d - y], left: [pl.d - y, x], right: [y, pl.w - x] })[front]; }
@@ -2369,6 +2399,11 @@ function overlaySVG(ph, standalone) {
     }
     if (lis) marks += `<g data-spk="__lis" transform="translate(${X(lis[0])} ${Y(lis[1])})"><circle r="${16 * k}" fill="#f0c24b" stroke="#1d2622" stroke-width="${k * 1.4}"/><circle r="${5 * k}" fill="#1d2622"/>
         <text y="${28 * k + fs * .4}" text-anchor="middle" font-family="Instrument Sans, Segoe UI, sans-serif" font-weight="600" font-size="${fs}" fill="#1d2622" stroke="#fff" stroke-width="${fs * .3}" paint-order="stroke">Hörplatz</text></g>`;
+    if(a.cables){
+      const amp=ampOf(ph);
+      for(const route of audioCables(ph)) marks=`<polyline points="${pts(route.points)}" fill="none" stroke="#b36b24" stroke-width="${2*k}" stroke-dasharray="${5*k} ${3*k}" pointer-events="none"/>`+marks;
+      marks+=`<g pointer-events="none"><rect x="${X(amp.x-15)}" y="${Y(amp.y-10)}" width="${30*k}" height="${20*k}" rx="${3*k}" fill="#b36b24"/><text x="${X(amp.x)}" y="${Y(amp.y-16)}" text-anchor="middle" font-size="${fs}" fill="#744013">HiFi</text></g>`;
+    }
     s += cones + marks;
   }
   return `<svg ${standalone ? `xmlns="http://www.w3.org/2000/svg" width="${ph.w}" height="${ph.h}" ` : ''}viewBox="0 0 ${ph.w} ${ph.h}" preserveAspectRatio="none">${s}</svg>`;
@@ -2390,7 +2425,7 @@ function audioPanel(ph) {
       <label class="field"><span>Montagehöhe (für 3D)</span><div class="money"><input class="input" id="aud-h" inputmode="decimal" value="${fnum(a.height)}"><em>cm</em></div></label>
       <div class="field"><span>&nbsp;</span><div class="inline"><label class="check"><input type="checkbox" id="aud-show" ${a.show ? 'checked' : ''}> Richtung zeigen</label><button class="btn sm ghost" data-act="aud-reset" ${a.ov && Object.keys(a.ov).length || a.listener ? '' : 'disabled'}>Vorschlag zurücksetzen</button></div></div>
     </div>
-    <p class="fine">Grüne Flächen zeigen schematisch die Abstrahlrichtung, keine gemessene Abdeckung. ${cov ? 'Gleichmäßig verteilt, Abstand zur Wand ≈ 35 cm.' : 'Front ±30°, Surround ±' + (a.system === '7.1' ? '100°, hinten ±145°' : '110°') + ' nach Dolby. Subwoofer-Platz und Pegel vor Ort prüfen.'}</p>
+    ${audioEquipmentHTML(ph)}<p class="fine">Grüne Flächen zeigen schematisch die Abstrahlrichtung, keine gemessene Abdeckung. ${cov ? 'Gleichmäßig verteilt, Abstand zur Wand ≈ 35 cm.' : 'Front ±30°, Surround ±' + (a.system === '7.1' ? '100°, hinten ±145°' : '110°') + ' nach Dolby. Subwoofer-Platz und Pegel vor Ort prüfen.'}</p>
   </div>`;
 }
 
@@ -3721,6 +3756,8 @@ const ACT = {
   'v3d'() { S.v3d = !S.v3d; renderToolbar(); renderStage(); renderInspector(); },
   'v3-floor'() { V3OPT.floor = V3OPT.floor === 'plan' ? 'wood' : 'plan'; LS.set('v3opt', V3OPT); render3D(); },
   'v3-box'() { V3OPT.box = !V3OPT.box; LS.set('v3opt', V3OPT); render3D(); },
+  'audio-preset'(t) { audSet(a=>{a.mode=t.dataset.preset==='room'?'coverage':'cinema';a.count=4;a.system=t.dataset.preset==='movie'?'5.1':'2.0';a.listener=null;a.cables=true;},true); },
+  'audio-rack'() { const style=furnishOf().style||'Minimalistisch', meta=STYLE_META[style]||STYLE_META.Minimalistisch; itemDialog(null,{name:'HiFi-Möbel · '+style,cat:'Kommode',color:meta.pal[0],price:null,dims:{},note:meta.desc+' Offenes Gerätefach, Belüftung und Traglast gemäß Gerätehandbuch einplanen. Eigene Außenmaße und Preis ergänzen; Planungsidee, kein konkretes Kaufangebot.'}); },
   'aud-toggle'() { const ph = activePhoto(); if (!ph || !ph.plan) return; snapshot(); if (!ph.audio) ph.audio = AUD_DEF(); else ph.audio.on = !ph.audio.on; S.sel = null; touch(); renderToolbar(); renderStage(); renderInspector(); },
   'aud-mode'(t) { audSet(a => { a.mode = t.dataset.m; }, true); },
   'aud-count'(t) { audSet(a => { a.count = +t.dataset.n; }, true); },
@@ -3885,6 +3922,8 @@ document.addEventListener('change', async e => {
   if (t.id === 'file-insp') { const f = t.files[0]; t.value = ''; if (f && S.room) inspirationFile(f); return; }
   if (t.id === 'file-scan') { const f = t.files[0]; t.value = ''; if (f && S.room) scanFile(f); return; }
   if (t.id === 'pl-elev') { const p = selPl(); if (!p) return; snapshot(); p.elev = clamp(num(t.value) || 0, 0, 400); touch(); refreshSelEl(); refreshWarn(); renderInspector(); return; }
+  if(t.dataset.amp){const ph=activePhoto();if(!ph?.audio)return; const key=t.dataset.amp; const v=key==='name'?t.value.slice(0,150):Number(t.value);if(key!=='name'&&(!Number.isFinite(v)||v<+t.min||v>+t.max)){toast('Bitte einen Wert im angegebenen Bereich eintragen.');renderInspector();return;}audSet(a=>{a.amp={...ampOf(ph),[key]:v};});return;}
+  if(t.id==='aud-cables'){audSet(a=>a.cables=t.checked);return;}
   if (t.id === 'aud-front') { audSet(a => { a.front = t.value; a.listener = null; }, true); return; }
   if (t.id === 'aud-show') { audSet(a => { a.show = t.checked; }); return; }
   if (t.id === 'aud-h') { audSet(a => { a.height = clamp(num(t.value) || 120, 0, 400); }); return; }
