@@ -1215,7 +1215,7 @@ function cornerOffset(pl, w, d) {
   return Math.max(0, Math.min(Math.ceil(win.width / 2) + 1, Math.round(lim - w)));
 }
 const KONRAD_DEFAULT_SET = 'ind_panama_fenster';   // seit 16.11.2026: Schreibtisch am Fenster (vorher ind_panama, davor ind_premium)
-function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = r.bedV1 = r.bedV2 = true; return ok; }
+function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = r.bedV1 = r.bedV2 = r.wallsV1 = true; return ok; }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
 const KONRAD_PHOTOS = [];
@@ -2309,10 +2309,20 @@ function updatePlEl(el, p) {
   if (tag && it) tag.innerHTML = tagText(p, it);
   if (it && isPlan()) refreshWarn();
 }
+/* Wandmagnet für Grundrisse: Ragt die Stellfläche bis zu 40 cm über eine Wand hinaus oder steht sie weniger als 3 cm davor, rückt das Möbel bündig an die Wand.
+   Weiter draußen abgestellte Möbel bleiben, wo sie sind. Liefert true, wenn verschoben wurde. */
+function snapToWalls(p, ph, it = getItem(p.itemId)) {
+  const pl = ph && ph.plan; if (!pl || !it) return false;
+  const cs = plCorners(p, it, ph), xs = cs.map(c => c[0]), ys = cs.map(c => c[1]), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), M = 3, OUT = 40;
+  const dx = x1 - x0 > pl.w ? 0 : x0 < M && x0 >= -OUT ? -x0 : x1 > pl.w - M && x1 <= pl.w + OUT ? pl.w - x1 : 0, dy = y1 - y0 > pl.d ? 0 : y0 < M && y0 >= -OUT ? -y0 : y1 > pl.d - M && y1 <= pl.d + OUT ? pl.d - y1 : 0;
+  if (Math.abs(dx) < .05 && Math.abs(dy) < .05) return false;
+  const [x, y] = plCm(p, ph); [p.x, p.y] = relFromCm(ph, x + dx, y + dy); return true;
+}
 function onStageUp(e) {
   if (!drag) return;
-  const moved = drag.moved; drag = null;
+  const d = drag, moved = d.moved; drag = null;
   try { stageEl.releasePointerCapture(e.pointerId); } catch {}
+  if (moved && d.mode === 'move' && d.p && isPlan() && snapToWalls(d.p, activePhoto())) updatePlEl(d.el, d.p);
   if (moved) { touch(); renderInspector(); }
 }
 function audSet(fn, clearOv) { const ph = activePhoto(); if (!ph || !ph.audio) return; snapshot(); fn(ph.audio); if (clearOv) { ph.audio.ov = {}; } touch(); refreshOverlay(); renderInspector(); }
@@ -3228,7 +3238,7 @@ async function render3D() {
     const one = ptr.size === 1; ptr.delete(e.pointerId); pinch = 0;
     const d = dragO; dragO = null;
     if (d && d.snap) {
-      if (e.type === 'pointerup') { const p = ph.placements.find(q => q.id === d.pid); if (p) [p.x, p.y] = relFromCm(ph, d.m.position.x, d.m.position.z); touch(); }
+      if (e.type === 'pointerup') { const p = ph.placements.find(q => q.id === d.pid); if (p) { [p.x, p.y] = relFromCm(ph, d.m.position.x, d.m.position.z); snapToWalls(p, ph); } touch(); }
       S.sel = d.pid; renderInspector(); update3D(); return;
     }
     if (one && !moved && e.type === 'pointerup') { const o = hitMesh(e); S.sel = o ? o.userData.pid : null; renderInspector(); update3D(); }
@@ -4367,6 +4377,12 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
       }
       r.bedV2 = true;
       S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && !r.wallsV1) {
+      // Einmalig aufräumen: Möbel, die im Grundriss in eine Wand ragen oder knapp davor stehen, rücken bündig an die Wand (z. B. von Hand verschobene Bestandsmöbel im Vorher-Plan)
+      let n = 0; for (const ph of r.photos) if (ph.plan) for (const q of ph.placements) if (snapToWalls(q, ph, r.items.find(i => i.id === q.itemId))) n++;
+      r.wallsV1 = true;
+      if (S.storage) await DB.put(r);
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
       // Ausgerichtete Aufstellung vom 16.11.2026 (Wandbretter mittig, gleiche Fugen): Räume mit PANAMA werden einmalig neu gestellt; gekaufte Möbel bleiben stehen

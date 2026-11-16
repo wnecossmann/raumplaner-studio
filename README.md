@@ -74,6 +74,10 @@ In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, 
 - **Fenster:** Ein Möbel, das höher ist als die Brüstung und dichter als 30 cm vor einem Fenster steht, meldet „Steht vor dem Fenster“. Die Brüstungshöhe ist mit 90 cm angenommen (`WIN_SILL`; je Fenster über `sill` im Grundriss überschreibbar, bisher ohne Eingabefeld). Rollos und Pflanzen sind ausgenommen. Ob ein Fensterflügel aufgeht, wird nicht geprüft.
 - **Bett (Bestand):** laut Angabe ca. 105 × 205 cm statt geschätzt 126 × 206 cm (`KONRAD_BED`). Umstellung bestehender Räume über den Merker `bedV1`: PANAMA-Vorschläge werden neu gestellt, bei den übrigen nur Bett, Nachttisch und Leselampe. `bedV2` holt Räume nach, in denen die Bettmaße schon von Hand geändert waren: Das Bett heißt nach seiner Liegefläche „Bett 100 × 200 (Bestand)“ und rückt bündig in seine Ecke. Liegefläche laut Angabe 100 × 200 cm: In den beiden PANAMA-Vorschlägen steht deshalb die Emma Original in 100 × 200 cm (410,39 €, Stand 16.11.2026; `PANAMA_REV` 4). Die Matratzen der übrigen 30 Vorschläge sind weiterhin 120 × 200 cm und passen nicht; deren Checkliste weist darauf hin.
 
+### Wandmagnet im Grundriss (16.11.2026)
+
+Beim Loslassen eines verschobenen Möbels (2D-Grundriss und 3D) rückt es bündig an die Wand, wenn seine Stellfläche bis zu 40 cm über die Wand hinausragt oder weniger als 3 cm davor steht (`snapToWalls`). Das gilt auch im Vorher-Plan, in dem die Passprüfung nichts meldet. Weiter draußen abgestellte Möbel bleiben liegen. Für Konrads Zimmer räumt der Merker `wallsV1` bestehende Pläne einmalig auf.
+
 ### Standard „Schreibtisch am Fenster“ (16.11.2026)
 
 Standard für Konrads Zimmer ist jetzt `ind_panama_fenster` („Industrial · PANAMA · Schreibtisch am Fenster“, 6.011,08 €). Umstellung (Merker `defaultV4`): Räume, die auf dem bisherigen Standard `ind_panama` stehen, wechseln beim Laden dorthin und werden neu gestellt. Gekaufte Möbel des Vorschlags behalten ihren Status und ziehen mit um, selbst hinzugefügte Möbel bleiben stehen, andere Vorschläge bleiben unberührt. `ind_panama` (ohne Highboard, Schreibtisch an der rechten Wand) bleibt wählbar.
