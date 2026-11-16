@@ -13,10 +13,10 @@ Möbel ausprobieren, bevor man sie kauft: Raumfoto hochladen oder einen maßstä
 - **Hausplan einlesen:** Bild oder PDF (Seite wählen), Raum markieren, Maße eintragen – danach funktionieren Möbel, Prüfung, Audio und 3D auch auf dem eingescannten Plan.
 - **Dachkanten aus Foto:** lange diagonale Kanten im Raumfoto als Vorschlag, Übernahme nur mit gemessenem Kniestock und Tiefe.
 - **Freistellen:** zusätzlich Radierer und Zuschnitt für Produktbilder; im Raumfoto Höhe und Neigung eines Möbels anpassbar.
-- **Einrichtungs-Assistent:** 10 Stile (z. B. Industrial, Skandinavisch, Japandi, Modern & Dunkel) und drei Preisklassen (Budget, Mittel, Premium). Stil und Preisklasse fließen als Suchbegriff und Preisfilter in die Shop-Suche ein.
+- **Einrichtungs-Assistent:** 18 Stile (z. B. Industrial, Skandinavisch, Japandi, Modern & Dunkel) und drei Preisklassen (Budget, Mittel, Premium). Stil und Preisklasse fließen als Suchbegriff und Preisfilter in die Shop-Suche ein.
 - **Lieblingsstück hochladen:** Foto eines Möbels, das gefällt – Farben, Materialien und der passende Stil werden abgeleitet (im Browser per Farbanalyse, in der claude.ai-Version optional durch Claude). Suche, Farben und Vorschläge richten sich danach.
 - **Fertige Vorschläge:** für das Beispiel „Konrads Zimmer“ 12 geprüfte Einrichtungen (4 Stile × 3 Preisklassen) mit echten Produkten, Preisen (Stand 15.11.2026) und Passprüfung. Standard ist „Industrial · Premium“. Die Produktfotos werden direkt von den Servern der Shops geladen (nicht im Repo gespeichert); dabei sieht der jeweilige Shop die Anfrage des Browsers.
-- **28 geprüfte Shops:** IKEA, OTTO, home24, XXXLutz, JYSK, mömax, POCO, ROLLER, porta, Höffner, Möbel Kraft, Segmüller, Westwing, Connox, AmbienteDirect, KARE, Tikamoon, massivum, Car-Möbel, Lampenwelt, benuta, Thomann, MediaMarkt, Amazon, moebel.de, Google Shopping, eBay, Kleinanzeigen – sortiert nach Möbelart und Preisklasse, mit Preisfilter, wo der Shop ihn in der Adresse unterstützt.
+- **36 Händler und Suchportale:** IKEA, OTTO, home24, XXXLutz, JYSK, mömax, POCO, ROLLER, porta, Höffner, Möbel Kraft, Segmüller, Westwing, Connox, AmbienteDirect, KARE, Tikamoon, massivum, Car-Möbel, Lampenwelt, benuta, Thomann, MediaMarkt, Amazon, moebel.de, Google Shopping, eBay, Kleinanzeigen sowie SKLUM, Beliani, Maisons du Monde, Kave Home, Tylko, Nordic Nest, BAUR und Rugvista – sortiert nach Möbelart und Preisklasse, mit Preisfilter, wo der Shop ihn in der Adresse unterstützt.
 - **3D direkt ziehen:** Möbel im 3D-Raum mit Maus oder Finger auf dem Boden verschieben, „3D“ an jedem Möbel öffnet es im Raum.
 - **Moodboard:** alle gewählten Produkte mit Bild, Preis und Farbpalette, als Bild speicherbar.
 - **Möbel finden:** Suche direkt bei IKEA, OTTO, home24, Wayfair, Amazon, Google Shopping, eBay und Kleinanzeigen; Produktlink einfügen, Name und Händler werden erkannt.
@@ -36,3 +36,18 @@ Die 3D-Ansicht stellt Möbel nun als räumliche, aus Einzelteilen aufgebaute Kat
 Die detaillierten Modelle, Oberflächen, Fenster und der hochauflösende Bildexport stammen aus dem zusammengeführten Branch `3d-moebelmodelle` (Stand `ef6dcf9`). Ergänzt wurden präzise Platzierung, Kameraansichten, transparente Dachanzeige und die Begrenzung aller Modelle auf die eingegebenen Außenmaße.
 
 Zusätzliche Entwicklerprüfungen: `node tests/geometry3d.test.mjs` prüft die Modellauswahl nach Kategorie und Produktname. `tests/graphics-browser.mjs` prüft echte WebGL-Darstellung, äußere Modellgrenzen, Kameraschalter, Möbelziehen mit Raster, Zentimeterschritte und Mobilansicht. Dafür werden Playwright, Chromium und `THREE_TEST_FILE` mit der Three.js-0.170-Moduldatei benötigt; `PLAYWRIGHT_MODULE` und `CHROMIUM_PATH` können die lokalen Installationen angeben.
+
+### Mehr Stile und Einzelvorschläge
+
+Neu sind Wabi-Sabi, Mediterran, Küstenstil, Art déco, Retro & Farbe, Soft Modern, Urban Jungle und Vintage. Jeder Stil hat Suchbegriffe, eine Farbpalette, Regeln für die lokale Farbanalyse und passende Händler.
+
+Unter „Möbel finden“ Stil, Möbelarten und Preisgrenzen wählen und „Einzelvorschläge ansehen“ öffnen. Für alle Räume werden Produkte aus dem vorhandenen Katalog und drei neu recherchierte Modelle angeboten. Die Auswahl priorisiert zugeordnete Stile und anschließend Farbähnlichkeit; sie zeigt bis zu drei unterschiedliche Händler je Möbelart. „Prüfen & übernehmen“ öffnet das bearbeitbare Formular mit Produktlink, Preis und Maßen. Vorhandene Möbel und ihre Farben bleiben unverändert.
+
+Preisgrenzen, Preisklasse, Restbudget und Kategoriegrenzen gelten pro Vorschlag, nicht als Gesamtbudget für alle angezeigten Alternativen. Versand und fehlende Preise können zusätzliche Kosten verursachen. Artikel mit offenem Preis erscheinen getrennt und werden nicht als budgetpassend bezeichnet. Produktpreise und Lieferbarkeit werden nicht live abgefragt. Die neuen Händler-Suchlinks sind ausdrücklich als Google-Suche innerhalb der jeweiligen Shop-Domain gekennzeichnet; sie behaupten keinen Preisfilter.
+
+Neue Produktquellen (abgerufen am 16.11.2026):
+- [SKLUM Ralik Nachttisch](https://www.sklum.com/de/kaufen-nachttisch/70351-nachttisch-aus-holz-ralik.html): 76,95 €, 40 × 40 × 50 cm; Lieferzeit und Maßtoleranz stehen in der Produktnotiz.
+- [Beliani BUTTE Nachttisch](https://www.beliani.de/nachttisch-hellbraun-butte.html): 40 × 30 × 60 cm; Preis war nicht auslesbar und bleibt offen.
+- [Maisons du Monde Griffith Kommode](https://www.maisonsdumonde.com/DE/de/p/vintage-kommode-mit-3-schubladen-w91-griffith-248546.htm): 399 €, 90,8 × 45 × 89,8 cm; Hinweis auf die beim Abruf schwachen Kundenbewertungen.
+
+Prüfungen: `node --test tests/recommendations.test.mjs` prüft Stile, Händlervielfalt, Produktarten und Budgetgrenzen. `tests/browser-smoke.mjs` prüft Auswahl, Preisfilter, offene Preise, Übernahme, Speicherung und Mobilansicht mit Playwright/Chromium.

@@ -397,6 +397,7 @@ dialog.dlg:has(.dlg-in.wide){width:min(1080px, calc(100vw - 24px))}
 .mb-check ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px;font-size:13px;color:var(--ink);line-height:1.45}
 .style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:6px}
 .style-card{display:grid;gap:5px;padding:7px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;font-size:12.5px}
+.idea-group{display:grid;gap:10px;margin:16px 0;scroll-margin-top:24px}.idea-card{padding:12px;border:1px solid var(--line);border-radius:12px;display:grid;gap:8px;min-width:0;background:var(--surface)}.idea-card h5{font-size:13px;margin:0;overflow-wrap:anywhere}.idea-card .row{flex-wrap:wrap}.idea-card img{width:100%;height:120px;object-fit:contain;background:#fff;border-radius:8px}.idea-card a{overflow-wrap:anywhere}.idea-meta{font-size:12px;color:var(--muted)}
 .style-card b{font-weight:600}
 .style-card[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .sw-row{display:flex;gap:0;border-radius:5px;overflow:hidden;height:12px}
@@ -703,6 +704,7 @@ function parseProductUrl(raw) {
   return { url: url.href, retailer, name, cat: guessCat(name) };
 }
 const SHOPS = [{"n": "IKEA","d": "Praktische Möbel, Schrank- & Regalsysteme","s": "https://www.ikea.com/de/de/search/?q={q}","p": null,"q": "enc","t": ["Budget","Mittel"],"c": ["Regal","Kleiderschrank","Kommode","Bett","Sofa","Tisch","Beleuchtung","Deko & Pflanzen"]},{"n": "OTTO","d": "Markenvielfalt: Sofas, Betten, Schränke","s": "https://www.otto.de/suche/{q}/","p": "https://www.otto.de/suche/{q}/?preis-in-eur~ab={min}&preis-in-eur~bis={max}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Kommode","Teppich","Beleuchtung","Audio"]},{"n": "home24","d": "Riesige Onlineauswahl für alle Wohnbereiche","s": "https://www.home24.de/search?query={q}","p": "https://www.home24.de/search?query={q}&price={min}-{max}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Tisch","Couchtisch","Stuhl","Beleuchtung"]},{"n": "XXXLutz","d": "Komplette Einrichtung inkl. Küchen","s": "https://www.xxxlutz.de/s/?s={q}","p": "https://www.xxxlutz.de/s/?s={q}&ec_price={min}-{max}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Vitrine","Tisch","Stuhl","Beleuchtung","Sonstiges"]},{"n": "JYSK","d": "Skandinavisch schlicht, Betten & Matratzen","s": "https://jysk.de/search?query={q}","p": "https://jysk.de/search?query={q}&filters=Preis%20%28EUR%29%3A{min}_{max}","q": "enc","t": ["Budget","Mittel"],"c": ["Bett","Kleiderschrank","Kommode","Regal","Tisch","Stuhl","Sonstiges"]},{"n": "mömax","d": "Junges Wohnen, trendige Möbel & Deko","s": "https://www.moemax.de/s/?s={q}","p": "https://www.moemax.de/s/?s={q}&ec_price={min}-{max}","q": "enc","t": ["Budget","Mittel"],"c": ["Sofa","Bett","Couchtisch","Beleuchtung","Teppich","Deko & Pflanzen"]},{"n": "POCO","d": "Discount-Möbel, Küchen & Mitnahmepreise","s": "https://www.poco.de/search?search={q}","p": "https://www.poco.de/search?search={q}&filters=Price%3A%5B{min}%2C{max}%5D","q": "enc","t": ["Budget"],"c": ["Kleiderschrank","Sofa","Bett","Kommode","Regal","Sonstiges"]},{"n": "ROLLER","d": "Möbeldiscounter, viele Sets & Mitnahme","s": "https://www.roller.de/search?q={q}","p": null,"q": "enc","t": ["Budget"],"c": ["Sofa","Bett","Kleiderschrank","Kommode","Tisch","Stuhl","Sonstiges"]},{"n": "porta","d": "Möbelhaus-Vollsortiment inkl. Küchen","s": "https://porta.de/search?text={q}","p": "https://porta.de/search?text={q}&preis={min}%3A{max}","q": "enc","t": ["Budget","Mittel"],"c": ["Sofa","Bett","Kleiderschrank","Tisch","Stuhl","Beleuchtung","Sonstiges"]},{"n": "Höffner","d": "Möbelhaus: Sofas, Esszimmer, Schränke","s": "https://www.hoeffner.de/suche?anfrage={q}","p": null,"q": "enc","t": ["Mittel","Premium"],"c": ["Sofa","Sessel","Tisch","Stuhl","Kleiderschrank","Bett","Vitrine","Kommode"]},{"n": "Möbel Kraft","d": "Großes Möbelhaus-Sortiment, viele Marken","s": "https://www.moebel-kraft.de/suche?anfrage={q}","p": null,"q": "enc","t": ["Mittel","Premium"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Tisch","Stuhl","Sonstiges"]},{"n": "Segmüller","d": "Klassisches Möbelhaus, Wohn- & Schlafzimmer","s": "https://www.segmueller.de/search?q={q}","p": "https://www.segmueller.de/search?q={q}&range%5Bprice%5D={min}00%3A{max}00","q": "enc","t": ["Mittel","Premium"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Kommode","Tisch","Stuhl","Vitrine"]},{"n": "Westwing","d": "Moderne, elegante Einrichtung & Wohnideen","s": "https://www.westwing.de/all-products/?q={q}","p": "https://www.westwing.de/all-products/?q={q}&price={min}%3A{max}","q": "enc","t": ["Mittel","Premium"],"c": ["Sofa","Sessel","Couchtisch","Tisch","Beleuchtung","Teppich","Deko & Pflanzen"]},{"n": "Connox","d": "Designermöbel, Skandi-Marken & Leuchten","s": "https://www.connox.de/search?q={q}","p": "https://www.connox.de/search?q={q}&fq=Preis%3A%5B{min}+TO+{max}%5D","q": "enc","t": ["Premium"],"c": ["Beleuchtung","Stuhl","Sessel","Tisch","Regal","Deko & Pflanzen"]},{"n": "AmbienteDirect","d": "Designmöbel & Leuchten namhafter Marken","s": "https://www.ambientedirect.com/suchergebnisse?q={q}","p": "https://www.ambientedirect.com/suchergebnisse?q={q}&aPkgShopListfilter%5B93216332-ebd5-d60a-605b-8b7ffd7be6fe%5D%5Bmin%5D={min}&aPkgShopListfilter%5B93216332-ebd5-d60a-605b-8b7ffd7be6fe%5D%5Bmax%5D={max}","q": "enc","t": ["Premium"],"c": ["Beleuchtung","Stuhl","Tisch","Sofa","Sessel","Regal","Deko & Pflanzen"]},{"n": "KARE","d": "Extravagante Designmöbel & Deko","s": "https://www.kare.de/search/{q}","p": "https://www.kare.de/search/{q}/f/price--{min},{max}/","q": "enc","t": ["Mittel","Premium"],"c": ["Sofa","Sessel","Tisch","Stuhl","Beleuchtung","Deko & Pflanzen","Kommode"]},{"n": "Tikamoon (über Google)","d": "Massivholz – Suche über Google, da ohne Suchlink","s": "https://www.google.com/search?q=site%3Atikamoon.de%20{q}","p": null,"q": "enc","t": ["Mittel","Premium"],"c": ["Kommode","Tisch","Couchtisch","Regal","Stuhl","Sonstiges"]},{"n": "massivum","d": "Massivholzmöbel: Akazie, Mango, Sheesham","s": "https://massivum.de/search?search={q}","p": "https://massivum.de/search?search={q}&min-price={min}&max-price={max}","q": "enc","t": ["Mittel","Premium"],"c": ["Tisch","Kommode","Bett","Regal","Couchtisch","Vitrine","Stuhl"]},{"n": "Car-Möbel","d": "Kolonial, Vintage & Boho, viel Massivholz","s": "https://www.car-moebel.de/de/produktsuche?shopsearch={q}","p": null,"q": "enc","t": ["Budget","Mittel"],"c": ["Kommode","Regal","Vitrine","Tisch","Couchtisch","Sessel","Deko & Pflanzen"]},{"n": "Lampenwelt","d": "Leuchten aller Art, günstig bis Design","s": "https://www.lampenwelt.de/catalogsearch/result/?q={q}","p": "https://www.lampenwelt.de/catalogsearch/result/?q={q}&fq=price%3A{min}%2C{max}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Beleuchtung"]},{"n": "benuta","d": "Teppiche in vielen Stilen und Größen","s": "https://www.benuta.de/search?q={q}","p": "https://www.benuta.de/search?q={q}&filter=final_price%3D%2522{min}%2522-%2522{max}%2522","q": "enc","t": ["Budget","Mittel"],"c": ["Teppich"]},{"n": "Thomann","d": "Musik- & Studiotechnik, Audio, Bühnenlicht","s": "https://www.thomann.de/de/search_dir.html?sw={q}","p": null,"q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Audio","Beleuchtung","Tisch","Stuhl","Regal","Sonstiges"]},{"n": "MediaMarkt","d": "Elektronik, HiFi, TV & Smart-Home-Licht","s": "https://www.mediamarkt.de/de/search.html?query={q}","p": "https://www.mediamarkt.de/de/search.html?query={q}&filter=currentprice:{min}-{max}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Audio","Beleuchtung","Sonstiges"]},{"n": "Amazon","d": "Riesenauswahl, günstig, schnelle Lieferung","s": "https://www.amazon.de/s?k={q}","p": "https://www.amazon.de/s?k={q}&rh=p_36%3A{min}00-{max}00","q": "enc","t": ["Budget","Mittel"],"c": ["Beleuchtung","Deko & Pflanzen","Audio","Regal","Stuhl","Teppich","Sonstiges"]},{"n": "moebel.de","d": "Preisvergleich über 1.000 Möbelshops","s": "https://www.moebel.de/suche?query={q}","p": "https://www.moebel.de/suche/preis:{min}-{max}?query={q}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Sofa","Bett","Kleiderschrank","Tisch","Stuhl","Sessel","Kommode"]},{"n": "Google Shopping","d": "Preisvergleich über viele Onlineshops","s": "https://www.google.com/search?udm=28&q={q}&hl=de&gl=de","p": "https://www.google.com/search?udm=28&q={q}&hl=de&gl=de&tbs=mr:1,price:1,ppr_min:{min},ppr_max:{max}","q": "enc","t": ["Budget","Mittel","Premium"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Kommode","Vitrine","Regal","Tisch","Couchtisch","Stuhl","Beleuchtung","Teppich","Deko & Pflanzen","Audio","Sonstiges"]},{"n": "eBay","d": "Neu & gebraucht, Auktionen und Sofortkauf","s": "https://www.ebay.de/sch/i.html?_nkw={q}","p": "https://www.ebay.de/sch/i.html?_nkw={q}&_udlo={min}&_udhi={max}","q": "enc","t": ["Budget","Mittel"],"c": ["Audio","Beleuchtung","Deko & Pflanzen","Tisch","Stuhl","Sonstiges"],"used": true},{"n": "Kleinanzeigen","d": "Gebrauchtmöbel privat, oft zur Abholung","s": "https://www.kleinanzeigen.de/s-{q}/k0","p": "https://www.kleinanzeigen.de/s-preis:{min}:{max}/{q}/k0","q": "dash","t": ["Budget","Mittel"],"c": ["Sofa","Sessel","Bett","Kleiderschrank","Kommode","Vitrine","Regal","Tisch","Stuhl"],"used": true}];
+SHOPS.push(...[{"n": "SKLUM", "d": "Rattan, Naturholz, Retro und farbige Möbel · Suche über Google", "s": "https://www.google.com/search?q=site%3Asklum.com/de%20{q}", "p": null, "q": "enc", "t": ["Budget", "Mittel"], "c": ["Bett", "Kommode", "Regal", "Tisch", "Couchtisch", "Stuhl", "Sofa", "Sessel", "Beleuchtung", "Teppich", "Deko & Pflanzen"]}, {"n": "Beliani", "d": "Polstermöbel, Stauraum, Teppiche und Leuchten · Suche über Google", "s": "https://www.google.com/search?q=site%3Abeliani.de%20{q}", "p": null, "q": "enc", "t": ["Budget", "Mittel"], "c": ["Bett", "Kommode", "Regal", "Tisch", "Couchtisch", "Stuhl", "Sofa", "Sessel", "Beleuchtung", "Teppich", "Deko & Pflanzen"]}, {"n": "Maisons du Monde", "d": "Vintage, mediterrane Möbel und Dekoration · Suche über Google", "s": "https://www.google.com/search?q=site%3Amaisonsdumonde.com/DE/de%20{q}", "p": null, "q": "enc", "t": ["Mittel", "Premium"], "c": ["Bett", "Kommode", "Regal", "Tisch", "Couchtisch", "Stuhl", "Sofa", "Sessel", "Beleuchtung", "Teppich", "Deko & Pflanzen"]}, {"n": "Kave Home", "d": "Naturmaterialien, organische Formen und Design · Suche über Google", "s": "https://www.google.com/search?q=site%3Akavehome.com%20{q}", "p": null, "q": "enc", "t": ["Mittel", "Premium"], "c": ["Bett", "Kommode", "Regal", "Tisch", "Couchtisch", "Stuhl", "Sofa", "Sessel", "Beleuchtung", "Teppich", "Deko & Pflanzen"]}, {"n": "Tylko", "d": "Konfigurierbare Regale und Stauraummöbel · Suche über Google", "s": "https://www.google.com/search?q=site%3Atylko.com/de%20{q}", "p": null, "q": "enc", "t": ["Premium"], "c": ["Regal", "Kommode", "Kleiderschrank"]}, {"n": "Nordic Nest", "d": "Skandinavische Leuchten und Wohnaccessoires · Suche über Google", "s": "https://www.google.com/search?q=site%3Anordicnest.de%20{q}", "p": null, "q": "enc", "t": ["Mittel", "Premium"], "c": ["Beleuchtung", "Deko & Pflanzen", "Teppich"]}, {"n": "BAUR", "d": "Möbel für Schlaf- und Wohnzimmer · Suche über Google", "s": "https://www.google.com/search?q=site%3Abaur.de%20{q}", "p": null, "q": "enc", "t": ["Budget", "Mittel"], "c": ["Bett", "Kommode", "Regal", "Tisch", "Couchtisch", "Stuhl", "Sofa", "Sessel", "Beleuchtung", "Teppich", "Deko & Pflanzen", "Kleiderschrank", "Vitrine"]}, {"n": "Rugvista", "d": "Teppiche in vielen Stilen und Größen · Suche über Google", "s": "https://www.google.com/search?q=site%3Arugvista.de%20{q}", "p": null, "q": "enc", "t": ["Budget", "Mittel", "Premium"], "c": ["Teppich"]}]);
 SHOPS.forEach(sh => { if (sh.n === 'Thomann') sh.c = ['Audio']; });
 const IKEA_B = [[0, 100], [100, 200], [200, 300], [300, 400], [400, Infinity]];
 function shopQ(sh, q) {
@@ -726,7 +728,7 @@ function shopLinks(s) {
   const min = num(s.min), max = num(s.max), tier = s.tier || '';
   return SHOPS.map((sh, i) => {
     const cm = sh.c.includes(s.cat), tm = tier && sh.t.includes(tier), spec = sh.c.length <= 3;
-    return { sh, i, cm, tm, score: (cm ? 3 : 0) + (tm ? 2 : 0) - (tier && !sh.t.includes(tier) ? 1 : 0) - (spec && !cm ? 20 : 0) };
+    return { sh, i, cm, tm, score: (cm && STYLE_META[s.styleKey]?.shops?.includes(sh.n) ? 3 : 0) + (cm ? 3 : 0) + (tm ? 2 : 0) - (tier && !sh.t.includes(tier) ? 1 : 0) - (spec && !cm ? 20 : 0) };
   }).sort((a, b) => b.score - a.score || a.i - b.i).map(({ sh, cm, tm, score }) => ({
     n: sh.n, d: sh.d, u: shopUrl(sh, q, min, max), p: (min != null || max != null) && (sh.n === 'IKEA' ? shopUrl(sh, q, min, max).includes('f-price-buckets') : !!sh.p), used: sh.used, fit: cm && (tm || !tier), rel: score > -10,
   }));
@@ -1557,6 +1559,15 @@ const STYLE_META = {
   'Boho': { q: 'Boho Rattan', pal: ['#C68B59', '#E9D8C3', '#A0522D', '#6B8E23', '#D4A373'], desc: 'Rattan, Jute, Terrakotta und Pflanzen.' },
   'Klassisch': { q: 'klassisch', pal: ['#F2EFE9', '#6B4E3D', '#C2B280', '#2F3E46', '#A89F91'], desc: 'Hell, edle Hölzer, zeitlos.' },
 };
+Object.assign(STYLE_META, {"Wabi-Sabi": {"q": "Wabi Sabi Naturholz Leinen", "pal": ["#C4B49D", "#EBE3D5", "#887963", "#655E50", "#B0AC98"], "desc": "Unregelmäßige Naturholzflächen, Leinen und erdige Töne – bewusst schlicht.", "shops": ["SKLUM", "Kave Home", "Tikamoon (über Google)"]}, "Mediterran": {"q": "mediterran Holz Terrakotta", "pal": ["#F3E7D4", "#C47754", "#A78C65", "#6B8067", "#E0C09A"], "desc": "Kalkweiß, Terrakotta, helles Holz und Olivgrün – warm und sonnig.", "shops": ["Maisons du Monde", "SKLUM", "Kave Home"]}, "Küstenstil": {"q": "maritim weiß Naturholz", "pal": ["#F5F3EA", "#B7D1D8", "#336477", "#D7BD96", "#8EAAA8"], "desc": "Weiß, Sandtöne und Meeresblau mit leichtem Holz und Naturgewebe.", "shops": ["Maisons du Monde", "Beliani", "BAUR"]}, "Art déco": {"q": "Art Deco Samt Messing", "pal": ["#173D35", "#B59A59", "#242226", "#E9E0D1", "#7A3F52"], "desc": "Samt, Messing, dunkles Holz und geometrische Details – elegant und ausdrucksstark.", "shops": ["KARE", "Westwing", "Beliani"]}, "Retro & Farbe": {"q": "Retro bunt", "pal": ["#D9783E", "#DAB84E", "#5E7B62", "#654B3C", "#C6A0AB"], "desc": "Orange, Senfgelb und kräftige Akzente neben warmen Holztönen.", "shops": ["SKLUM", "Maisons du Monde", "KARE"]}, "Soft Modern": {"q": "modern beige Boucle", "pal": ["#EFE7DA", "#D5C4B2", "#AE9F93", "#9C8C80", "#C3B9AD"], "desc": "Runde Formen, Bouclé und Beige – weich, hell und zurückhaltend.", "shops": ["Kave Home", "Westwing", "Beliani"]}, "Urban Jungle": {"q": "Naturholz Rattan grün", "pal": ["#315B43", "#799266", "#BC986A", "#E2D7BE", "#423C30"], "desc": "Viele Grüntöne, Holz und Rattan als Basis für Pflanzen und natürliche Texturen.", "shops": ["SKLUM", "Maisons du Monde", "Kave Home"]}, "Vintage": {"q": "Vintage Holz", "pal": ["#76563E", "#B08352", "#A69779", "#E6D9C4", "#7B8580"], "desc": "Warme Hölzer, patinierte Oberflächen und Möbel mit Retro-Charakter.", "shops": ["Maisons du Monde", "Car-Möbel", "SKLUM"]}});
+const STYLE_SHOPS = {
+  'Eiche & Schwarz':['BAUR','home24','OTTO'], Industrial:['massivum','SKLUM','Car-Möbel'],
+  Skandinavisch:['JYSK','Nordic Nest','Kave Home'], 'Modern & Dunkel':['Tylko','Beliani','home24'],
+  Japandi:['Kave Home','SKLUM','Tikamoon (über Google)'], Minimalistisch:['Tylko','IKEA','Beliani'],
+  'Mid-Century':['Maisons du Monde','Kave Home','Westwing'], Landhaus:['BAUR','Car-Möbel','Maisons du Monde'],
+  Boho:['SKLUM','Beliani','Maisons du Monde'], Klassisch:['Höffner','BAUR','Westwing']
+};
+for (const [style,shops] of Object.entries(STYLE_SHOPS)) STYLE_META[style].shops=shops;
 const STYLES = Object.keys(STYLE_META);
 const STYLE_ALIAS = { 'Schwarz / Eiche': 'Eiche & Schwarz', 'Modern': 'Modern & Dunkel' };
 const TIERS = ['Budget', 'Mittel', 'Premium'];
@@ -1581,14 +1592,14 @@ function styleWord() {
 function searchArgs() {
   const f = furnishOf(), b = S.room && f.tier ? tierBand(S.search.cat, f.tier) : null, has = v => v !== '' && v != null;
   const own = has(S.search.min) || has(S.search.max);
-  return { ...S.search, tier: f.tier, style: S.room ? styleWord() : '', min: own ? S.search.min : (b && b[0] ? String(b[0]) : ''), max: own ? S.search.max : (b ? String(b[1]) : '') };
+  return { ...S.search, styleKey: f.style, tier: f.tier, style: S.room ? styleWord() : '', min: own ? S.search.min : (b && b[0] ? String(b[0]) : ''), max: own ? S.search.max : (b ? String(b[1]) : '') };
 }
 const hasSets = r => !!(r && r.seed === 'konrad' && typeof KONRAD_SETS !== 'undefined' && KONRAD_SETS.length);
 function furnishHTML() {
   const r = S.room, f = furnishOf(r), meta = STYLE_META[f.style];
   const band = f.tier ? tierBand(S.search.cat, f.tier) : null;
   return `<section class="furnish"><h4>Einrichtungs-Assistent</h4>
-    <div class="field"><span>Stil</span><div class="style-grid">${STYLES.map(s => `<button type="button" class="style-card" data-act="fu-style" data-s="${esc(s)}" aria-pressed="${f.style === s}"><span class="sw-row">${STYLE_META[s].pal.map(h => `<i style="background:${h}"></i>`).join('')}</span><b>${esc(s)}</b></button>`).join('')}</div>
+    <div class="field"><span>Stil</span><div class="style-grid">${STYLES.map(s => `<button type="button" class="style-card" data-act="fu-style" data-s="${esc(s)}" title="${esc(STYLE_META[s].desc)}" aria-pressed="${f.style === s}"><span class="sw-row">${STYLE_META[s].pal.map(h => `<i style="background:${h}"></i>`).join('')}</span><b>${esc(s)}</b></button>`).join('')}</div>
       ${meta ? `<p class="fine">${esc(meta.desc)}</p>` : ''}</div>
     <div class="field"><span>Preisklasse</span><div class="segbtns">${TIERS.map(t => `<button type="button" data-act="fu-tier" data-t="${t}" aria-pressed="${f.tier === t}">${t}</button>`).join('')}</div>
       ${band ? `<p class="fine">${esc(f.tier)} für ${esc(S.search.cat)}: ${band[0] ? eur0(band[0]) + '–' : 'bis '}${eur0(band[1])} – wird als Preisfilter in die Shop-Suche übernommen.</p>` : ''}</div>
@@ -1596,7 +1607,7 @@ function furnishHTML() {
     ${hasSets(r) ? `<button type="button" class="btn primary" data-act="sets">${I('sofa')} Fertige Vorschläge für dieses Zimmer (${KONRAD_SETS.length})</button>` : ''}
     <div class="field"><span>Gewünschte Möbelarten</span><div class="chips">${WANT.map(([k]) => `<button type="button" class="chip" data-act="fu-want" data-k="${esc(k)}" aria-pressed="${f.wanted.includes(k)}">${esc(k)}</button>`).join('')}</div></div>
     ${f.wanted.length ? `<div class="chips">${f.wanted.map(k => `<button type="button" class="btn sm" data-act="fu-search" data-k="${esc(k)}">${esc(k)} suchen →</button>`).join('')}</div>` : ''}
-    <p class="fine">Stil, Preisklasse und Lieblingsstück ergänzen die Shop-Suche. Bereits gewählte Möbel bleiben unverändert.</p></section>`;
+    <a class="btn sm" href="#product-ideas" data-act="ideas-show">Einzelvorschläge ansehen ↓</a><p class="fine">Stil und Preisklasse bestimmen die Einzelvorschläge. Dein Lieblingsstück ergänzt die Shop-Suche. Bereits gewählte Möbel bleiben unverändert.</p></section>`;
 }
 
 /* ---------- Lieblingsstück ---------- */
@@ -1626,7 +1637,7 @@ function colorName(c) {
   return 'Rosa';
 }
 const SEARCH_WORD = { 'Eiche hell': 'Eiche hell', 'Eiche / Holz': 'Eiche', 'Nussbaum': 'Nussbaum', 'Dunkles Holz': 'dunkles Holz', 'Schwarz': 'schwarz', 'Anthrazit': 'anthrazit', 'Grau / Beton': 'grau', 'Weiß': 'weiß', 'Cognac': 'cognac', 'Senfgelb / Messing': 'Messing', 'Salbeigrün': 'salbei', 'Petrol': 'petrol', 'Taubenblau': 'blau', 'Terrakotta': 'terrakotta' };
-const FEAT = { 'Eiche hell': 'lightWood', 'Eiche / Holz': 'midWood', 'Nussbaum': 'walnut', 'Dunkles Holz': 'darkWood', 'Schwarz': 'black', 'Anthrazit': 'anthracite', 'Grau / Beton': 'grey', 'Hellgrau': 'lightGrey', 'Weiß': 'white', 'Cognac': 'cognac', 'Senfgelb / Messing': 'mustard', 'Ocker': 'ocker', 'Terrakotta': 'terracotta', 'Salbeigrün': 'sage', 'Grün': 'green', 'Petrol': 'petrol', 'Taubenblau': 'dustyBlue', 'Blau': 'blue' };
+const FEAT = { 'Eiche hell': 'lightWood', 'Eiche / Holz': 'midWood', 'Nussbaum': 'walnut', 'Dunkles Holz': 'darkWood', 'Schwarz': 'black', 'Anthrazit': 'anthracite', 'Grau / Beton': 'grey', 'Hellgrau': 'lightGrey', 'Weiß': 'white', 'Cognac': 'cognac', 'Senfgelb / Messing': 'mustard', 'Ocker': 'ocker', 'Terrakotta': 'terracotta', 'Salbeigrün': 'sage', 'Grün': 'green', 'Petrol': 'petrol', 'Taubenblau': 'dustyBlue', 'Blau': 'blue', 'Rosa': 'pink', 'Rot': 'red', 'Lila': 'purple' };
 const STYLE_W = {
   'Eiche & Schwarz': { midWood: 3, lightWood: 1.2, darkWood: .5, black: 2.5, anthracite: 1, sage: 2 },
   'Industrial': { darkWood: 3, walnut: 1.5, black: 2.5, anthracite: 2, grey: 2, cognac: 3, terracotta: .5 },
@@ -1639,6 +1650,7 @@ const STYLE_W = {
   'Boho': { terracotta: 3, ocker: 2, green: 2, lightWood: .8, cognac: 1 },
   'Klassisch': { darkWood: 2, walnut: 1.5, white: 1, mustard: 1.5 },
 };
+Object.assign(STYLE_W, {"Wabi-Sabi": {"lightWood": 2, "midWood": 2, "grey": 1, "sage": 1}, "Mediterran": {"terracotta": 3, "white": 2, "lightWood": 2, "sage": 2}, "Küstenstil": {"dustyBlue": 3, "blue": 2, "white": 3, "lightWood": 1}, "Art déco": {"green": 2, "mustard": 2, "black": 2, "walnut": 1}, "Retro & Farbe": {"terracotta": 2, "mustard": 3, "green": 2, "walnut": 1, "pink": 1}, "Soft Modern": {"lightWood": 1, "white": 2, "lightGrey": 2, "cognac": 0.5}, "Urban Jungle": {"green": 3, "sage": 2, "midWood": 2, "lightWood": 1}, "Vintage": {"walnut": 2, "midWood": 2, "ocker": 1, "sage": 1}});
 /* Stil-Zuordnung: Materialien/Farbrollen des Stücks gewichtet (Holzton, Schwarz/Metall, Weiß, Akzent), Palettennähe nur als Feinabstimmung */
 function styleScores(pal) {
   const f = {}; let tot = 0;
@@ -1816,7 +1828,7 @@ function setsDialog() {
   openDlg(dlg, `<div class="dlg-h"><div><p class="eyebrow">${esc(r.name)} · Stil × Preisklasse</p><h2>Fertige Vorschläge</h2></div><button type="button" class="icon-btn flat" data-close aria-label="Schließen">${I('x')}</button></div>
     <div class="dlg-b">
       <p class="hint">Jeder Vorschlag passt in die geprüften Stellflächen des Zimmers (Konrads Bett bleibt). Übernehmen ersetzt nur die Produkte im Nachher-Plan – Bestand und selbst hinzugefügte Möbel bleiben.${ins ? ' Sortiert nach Ähnlichkeit zu deinem Lieblingsstück.' : ''}</p>
-      <div class="chips"><button type="button" class="chip" data-act="set-filter" data-f="style" data-v="" aria-pressed="${!flt.style}">Alle Stile</button>${styles.map(s => `<button type="button" class="chip" data-act="set-filter" data-f="style" data-v="${esc(s)}" aria-pressed="${flt.style === s}">${esc(s)}</button>`).join('')}</div>
+      <button type="button" class="btn" data-act="ideas-show">Alle ${STYLES.length} Stile: Einzelvorschläge ansehen</button><div class="chips"><button type="button" class="chip" data-act="set-filter" data-f="style" data-v="" aria-pressed="${!flt.style}">Alle Stile</button>${styles.map(s => `<button type="button" class="chip" data-act="set-filter" data-f="style" data-v="${esc(s)}" aria-pressed="${flt.style === s}">${esc(s)}</button>`).join('')}</div>
       <div class="chips"><button type="button" class="chip" data-act="set-filter" data-f="tier" data-v="" aria-pressed="${!flt.tier}">Alle Preisklassen</button>${TIERS.map(t => `<button type="button" class="chip" data-act="set-filter" data-f="tier" data-v="${t}" aria-pressed="${flt.tier === t}">${t}</button>`).join('')}</div>
       <div class="set-grid">${list.map(({ s }) => `<article class="set-card${r.activeSet === s.id ? ' active' : ''}">
         <div class="set-thumbs">${thumbs(s)}</div>
@@ -1898,6 +1910,74 @@ function applyKonradSet(r, id, migrate = false) {
   return true;
 }
 
+/* Einzelideen: tatsächliche Katalogprodukte; keine Live-Verfügbarkeit. */
+const EXTRA_PRODUCTS = [
+  {id:'sklum-ralik',key:'nachttisch',cat:'Kommode',name:'SKLUM Ralik Nachttisch, helles Naturholz und Rattan',retailer:'SKLUM',url:'https://www.sklum.com/de/kaufen-nachttisch/70351-nachttisch-aus-holz-ralik.html',price:76.95,qty:1,dims:{w:40,d:40,h:50},color:'#C6A77D',styles:['Boho','Vintage','Urban Jungle','Mediterran','Skandinavisch'],checkedAt:'2026-11-16',note:'Angebotspreis beim Abruf. Lieferzeit im Shop prüfen; Seite nennt Lieferung im Januar 2027 und ±3 cm Maßtoleranz.',img:'https://cdn.sklum.com/de/wk/5405297/nachttisch-aus-holz-ralik.jpg?cf-resize=gallery'},
+  {id:'beliani-butte',key:'nachttisch',cat:'Kommode',name:'Beliani BUTTE Nachttisch, hellbraun mit Rattanfront',retailer:'Beliani',url:'https://www.beliani.de/nachttisch-hellbraun-butte.html',price:null,qty:1,dims:{w:40,d:30,h:60},color:'#BF9B70',styles:['Boho','Vintage','Urban Jungle','Skandinavisch','Mediterran'],checkedAt:'2026-11-16',note:'Preis war beim Abruf nicht auslesbar. Aktuellen Preis im Shop prüfen und eintragen.',img:'https://img.pictureserver.net/pic_storage/pic/2f/71/undef_src_sa_picid_975693_x_185_type_whitesh_image.webp?ver=3'},
+  {id:'mdm-griffith',key:'kommode',cat:'Kommode',name:'Maisons du Monde Griffith Kommode, Nussbaumfurnier, 3 Schubladen',retailer:'Maisons du Monde',url:'https://www.maisonsdumonde.com/DE/de/p/vintage-kommode-mit-3-schubladen-w91-griffith-248546.htm',price:399,qty:1,dims:{w:90.8,d:45,h:89.8},color:'#765139',styles:['Vintage','Mid-Century','Retro & Farbe','Klassisch'],checkedAt:'2026-11-16',note:'Bewertungen zur Verarbeitung vor dem Kauf lesen: beim Abruf 1,7/5 aus 4 Bewertungen.',img:'https://medias.maisonsdumonde.com/image/upload/ar_1%3A1%2Cc_fill%2Cf_auto%2Cq_auto%2Cw_425/v1/img/vintage-kommode-mit-3-schubladen-w91-1000-6-4-248546_4.jpg'}
+];
+let catalogCache;
+function productCatalog() {
+  if (catalogCache) return catalogCache;
+  const byUrl = new Map();
+  for (const set of KONRAD_SETS) for (const item of set.items) {
+    if (!item.url) continue;
+    const prev = byUrl.get(item.url);
+    if (prev) { if (!prev.styles.includes(set.style)) prev.styles.push(set.style); continue; }
+    byUrl.set(item.url, {...item, id:'catalog-'+byUrl.size, styles:[set.style]});
+  }
+  for (const p of EXTRA_PRODUCTS) byUrl.set(p.url,p);
+  return catalogCache = [...byUrl.values()];
+}
+function catalogHost(p) { try { return new URL(p.url).hostname.replace(/^www\./,''); } catch { return p.retailer; } }
+function wantedMatches(p,k,cat) {
+  if (p.cat !== cat) return false;
+  const keys = {Nachttisch:['nachttisch'],Schreibtisch:['schreibtisch'],'TV-Schrank':['lowboard'],Sideboard:['lowboard','kommode']};
+  if (keys[k]) return keys[k].includes(p.key);
+  if (k === 'Kommode') return p.key !== 'nachttisch';
+  if (k === 'Lautsprecher') return p.key === 'lautsprecher';
+  return true;
+}
+function concreteIdeas(r, f, min = null, max = null, fallbackCat = 'Kleiderschrank') {
+  const cost = calc(r), selected = f.wanted.map(k => WANT.find(x => x[0] === k)).filter(Boolean);
+  const wants = selected.length ? selected : [[fallbackCat,fallbackCat,catOf(fallbackCat).q]];
+  return wants.map(([k,cat,kw]) => {
+    const band = f.tier ? tierBand(cat,f.tier) : null;
+    const own = min != null || max != null, low = own ? (min ?? 0) : (band?.[0] ?? 0);
+    const high = own ? (max ?? Infinity) : (band?.[1] ?? Infinity);
+    const cap = Math.min(cost.rest ?? Infinity, r.catBudgets?.[cat] != null ? r.catBudgets[cat]-(cost.byCat.get(cat)||0) : Infinity);
+    const pal = STYLE_META[f.style]?.pal || [];
+    const candidates = productCatalog().filter(p => wantedMatches(p,k,cat) && !r.items.some(i=>i.url===p.url)).map(p=>{
+      const exact = !!f.style && p.styles.includes(f.style);
+      const distance = pal.length && /^#[0-9a-f]{6}$/i.test(p.color||'') ? Math.min(...pal.map(h=>cdist(hx(h),hx(p.color)))) : 0;
+      return {p,exact,score:(exact?400:0)-distance};
+    }).sort((a,b)=>b.score-a.score || (a.p.price??Infinity)-(b.p.price??Infinity));
+    const eligible = candidates.filter(({p})=>p.price != null && p.price>=low && p.price<=high && p.price*(p.qty||1)<=cap);
+    // Keep different retailers visible instead of filling each group with one shop.
+    const chosen=[], hosts=new Set();
+    for(const c of eligible) if(!hosts.has(catalogHost(c.p))){chosen.push(c);hosts.add(catalogHost(c.p));if(chosen.length===3)break;}
+    for(const c of eligible) if(chosen.length<3&&!chosen.includes(c)) chosen.push(c);
+    return {k,cat,kw,low,high,cap,products:chosen,unknown:candidates.filter(c=>c.p.price==null && (!f.style||c.exact)).slice(0,2)};
+  });
+}
+function productIdeasHTML() {
+  const r=S.room, f=furnishOf(r), groups=concreteIdeas(r,f,num(S.search.min),num(S.search.max),S.search.cat);
+  const card = (c,unknown=false) => {const p=c.p;return `<article class="idea-card">
+    ${p.img?`<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy">`:''}
+    <h5>${esc(p.name)}</h5><span class="idea-meta">${esc(p.retailer)} · ${c.exact?'Stilzuordnung im Katalog':f.style?'Nach Farbpalette ausgewählt':'Katalogidee'}</span>
+    <strong>${unknown?'Preis im Shop prüfen':eur(p.price)+(p.qty>1?' pro Stück · '+p.qty+' Stück: '+eur(p.price*p.qty):'')}</strong>
+    <span class="fine">${p.dims?.w!=null?`${p.dims.w} × ${p.dims.d} × ${p.dims.h} cm (B × T × H) · `:''}Stand ${esc(p.checkedAt||'unbekannt')}</span>
+    ${p.note?`<p class="fine">${esc(p.note)}</p>`:''}
+    <div class="row"><a class="btn sm" href="${esc(p.url)}" target="_blank" rel="noopener">Zum Produkt ${I('ext')}</a><button type="button" class="btn sm" data-act="idea-review" data-id="${esc(p.id)}">Prüfen & übernehmen</button></div></article>`;};
+  return `<h4>Einzelvorschläge${f.style?' · '+esc(f.style):''}</h4><p class="fine">Katalogideen verschiedener Händler. Preisgrenzen und verbleibendes Budget gelten je Vorschlag, nicht für alle zusammen. Versand und offene Preise sind noch zu prüfen. Die Farbauswahl ersetzt keine Prüfung von Form und Material; die Passprüfung erfolgt nach dem Platzieren.</p>
+    ${groups.map(g=>`<section class="idea-group" aria-label="Vorschläge für ${esc(g.k)}"><h4>${esc(g.k)}</h4>
+      ${g.products.map(c=>card(c)).join('')||'<p class="hint">Kein Katalogprodukt innerhalb deiner Preis- und Budgetgrenzen. Weitere Angebote über die Läden suchen.</p>'}
+      ${g.unknown.length?`<details><summary>Weitere Produkte mit offenem Preis (${g.unknown.length})</summary><p class="fine">Diese Produkte sind nicht auf dein Budget geprüft.</p>${g.unknown.map(c=>card(c,true)).join('')}</details>`:''}
+      <div class="chips">${shopLinks({...searchArgs(),cat:g.cat,kw:g.kw,min:g.low||'',max:Number.isFinite(Math.min(g.high,g.cap))?String(Math.max(0,Math.min(g.high,g.cap))):''}).filter(l=>l.fit&&l.rel).slice(0,3).map(l=>`<a class="btn sm" href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.n)}: weitere ${esc(g.k)}</a>`).join('')}</div>
+    </section>`).join('')}`;
+}
+function refreshProductIdeas(){const el=$('#product-ideas');if(el&&S.room)el.innerHTML=productIdeasHTML();}
+
 function sideFinden() {
   const s = S.search;
   return `${furnishHTML()}
@@ -1908,6 +1988,8 @@ function sideFinden() {
       <label class="field"><span>Preis bis</span><div class="money"><input class="input" id="s-max" inputmode="decimal" value="${esc(s.max)}" placeholder="offen"><em>€</em></div></label>
     </div>
     <p class="hint">${s.kw || styleWord() ? `Suche: <strong>${esc([s.kw || catOf(s.cat).q, styleWord(), s.term].filter(Boolean).join(' '))}</strong>. ` : ''}Die Suche öffnet sich direkt im Shop. Gefällt dir etwas, kopiere den Produktlink und füge ihn unten ein.</p>
+    <div id="product-ideas">${productIdeasHTML()}</div>
+    <h4>Weitere Läden entdecken</h4><p class="fine">Shop-Suchen sind keine geprüften Produktangebote. Bei Google-Suchen Preise im Shop filtern.</p>
     <div class="shops" id="shop-links">${shopLinksHTML()}</div>
     <div class="paste-box">
       <label class="lbl" for="s-url">${'Produktlink einfügen'}</label>
@@ -3654,6 +3736,8 @@ const ACT = {
     S.v3d = true; S.sel = p ? p.id : null; touch(); renderEditorAll();
     stageEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   },
+  'ideas-show'(t,e) { e.preventDefault(); if(dlg.open) closeDlg(dlg); S.tab='finden'; LS.set('tab',S.tab); renderSide(); $('#product-ideas')?.scrollIntoView({behavior:'smooth',block:'start'}); },
+  'idea-review'(t) { const p = productCatalog().find(p => p.id === t.dataset.id); if (!p) return; itemDialog(null, { name:p.name, cat:p.cat, price:p.price, qty:p.qty || 1, retailer:p.retailer, url:p.url, img:p.img || null, dims:{...p.dims}, color:p.color, note:`Katalogangaben, Stand ${p.checkedAt || 'unbekannt'}. Preis, Lieferbarkeit und Maße vor dem Kauf im Shop prüfen. ${p.note || ''}` }); },
   'fu-want'(t) { const r = S.room, f = furnishOf(r), k = t.dataset.k; r.furnish = { ...f, wanted: f.wanted.includes(k) ? f.wanted.filter(x => x !== k) : [...f.wanted, k] }; touch(); renderSide(); },
   'fu-style'(t) { const r = S.room, f = furnishOf(r), v = t.dataset.s; r.furnish = { ...f, style: f.style === v ? '' : v }; touch(); renderSide(); },
   'fu-tier'(t) { const r = S.room, f = furnishOf(r), v = t.dataset.t; r.furnish = { ...f, tier: f.tier === v ? '' : v }; S.search.min = ''; S.search.max = ''; LS.set('search', S.search); touch(); renderSide(); },
@@ -3791,7 +3875,7 @@ document.addEventListener('input', e => {
   if (t.id === 'aud-spread') { const ph = activePhoto(); if (ph && ph.audio) { ph.audio.spread = +t.value; $('#aud-sv').textContent = t.value + '°'; refreshOverlay(); touch(); } return; }
   if (t.id === 's-term' || t.id === 's-min' || t.id === 's-max') {
     S.search[t.id.slice(2)] = t.value; LS.set('search', S.search);
-    $('#shop-links').innerHTML = shopLinksHTML();
+    $('#shop-links').innerHTML = shopLinksHTML(); refreshProductIdeas();
   }
 });
 document.addEventListener('change', async e => {
@@ -3812,10 +3896,10 @@ document.addEventListener('change', async e => {
   if (t.id === 'room-name') { r.name = t.value.trim() || r.type; t.value = r.name; document.title = r.name + ' · Raumplaner Studio'; touch(); return; }
   if (t.id === 'fu-style') { r.furnish = { ...furnishOf(r), style: t.value }; touch(); renderSide(); return; }
   if (t.id === 's-cat') { S.search.cat = t.value; S.search.kw = ''; LS.set('search', S.search); renderSide(); $('#s-cat')?.focus(); return; }
-  if (t.id === 'b-total') { r.budget = num(t.value); touch(); renderBudget(); renderMini(); return; }
+  if (t.id === 'b-total') { r.budget = num(t.value); touch(); renderBudget(); renderMini(); refreshProductIdeas(); return; }
   if (t.id === 'b-addcat' && t.value) { r.catBudgets[t.value] = null; touch(); renderBudget(); setTimeout(() => $(`[data-catmax="${CSS.escape(t.value)}"]`)?.focus(), 0); return; }
-  if (t.dataset.catmax !== undefined) { const v = num(t.value); if (v == null && !r.items.some(i => i.cat === t.dataset.catmax)) delete r.catBudgets[t.dataset.catmax]; else r.catBudgets[t.dataset.catmax] = v; touch(); renderBudget(); return; }
-  if (t.dataset.ship !== undefined) { const v = num(t.value); if (v == null) delete r.shipping[t.dataset.ship]; else r.shipping[t.dataset.ship] = v; touch(); renderBudget(); renderMini(); return; }
+  if (t.dataset.catmax !== undefined) { const v = num(t.value); if (v == null && !r.items.some(i => i.cat === t.dataset.catmax)) delete r.catBudgets[t.dataset.catmax]; else r.catBudgets[t.dataset.catmax] = v; touch(); renderBudget(); refreshProductIdeas(); return; }
+  if (t.dataset.ship !== undefined) { const v = num(t.value); if (v == null) delete r.shipping[t.dataset.ship]; else r.shipping[t.dataset.ship] = v; touch(); renderBudget(); renderMini(); refreshProductIdeas(); return; }
 });
 document.addEventListener('paste', e => {
   const file = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'))?.getAsFile();

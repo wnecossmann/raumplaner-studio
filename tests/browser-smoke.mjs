@@ -1,2 +1,32 @@
-const {chromium}=await import(process.env.PLAYWRIGHT_MODULE || 'playwright');import {readFile} from 'node:fs/promises';import assert from 'node:assert/strict';
-const browser=await chromium.launch({...(process.env.CHROMIUM_PATH ? {executablePath:process.env.CHROMIUM_PATH} : {}),headless:true,args:['--no-sandbox']});try{const ctx=await browser.newContext({offline:true,viewport:{width:1300,height:950}}),page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));const html=await readFile(new URL('../index.html',import.meta.url),'utf8'),url='http://127.0.0.1:9877/';await page.route(url,r=>r.fulfill({contentType:'text/html',body:html}));await page.goto(url);await page.getByRole('button',{name:/Neuen Raum anlegen/}).click();await page.locator('#nr-name').fill('Empfehlungstest');await page.locator('#nr-budget').fill('400');await page.getByRole('button',{name:'Raum anlegen',exact:true}).click();await page.getByRole('tab',{name:/Möbel finden/}).click();await page.getByLabel('Möbelstil',{exact:true}).selectOption('Industrial');await page.getByRole('button',{name:'Schreibtisch',exact:true}).click();const group=page.getByRole('region',{name:'Vorschläge für Schreibtisch',exact:true});await group.getByText('FJÄLLBO Laptoptisch schwarz',{exact:true}).waitFor();await page.locator('#s-max').fill('50');assert.equal(await group.locator('.idea-card').count(),0);await page.locator('#s-max').fill('150');assert.equal(await group.locator('.idea-card').count(),1);await group.getByRole('button',{name:'Vorschlag prüfen und übernehmen',exact:true}).click();assert.equal(await page.locator('#f-name').inputValue(),'FJÄLLBO Laptoptisch schwarz');assert.equal(await page.locator('#f-cat').inputValue(),'Tisch');assert.equal(await page.locator('#f-price').inputValue(),'');assert.equal(await page.locator('#f-dw').inputValue(),'');await page.locator('#f-price').fill('99');await page.getByRole('button',{name:'Möbel übernehmen',exact:true}).click();await page.waitForTimeout(750);await page.reload();await page.getByRole('tab',{name:/Möbel finden/}).click();assert.equal(await page.getByLabel('Möbelstil',{exact:true}).inputValue(),'Industrial');assert.equal(await page.getByRole('button',{name:'Schreibtisch',exact:true}).getAttribute('aria-pressed'),'true');assert.equal(await group.locator('.idea-card').count(),1);await page.locator('#b-total').fill('100');await page.locator('#b-total').blur();assert.equal(await group.locator('.idea-card').count(),0);await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.deepEqual(errors,[]);console.log('PASS: shared HTML app, style/type/price/remaining-budget filters, real model suggestion, review form, saved furniture and preferences, mobile, no page errors.');}finally{await browser.close()}
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,headless:true,args:['--no-sandbox']});
+try{
+  const ctx=await browser.newContext({offline:true,viewport:{width:1300,height:950}}),page=await ctx.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8'),url='http://127.0.0.1:9877/';
+  await page.route(url,r=>r.fulfill({contentType:'text/html',body:html}));await page.goto(url);
+  await page.getByRole('button',{name:/Neuen Raum anlegen/}).click();await page.locator('#nr-name').fill('Stiltest');await page.locator('#nr-budget').fill('400');await page.getByRole('button',{name:'Raum anlegen',exact:true}).click();
+  await page.getByRole('tab',{name:/Möbel finden/}).click();
+  assert.equal(await page.locator('[data-act="fu-style"]').count(),18);
+  await page.locator('[data-act="fu-style"][data-s="Vintage"]').click();
+  await page.locator('[data-act="fu-want"][data-k="Nachttisch"]').click();
+  await page.locator('[data-act="ideas-show"]').click();
+  const group=page.getByRole('region',{name:'Vorschläge für Nachttisch',exact:true});
+  await group.getByText('SKLUM Ralik Nachttisch, helles Naturholz und Rattan',{exact:true}).waitFor();
+  await page.locator('#s-max').fill('50');assert.equal(await group.locator('[data-id="sklum-ralik"]').count(),0);
+  await page.locator('#s-max').fill('100');assert.equal(await group.locator('[data-id="sklum-ralik"]').count(),1);
+  await group.locator('summary').click();await group.getByText('Preis im Shop prüfen',{exact:true}).waitFor();
+  await group.locator('[data-id="beliani-butte"]').click();assert.equal(await page.locator('#f-price').inputValue(),'');await page.getByRole('button',{name:'Abbrechen',exact:true}).click();
+  await group.locator('[data-id="sklum-ralik"]').click();
+  assert.equal(await page.locator('#f-ret').inputValue(),'SKLUM');assert.equal(await page.locator('#f-price').inputValue(),'76,95');assert.equal(await page.locator('#f-dw').inputValue(),'40');assert.equal(await page.locator('#f-dh').inputValue(),'50');
+  await page.getByRole('button',{name:'Möbel übernehmen',exact:true}).click();await page.waitForTimeout(750);await page.reload();
+  await page.getByRole('tab',{name:/Möbel finden/}).click();assert.equal(await page.locator('[data-s="Vintage"]').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('[data-k="Nachttisch"][data-act="fu-want"]').getAttribute('aria-pressed'),'true');assert.equal(await group.locator('[data-id="sklum-ralik"]').count(),0);
+  await page.locator('#b-total').fill('77');await page.locator('#b-total').blur();assert.equal(await group.locator(':scope > .idea-card').count(),0);
+  await page.locator('[data-act="fu-style"][data-s="Art déco"]').click();assert.ok((await page.locator('#shop-links').textContent()).includes('Beliani'));
+  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  await page.locator('[data-act="fu-style"][data-s="Vintage"]').click();
+  await page.locator('.furnish').screenshot({path:'/tmp/raumplaner-styles.png'});
+  assert.deepEqual(errors,[]);console.log('PASS: 18 styles, retailer suggestions, price and budget filtering, unknown-price review, saved item and preferences, mobile layout.');
+}finally{await browser.close()}
