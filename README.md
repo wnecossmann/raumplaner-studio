@@ -68,6 +68,12 @@ Umstellung bestehender Räume (einmalig, Merker `defaultV3`): Räume auf „Indu
 
 In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, „1 Schublade, 2 Türen“, „1 Klappe“) als Holzkorpus im schwarzen Rahmen mit Metallschubladen oben und Türen oder Klappe unten gezeichnet (Modellart `framecab`).
 
+### Raummaße 3,50 × 4,53 m und schwarzer Schreibtisch (16.11.2026)
+
+- **Raummaße:** Konrads Zimmer misst laut Aufmaß 350 × 453 cm (Zeichnung: 358 × 457,5 cm; `KONRAD_W`, `KONRAD_D`). Alle 32 Vorschläge bestehen damit die Passprüfung, kein Möbel steht im 90°-Schwenk der Tür. Der Schrank der übrigen Vorschläge steht jetzt bei 69–219 cm (150 cm breit) bzw. 19–219 cm (200 cm breit).
+- **Umstellung bestehender Räume** (Merker `sizeV1`, nur Grundrisse mit den alten Maßen): Der Grundriss wird neu gezeichnet, Möbel und Lautsprecher behalten ihren Abstand zur jeweils näheren Wand (`resizePlanKeepWalls`). PANAMA-Vorschläge werden danach neu gestellt; bei den übrigen rückt nur der Schrank nach, wenn er noch am berechneten Platz steht.
+- **Schreibtisch:** In beiden PANAMA-Vorschlägen steht jetzt der IKEA MITTZON sitz/steh, elektrisch, schwarz gebeiztes Eschenfurnier/schwarz, 140 × 80 cm (429 €, Stand 16.11.2026). Der Eichentisch bleibt als Alternative in der Liste. Neue Summen: Standard 5.334,42 €, „Schreibtisch am Fenster“ 6.011,08 €. `PANAMA_REV` steht auf 3.
+
 ### PANAMA ohne Highboard, Deko-Ideen und eigener Vorschlag (16.11.2026)
 
 - **Standard „Industrial · PANAMA“:** Das Highboard ist entfallen, damit die Tür frei aufgeht (5.754,42 €). An der oberen Wand steht nur noch der Dielenschrank.

@@ -1089,17 +1089,26 @@ function doRedo() { if (!S.redo.length) return; S.undo.push(snapState()); applyS
 
 /* Konrads Zimmer: Kinderzimmer neben „Arbeiten“ aus der Arbeitszeichnung Dachgeschoss 1:50.
    Innenmaße 3,58 × 4,575 m; Giebelfenster 1,51 m (2,805 m ab Außenecke); Tür 90 in abgeschrägter Ecke (30|90|30 = 1,50 m). */
+const KONRAD_W = 350, KONRAD_D = 453, KONRAD_NOTE = 'Raummaße laut Aufmaß vom 16.11.2026 · Drempel und Dachneigung angenommen, bitte nachmessen';
+/* Grundriss auf neue Innenmaße bringen: Möbel und Lautsprecher behalten ihren Abstand zur jeweils näheren Wand */
+function resizePlanKeepWalls(ph, w, d, patch = {}) {
+  const ow = ph.plan.w, od = ph.plan.d, w0 = ph.w, mv = p => { if (p) { if (p[0] > ow / 2) p[0] += w - ow; if (p[1] > od / 2) p[1] += d - od; } return p; };
+  const old = ph.placements.map(q => mv(plCm(q, ph)));
+  repaintPlan(ph, { ...patch, w, d });
+  ph.placements.forEach((q, i) => { [q.x, q.y] = relFromCm(ph, old[i][0], old[i][1]); q.w *= w0 / ph.w; });
+  if (ph.audio) { mv(ph.audio.listener); Object.values(ph.audio.ov || {}).forEach(mv); }
+}
 function makeKonrad() {
   const r = newRoom('Konrads Zimmer', 'Jugendzimmer', null);
   r.seed = 'konrad';
   const out = paintPlan({
-    label: 'Konrads Zimmer · Kinderzimmer neben „Arbeiten“ (DG)', w: 358, d: 457.5,
+    label: 'Konrads Zimmer · Kinderzimmer neben „Arbeiten“ (DG)', w: KONRAD_W, d: KONRAD_D,   // Aufmaß JC 16.11.2026 (Zeichnung: 358 × 457,5)
     walls: { t: 11.5, r: 11.5, b: 43, l: 43 },
     slope: { side: 'bottom', knee: 100, pitch: 40 }, height: 250,
     windows: [{ wall: 'left', from: 25, width: 151 }],   // Aufmaß JC 16.11.2026: nur 25 cm von der Ecke bis zum Fenster (Zeichnung: 69)
     door: { type: 'corner', corner: 'tr', leg: 106, width: 90 },
     wallLabels: { t: 'Wand zum zweiten Kinderzimmer', r: 'Treppe / Arbeitszimmer', b: 'Traufwand mit Drempel', l: 'Giebelwand' },
-    note: 'Rohbaumaße aus der Arbeitszeichnung DG 1:50 · Drempel und Dachneigung angenommen, bitte nachmessen',
+    note: KONRAD_NOTE,
   });
   const ph = { id: uid(), src: out.src, w: out.w, h: out.h, placements: [], scale: null, plan: out.plan };
   r.photos.push(ph); r.activePhoto = ph.id;
@@ -1143,7 +1152,7 @@ const KONRAD_CHECKLIST = [
   'Steckdosen kartieren, wenn der alte Schrank weg ist: an der Giebelwand neben dem Bett (Nachtkonsole, Leselicht, Laden) und am Schreibtisch. Am Tisch hängen Motor, PC, Monitor, Lautsprecher und Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt.',
   'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen. Der Schreibtisch beginnt jetzt erst 29 cm hinter der Ecke (y = 135) und steht 4 cm vor der Wand (Kabel, Hubweg).',
   'Tür: Bodentürstopper (am besten magnetisch) so setzen, dass die Tür bei 90° stoppt – weiter geöffnet schlägt sie gegen die Schrankecke.',
-  'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der Kleiderschrank steht deshalb 77 cm von der Giebelwand entfernt, der Fensterflügel geht frei auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke bleibt frei.',
+  'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der Kleiderschrank steht deshalb rund 70 cm von der Giebelwand entfernt – mehr lässt die Tür nicht zu –, der Fensterflügel geht fast ganz auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke bleibt frei.',
   'PAX: Deckenhöhe an allen vier Ecken der Stellfläche messen (mind. 240 cm, Kippdiagonale ca. 243 cm, keine Deckenleuchte im Kippbereich). Pakete sind 246 cm lang – im Erdgeschoss auspacken und Teile einzeln über die Treppe tragen.',
   'Rechte Wand für das String-Regal prüfen (Mauerwerk oder Gipskarton). Bei Gipskarton ein Seitenteil in einen Ständer schrauben, sonst Hohlraumdübel. Größte Lego-Modelle vorher ausmessen.',
   'Rollo erst nach dem PAX montieren, über der Laibung leicht Richtung Bett versetzt; im Heizbetrieb nur bis zur Fensterbank.',
@@ -1156,15 +1165,15 @@ const KONRAD_CHECKLIST = [
 const PANAMA_CHECKLIST = [
   KONRAD_CHECKLIST[0],
   'Bett: Konrads Bett (120 × 200) bleibt, wo es heute steht – rechte Ecke am Kniestock, Kopfende an der rechten Wand. Außenmaße nachmessen (geplant 126 × 206 cm).',
-  'Rechte Wand ausmessen: Zwischen Türecke und Bett sind es rechnerisch 225 cm. Schreibtisch (150 cm, ab 21 cm hinter der Ecke) und die Kommode als Nachttisch (50 cm) passen mit jeweils 2 cm Fuge. Fehlt Platz, einen 140-cm-Tisch nehmen.',
+  'Rechte Wand ausmessen: Zwischen Türecke und Bett sind es rechnerisch 221 cm. Schreibtisch (140 cm, ab 27 cm hinter der Ecke) und die Kommode als Nachttisch (50 cm) passen mit jeweils 2 cm Fuge.',
   'Kommode als Nachttisch: mit 73 cm deutlich höher als die Liegefläche (rund 45 cm). Am Bett ausprobieren, ob Wecker und Wasserglas so noch gut erreichbar sind.',
   'Steckdosen kartieren: am Schreibtisch (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
-  'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen und frei bleiben – der Schreibtisch beginnt schon 21 cm hinter der Ecke und steht 4 cm vor der Wand (Kabel, Hubweg).',
+  'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen und frei bleiben – der Schreibtisch beginnt 27 cm hinter der Ecke und steht 4 cm vor der Wand (Kabel, Hubweg).',
   'Dielenschrank: nur 80 cm breit, eine Kleiderstange und drei Böden. Vor dem Kauf prüfen, ob das zusammen mit Sideboard und Kommode für Konrads Kleidung reicht (das Highboard ist entfallen, damit die Tür frei aufgeht) – sonst den Vorschlag „Schreibtisch am Fenster“ mit Highboard oder den PAX aus „Industrial · Premium“ nehmen.',
   'Ecke am Fenster: Das Fenster beginnt schon 25 cm hinter der Ecke. Der Dielenschrank steht deshalb 77 cm von der Giebelwand entfernt – so steht nichts vor dem Fenster und der Flügel geht auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke selbst bleibt frei.',
   'Tür: Im Schwenkbereich steht kein Möbel mehr, sie geht ganz auf. Ein Bodentürstopper schützt Wand und Türgriff.',
   'Sideboard an der Giebelwand direkt hinter dem Fenster: Abstand zu Fensterbank und Heizkörper prüfen.',
-  'Schuhschrank am Kniestock links (130 × 40 × 50 cm): Kniestockhöhe dort nachmessen; zwischen Schrank und Bettfuß bleiben rund 21 cm. Er hat eine große Klappe – vor dem Kauf ansehen, was hineinpasst.',
+  'Schuhschrank am Kniestock links (130 × 40 × 50 cm): Kniestockhöhe dort nachmessen; zwischen Schrank und Bettfuß bleiben rund 13 cm. Er hat eine große Klappe – vor dem Kauf ansehen, was hineinpasst.',
   'Lieferung: Dielenschrank, Highboard und Sideboard kommen von Kaufland per Spedition frei Bordsteinkante – Tragehilfe bis ins Dachgeschoss einplanen; dort waren am 16.11.2026 nur noch wenige Stück zum genannten Preis verfügbar. Der Schuhschrank kommt von home24 (Lieferung ca. 10.–17.12.2026, Versandkosten prüfen). Akazie ist Naturholz, Farbe und Maserung weichen je Stück ab.',
   'Altmöbel: Kiefernschrank, Hochregal, KALLAX 5 × 5 und der Rollcontainer haben in dieser Aufstellung keinen Platz mehr.',
   'Monitor matt (entspiegelt) wählen und an einem Monitorarm mittig hinten befestigen – das Fenster liegt gegenüber.',
@@ -1175,9 +1184,9 @@ const PANAMA_CHECKLIST = [
 const FENSTERPLATZ_CHECKLIST = (pc => [
   KONRAD_CHECKLIST[0],
   pc('Bett:'),
-  'Schreibtisch an der oberen Wand, 40 cm von der Giebelwand: Das Fenster liegt links vom Bildschirm, das Tageslicht kommt von der Seite und spiegelt nicht. Brüstungshöhe messen und prüfen, ob der Fensterflügel über Tischplatte und linken Lautsprecher hinweg aufgeht; sonst den Tisch weiter zur Tür rücken (bis 207 cm rechte Tischkante bleibt die Tür frei).',
+  'Schreibtisch an der oberen Wand, 40 cm von der Giebelwand: Das Fenster liegt links vom Bildschirm, das Tageslicht kommt von der Seite und spiegelt nicht. Brüstungshöhe messen und prüfen, ob der Fensterflügel über Tischplatte und linken Lautsprecher hinweg aufgeht; sonst den Tisch weiter zur Tür rücken (bis rund 200 cm rechte Tischkante bleibt die Tür frei).',
   'Heizkörper unter dem Fenster: Das linke Tischende steht davor. Die 40 cm Abstand zur Giebelwand lassen, damit die Wärme aufsteigen kann.',
-  'Rechte Wand ausmessen: Dielenschrank (80 cm), Highboard (75 cm) und Kommode (50 cm) stehen mit 2 cm Fugen als abgestufte Reihe vor dem Bett und beginnen 14 cm hinter der Türecke. Lichtschalter und Steckdose dort dürfen nicht hinter dem Dielenschrank verschwinden.',
+  'Rechte Wand ausmessen: Dielenschrank (80 cm), Highboard (75 cm) und Kommode (50 cm) stehen mit 2 cm Fugen als abgestufte Reihe vor dem Bett und beginnen 10 cm hinter der Türecke. Lichtschalter und Steckdose dort dürfen nicht hinter dem Dielenschrank verschwinden.',
   'Raumhöhe an der rechten Wand: Der Dielenschrank (180 cm) steht im hohen Bereich, das Highboard (110 cm) reicht bis kurz hinter den Beginn der Schräge. Kniestock und Neigung nachmessen.',
   pc('Kommode als Nachttisch:'),
   'Steckdosen kartieren: am Schreibtisch an der oberen Wand (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
@@ -1190,7 +1199,7 @@ const FENSTERPLATZ_CHECKLIST = (pc => [
   pc('Deko-Ideen'),
 ].filter(Boolean))(p => PANAMA_CHECKLIST.find(t => t.startsWith(p)));
 /* Fenster-Hinweis für 200 cm breite Schränke: sie können nicht weit genug abrücken */
-const KONRAD_FENSTER_BREIT = 'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der 200 cm breite Kleiderschrank kann nur 27 cm von der Giebelwand abrücken, sonst öffnet die Tür keine 90° mehr. Er steht damit seitlich vor dem Fensterrand: Der eckseitige Flügel lässt sich nur einen Spalt weit drehen (Kippen geht), und in die Ecke kommt weniger Licht. Wer das Fenster frei haben will, nimmt einen 150 cm breiten Schrank oder den Vorschlag „Industrial · PANAMA“.';
+const KONRAD_FENSTER_BREIT = 'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der 200 cm breite Kleiderschrank kann nur rund 20 cm von der Giebelwand abrücken, sonst öffnet die Tür keine 90° mehr. Er steht damit seitlich vor dem Fensterrand: Der eckseitige Flügel lässt sich nur einen Spalt weit drehen (Kippen geht), und in die Ecke kommt weniger Licht. Wer das Fenster frei haben will, nimmt einen 150 cm breiten Schrank oder den Vorschlag „Industrial · PANAMA“.';
 const setWideWardrobe = set => { const x = set && !set.layout && set.items.find(i => i.key === 'schrank'); return !!x && x.dims.w > 175; };
 function konradChecklist(set) {
   if (set && set.layout === 'bett-bestand') return PANAMA_CHECKLIST;
@@ -1205,7 +1214,7 @@ function cornerOffset(pl, w, d) {
   return Math.max(0, Math.min(Math.ceil(win.width / 2) + 1, Math.round(lim - w)));
 }
 const KONRAD_DEFAULT_SET = 'ind_panama';
-function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.windowV1 = r.cornerV1 = true; return ok; }
+function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.windowV1 = r.cornerV1 = r.sizeV1 = true; return ok; }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
 const KONRAD_PHOTOS = [];
@@ -1911,6 +1920,10 @@ const PANAMA_ITEMS = [
   { key: 'lowboard', short: 'Schuhschrank', role: 'main', cat: 'Kommode', name: 'SIT Schuhschrank PANAMA 09258-01, Akazie natur mit Altmetall antikschwarz, 1 Klappe, 130 cm', retailer: 'home24 (Verkauf und Versand durch SIT Möbel)', url: 'https://www.home24.de/produkt/panama-schuhschrank-schwarz-braun-akazie-130-x-50-x-40-cm', price: 729.99, qty: 1, dims: { w: 130, d: 40, h: 50 }, color: PANAMA_COL,
     why: 'Der flache Schrank passt unter den Kniestock und ersetzt das Lowboard – damit kommen alle Schränke aus derselben Serie.', note: 'Eigentlich eine Schuhkippe mit einer großen Klappe: vor dem Kauf prüfen, ob die Inneneinteilung für Konsole, Spiele oder Technik taugt. Versandkosten im Shop prüfen; Lieferung laut home24 ca. 10.–17.12.2026.', checkedAt: '2026-11-16', img: 'https://cdn1.home24.net/images/media/catalog/product/455x455/jpg/6/e/6e3974de790f494fa1cda7275983c1bd.webp' },
 ];
+/* Schreibtisch mit matt schwarzer Platte (JC 16.11.2026): neben der Akazie kein zweiter Holzton. 140 cm, damit an der rechten Wand Luft zur Türecke bleibt. */
+const PANAMA_DESK = { key: 'schreibtisch', role: 'main', cat: 'Tisch', name: 'IKEA MITTZON Schreibtisch sitz/steh, elektrisch, schwarz gebeiztes Eschenfurnier/schwarz, 140x80 cm', retailer: 'IKEA Deutschland', url: 'https://www.ikea.com/de/de/p/mittzon-schreibtisch-sitz-steh-elektrisch-schwarz-gebeiztes-eschenfurnier-schwarz-s79528942/', price: 429, qty: 1, dims: { w: 140, d: 80, h: 75 }, color: '#1E1E1F',
+  why: 'Matt schwarze Platte auf schwarzem Gestell: Neben der Akazie gibt es keinen zweiten Holzton mehr, Bildschirm und Technik treten zurück.', note: 'Echtholzfurnier, schwarz gebeizt: matt, aber Staub und Fingerabdrücke sieht man eher als auf Eiche. Die Größe 160x80 cm kostet 449 €, lässt an der rechten Wand aber kaum Luft zur Türecke.', checkedAt: '2026-11-16', img: 'https://www.ikea.com/de/de/images/products/mittzon-schreibtisch-sitz-steh-elektrisch-schwarz-gebeiztes-eschenfurnier-schwarz__1210942_pe909894_s5.jpg' };
+const panamaDesk = x => [PANAMA_DESK, { ...x, key: 'alt_schreibtisch', short: 'Eichentisch', role: 'alternative' }];
 /* Deko-Ideen ohne konkretes Produkt: Richtwerte, zählen nicht zum Budget (Rolle „alternative“), stehen aber im Plan */
 const PANAMA_DEKO = [
   { key: 'deko_bild', short: 'Bild', idea: true, role: 'alternative', cat: 'Deko & Pflanzen', name: 'Bilderrahmen 40 × 50 cm, schwarz, mit Poster oder eigenem Foto', retailer: '', url: '', price: 15, qty: 2, dims: { w: 40, d: 3, h: 50 }, color: '#1C1C1C',
@@ -1925,14 +1938,14 @@ const PANAMA_DEKO = [
 {
   const i = KONRAD_SETS.findIndex(s => s.id === 'ind_premium'), base = KONRAD_SETS[i];
   if (base) KONRAD_SETS.splice(i + 1, 0, { id: 'ind_panama', title: 'Industrial · PANAMA', style: base.style, tier: base.tier, layout: 'bett-bestand', palette: base.palette,
-    summary: 'Alle Schränke aus der Serie PANAMA von SIT: Dielenschrank, Sideboard, Schuhschrank und die Kommode als Nachttisch. Konrads Bett bleibt an seinem heutigen Platz, die Tür geht frei auf.', coherence: base.coherence,
-    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], PANAMA_ITEMS[2], PANAMA_ITEMS[3]] : [x]), ...PANAMA_DEKO] });
+    summary: 'Alle Schränke aus der Serie PANAMA von SIT: Dielenschrank, Sideboard, Schuhschrank und die Kommode als Nachttisch, dazu ein Schreibtisch mit matt schwarzer Platte. Konrads Bett bleibt an seinem heutigen Platz, die Tür geht frei auf.', coherence: base.coherence,
+    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], PANAMA_ITEMS[2], PANAMA_ITEMS[3]] : [x]), ...PANAMA_DEKO] });
   // Eigener Vorschlag (Claude, 16.11.2026): Schreibtisch neben dem Fenster, alle hohen Möbel abgestuft an der rechten Wand, Highboard bleibt
   if (base) KONRAD_SETS.splice(i + 2, 0, { id: 'ind_panama_fenster', title: 'Industrial · PANAMA · Schreibtisch am Fenster', style: base.style, tier: base.tier, layout: 'fensterplatz', palette: base.palette,
     summary: 'Vorschlag von Claude: Schreibtisch an die obere Wand neben das Fenster (Tageslicht von der Seite), Dielenschrank, Highboard und Kommode abgestuft an der rechten Wand, Tür und Fenster frei.', coherence: base.coherence,
-    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]), ...PANAMA_DEKO] });
+    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]), ...PANAMA_DEKO] });
 }
-const PANAMA_REV = 2;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
+const PANAMA_REV = 3;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
 const setName = s => s.title || s.style + ' · ' + s.tier;
 const SET_SHORT = { highboard: 'Highboard', kommode: 'Kommode', sideboard: 'Sideboard', schrank: 'Kleiderschrank', schreibtisch: 'Schreibtisch', stuhl: 'Stuhl', teppich: 'Teppich', lowboard: 'Lowboard', regal: 'Regal', nachttisch: 'Nachttisch', lautsprecher: 'Lautsprecher', lautsprecher_staender: 'Ständer', schreibtischlampe: 'Lampe', leseleuchte: 'Leselampe', matratze: 'Matratze', rollo: 'Rollo' };
 const setTotal = set => set.items.filter(i => i.role !== 'alternative').reduce((a, i) => a + (i.price || 0) * (i.qty || 1), 0);
@@ -2052,7 +2065,7 @@ function layoutKonradSet(r, keep = new Set(), layout) {
     if ((m.h || 0) >= 40) put(by.regal, x, y, 90, 65);
     else { const h = m.h || 3, sp = Math.max(h + 1, 36), n = Math.min(by.regal.qty || 1, 1 + Math.floor((90 - h) / sp)); for (let i = 0; i < n; i++) put(by.regal, x, y, 90, 62.5 + i * sp); }
   }
-  if (roll) put(roll, 330.5, 322.5, 90);
+  if (roll) put(roll, W - 27.5, 322.5, 90);
   }
   if (!(spk && keep.has(spk.id) && placed.has(spk.id))) after.audio = spk ? { ...AUD_DEF(), amp:after.audio?.amp, cables:after.audio?.cables, on: false, mode: 'cinema', system: '2.0', front: 'right', listener: [chairX, cy], height: se, ov: { FL: [sx, cy - off], FR: [sx, cy + off] } } : after.audio;
 }
@@ -4261,6 +4274,25 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
       // PANAMA-Räume auf den aktuellen Stand: entfallene Produkte (Highboard) gehen, neue Deko-Ideen kommen in den Plan; vorhandene Positionen, Gekauftes und eigene Möbel bleiben
       const set = KONRAD_SETS.find(x => x.id === r.activeSet);
       if (set && set.layout) { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} applyKonradSet(r, set.id, true); S.storage && await DB.put(r); }
+    }
+    if (r.seed === 'konrad' && KONRAD_SETS.length && !r.sizeV1) {
+      // Aufmaß 16.11.2026: Raum 350 × 453 cm statt 358 × 457,5 cm (nur Grundrisse, die noch die alten Maße haben). Möbel behalten den Abstand zur näheren Wand;
+      // PANAMA-Vorschläge werden danach neu gestellt, bei den übrigen rückt nur der Schrank nach, wenn er noch am berechneten Platz steht.
+      const OW = 358, OD = 457.5, after = r.photos.find(p => p.plan && !p.plan.before), set = KONRAD_SETS.find(x => x.id === r.activeSet);
+      const todo = r.photos.filter(ph => ph.plan && !ph.plan.scan && ph.plan.w === OW && ph.plan.d === OD);
+      if (todo.length) {
+        try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {}
+        const it = set && !set.layout && after ? r.items.find(i => i.pkey === 'schrank') : null, p = it && after.placements.find(q => q.itemId === it.id), m = it && itemDims(it), c0 = p && plCm(p, after);
+        const atSpot = !!p && !((p.rot || 0) % 360) && Math.abs(c0[0] - cornerOffset(after.plan, m.w, m.d) - m.w / 2) < 1.5 && Math.abs(c0[1] - m.d / 2) < 1.5;
+        for (const ph of todo) resizePlanKeepWalls(ph, KONRAD_W, KONRAD_D, ph.plan.before ? {} : { note: KONRAD_NOTE });
+        if (todo.includes(after) && set) {
+          if (set.layout) layoutKonradSet(r, new Set(r.items.filter(i => i.pkey && i.status === 'gekauft').map(i => i.id)), set.layout);
+          else if (atSpot) [p.x, p.y] = relFromCm(after, cornerOffset(after.plan, m.w, m.d) + m.w / 2, m.d / 2);
+          r.checklist = konradChecklist(set);
+        }
+      }
+      r.sizeV1 = true;
+      S.storage && await DB.put(r);
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
       // Ausgerichtete Aufstellung vom 16.11.2026 (Wandbretter mittig, gleiche Fugen): Räume mit PANAMA werden einmalig neu gestellt; gekaufte Möbel bleiben stehen
