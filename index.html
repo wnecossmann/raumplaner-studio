@@ -1331,6 +1331,36 @@ function renderTabs() {
     + `<button class="ptab add" data-act="pick-photo">${I('plus')} Foto</button><button class="ptab add" data-act="new-plan">${I('plus')} Grundriss</button><button class="ptab add" data-act="new-scan" title="Hausplan als Bild oder PDF">${I('plus')} Hausplan</button>`;
 }
 const tabLabel = (p, i) => p.title || (p.plan ? (p.plan.scan ? 'Hausplan' : 'Grundriss') : 'Foto ' + (i + 1));
+function roomVariant(ph, mode, cabinet) {
+  const out={...ph,placements:ph.placements.map(p=>({...p}))},W=ph.plan.w,D=ph.plan.d;
+  if(mode==='roof'){
+    const sl=slopeOf(ph.plan),p=out.placements.find(p=>p.id===cabinet),it=p&&getItem(p.itemId);
+    if(!sl||!it||!ownDims(it))return {error:'Dachschräge und bestätigte Schrankmaße erforderlich.'};
+    const dm=itemDims(it),h=dm.h+(p.elev||0);
+    if(h+2>(ph.plan.height||250))return {error:'Der Schrank ist für die Raumhöhe zu hoch (inklusive 2 cm Planungsabstand).'};
+    const inset=Math.max(2,(h+2-(sl.knee||0))/slopeTan(sl)),depth=inset+dm.d/2,L=['left','right'].includes(sl.side)?D:W;
+    p.rot=({top:0,right:90,bottom:180,left:-90})[sl.side];
+    for(let along=dm.w/2+2;along<=L-dm.w/2-2;along+=5){
+      const [x,y]=({top:[along,depth],bottom:[along,D-depth],left:[depth,along],right:[W-depth,along]})[sl.side];
+      [p.x,p.y]=relFromCm(ph,x,y);
+      if(!fitIssues(p,out).length)return {ph:out,note:`Rückkante ca. ${Math.ceil(inset)} cm von der Schrägenwand entfernt. Dieser Abstand schafft Platz für die Schrankhöhe.`};
+    }
+    return {error:'Kein freier Standort an der Schrägenseite gefunden. Niedrigeren oder schmaleren Schrank wählen oder dort Platz schaffen.'};
+  }
+  for(const p of out.placements){let [x,y]=plCm(p,ph);if(mode==='x'){x=W-x;p.rot=-(p.rot||0);}if(mode==='y'){y=D-y;p.rot=180-(p.rot||0);}if(mode==='180'){x=W-x;y=D-y;p.rot=(p.rot||0)+180;}if(mode==='90'){[x,y]=[W/2-(y-D/2),D/2+(x-W/2)];p.rot=(p.rot||0)+90;}[p.x,p.y]=relFromCm(ph,x,y);}
+  return {ph:out,note:'Nur die Möbel werden neu angeordnet. Raumgeometrie, Dachschräge und Audio-Positionen bleiben unverändert.'};
+}
+function roomVariantsDialog(cabinet='') {
+  const ph=activePhoto();if(!ph?.plan||ph.plan.before)return;
+  const cabinets=ph.placements.filter(p=>['Kleiderschrank','Kommode','Vitrine','Regal'].includes(getItem(p.itemId)?.cat));cabinet=cabinet||cabinets[0]?.id||'';
+  const modes=[['x','Links / rechts tauschen'],['y','Vorne / hinten tauschen'],['180','Um 180° drehen'],['90','Quer stellen · 90°'],['roof','Schrank an die Dachschräge']];
+  openDlg(dlg,`<div class="dlg-h"><h2>Raumaufteilungen</h2><button class="icon-btn" data-close aria-label="Schließen">${I('x')}</button></div><div class="dlg-b"><p class="hint">Vorschauen deiner aktuell platzierten Möbel. Rot markiert Maß- und Kollisionsprobleme. Fehlende Möbelmaße werden bei Drehvarianten durch Standardmaße ersetzt und müssen bestätigt werden. Türschwenkbereiche, Fensterzugang, Laufwege und Audio bitte selbst prüfen. Übernehmen lässt sich rückgängig machen.</p><label class="field"><span>Schrank für die Dachschrägen-Variante</span><select class="input" id="variant-cabinet">${cabinets.map(p=>`<option value="${p.id}" ${p.id===cabinet?'selected':''}>${esc(getItem(p.itemId).name)}</option>`).join('')||'<option value="">Kein Schrank im Plan</option>'}</select></label><div class="set-grid">${modes.map(([mode,title])=>{
+    const v=roomVariant(ph,mode,cabinet),bad=v.ph?v.ph.placements.filter(p=>fitIssues(p,v.ph).length):[];
+    const diagram=v.ph?`<svg viewBox="-10 -10 ${ph.plan.w+20} ${ph.plan.d+20}" style="width:100%;height:160px;background:#eee" aria-label="Grundrissvorschau"><polygon points="${planPoly(ph.plan).map(p=>p.join(',')).join(' ')}" fill="white" stroke="#333" stroke-width="3"/>${v.ph.placements.map(p=>{const it=getItem(p.itemId);return it?`<polygon points="${plCorners(p,it,v.ph).map(p=>p.join(',')).join(' ')}" fill="${bad.includes(p)?'#d58b80':'#91b4a4'}" stroke="#344e42" stroke-width="2"/>`:'';}).join('')}</svg>`:'';
+    return `<article class="idea-card"><h4>${title}</h4>${diagram}<p class="fine">${esc(v.error||v.note)}</p>${v.ph?`<strong>${bad.length?bad.length+' Möbel mit Problemen':'Keine Maßkollision erkannt'}</strong>`:''}<button class="btn" data-act="variant-apply" data-mode="${mode}" data-cabinet="${cabinet}" ${v.error?'disabled':''}>${bad.length?'Als Entwurf übernehmen':'Übernehmen'}</button></article>`;
+  }).join('')}</div></div>`);dlg.querySelector('.dlg-in').classList.add('wide');
+}
+
 function renderToolbar() {
   const el = $('#toolbar'); if (!el) return;
   if (S.cmp) { el.innerHTML = cmpToolbar(); return; }
@@ -1340,7 +1370,7 @@ function renderToolbar() {
     <button class="icon-btn sm flat" data-act="redo" ${S.redo.length ? '' : 'disabled'} title="Wiederholen (Strg+Y)" aria-label="Wiederholen">${I('redo')}</button>
     <span class="sep"></span>
     ${ph && ph.plan ? `<button class="btn sm ghost" data-act="edit-plan" title="Maße, Fenster, Tür und Dachschräge ändern">${I('ruler')} <span class="hide-sm">${ph.plan.scan ? 'Hausplan' : 'Grundriss'}</span> bearbeiten</button>
-      <button class="btn sm ghost" data-act="aud-toggle" aria-pressed="${!!(ph.audio && ph.audio.on)}" title="Lautsprecher-Positionen vorschlagen">${I('speaker')} Audio</button>
+      <button class="btn sm ghost" data-act="variants" ${ph.plan.before ? 'disabled' : ''}>Raumaufteilungen</button><button class="btn sm ghost" data-act="aud-toggle" aria-pressed="${!!(ph.audio && ph.audio.on)}" title="Lautsprecher-Positionen vorschlagen">${I('speaker')} Audio</button>
       <button class="btn sm ghost" data-act="v3d" aria-pressed="${!!S.v3d}" title="Raum in 3D mit Passprüfung">${I('cube')} 3D</button>`
       : `<button class="btn sm ghost" data-act="measure" aria-pressed="${!!S.measure}" ${ph ? '' : 'disabled'} title="Maßstab aus einer bekannten Strecke setzen">${I('ruler')} Maßstab</button>`}
     ${ph && !ph.plan ? `<button class="btn sm ghost" data-act="roof-find" title="Lange diagonale Kanten als mögliche Dachschräge vorschlagen">${I('roof')} <span class="hide-sm">Dachkanten</span></button>` : ''}
@@ -3850,6 +3880,8 @@ const ACT = {
   'import-backup'() { $('#file-backup').click(); },
   'pick-photo'() { $('#file-photo').click(); },
   'neutral-photo'() { addPhoto(paintRoom()); },
+  variants() { roomVariantsDialog(); },
+  'variant-apply'(t) { const ph=activePhoto();if(!ph?.plan||ph.plan.before)return;const v=roomVariant(ph,t.dataset.mode,t.dataset.cabinet);if(v.error){toast(v.error);return;}snapshot();ph.placements=v.ph.placements;S.sel=null;touch();closeDlg(dlg);renderEditorAll();toast('Raumaufteilung übernommen – Laufwege und Audio prüfen.'); },
   'new-plan'() { planDialog(null); },
   'edit-plan'() { const ph = activePhoto(); if (ph && ph.plan) (ph.plan.scan ? scanDialog(ph) : planDialog(ph)); },
   'new-scan'() { $('#file-scan').click(); },
@@ -4022,6 +4054,7 @@ document.addEventListener('input', e => {
 document.addEventListener('change', async e => {
   const t = e.target;
   if (t.matches('[data-prop]')) { rangeSnap = false; if (t.dataset.prop === 'w') renderInspector(); return; }
+  if(t.id==='variant-cabinet'){roomVariantsDialog(t.value);return;}
   if (t.id === 'file-photo') { const f = t.files[0]; t.value = ''; if (f && S.room) addPhotoFile(f); return; }
   if (t.id === 'file-insp') { const f = t.files[0]; t.value = ''; if (f && S.room) inspirationFile(f); return; }
   if (t.id === 'file-scan') { const f = t.files[0]; t.value = ''; if (f && S.room) scanFile(f); return; }
