@@ -68,6 +68,16 @@ Umstellung bestehender Räume (einmalig, Merker `defaultV3`): Räume auf „Indu
 
 In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, „1 Schublade, 2 Türen“, „1 Klappe“) als Holzkorpus im schwarzen Rahmen mit Metallschubladen oben und Türen oder Klappe unten gezeichnet (Modellart `framecab`).
 
+### Fenster in der Ecke und Schrankposition (16.11.2026)
+
+Laut Aufmaß beginnt das Fenster in der Giebelwand schon 25 cm hinter der Ecke (Zeichnung: 69 cm). Möbel an der oberen Wand, die tiefer sind als dieser Abstand, rücken deshalb von der Giebelwand ab (`cornerOffset`): um eine Fensterflügelbreite (77 cm), höchstens aber so weit, dass die Ecktür noch 90° öffnet (rechte Möbelkante bei 227 cm für 66 cm Tiefe).
+
+- 150 cm breite Schränke (7 Vorschläge) stehen bei 77–227 cm: Fenster frei, Tür öffnet 90°.
+- 200 cm breite Schränke (23 Vorschläge) können nur 27 cm abrücken. Der eckseitige Fensterflügel lässt sich dann nur einen Spalt weit drehen. Diese Vorschläge sind auf der Karte gekennzeichnet und haben einen eigenen Checklistenpunkt (`KONRAD_FENSTER_BREIT`). An der rechten Wand wäre nur für die 201 cm hohen Platz (236 cm passen nicht unter die Schräge) und der Schreibtisch müsste umziehen; das ist nicht umgesetzt.
+- Die Passprüfung berücksichtigt Fenster und Türschwenk weiterhin nicht.
+
+Umstellung bestehender Räume (Merker `cornerV1`): Steht der Schrank eines anderen Vorschlags noch unverändert in der Ecke, rückt er auf die neue Position; von Hand verschobene Schränke und alle übrigen Möbel bleiben. Die Checkliste wird erneuert.
+
 ### HiFi und Kabelplanung
 
 Im Grundriss „Audio“ öffnen: Stereo-Hörplatz, vier verteilte Boxen oder 5.1-Heimkino vorschlagen lassen. Die Stilpalette beeinflusst den HiFi-Möbelentwurf; seine Maße und Preise müssen eingetragen werden. Verstärkername, unabhängige Kanalzahl, X/Y-Position, Anschlusshöhe und Kabelreserve werden pro Plan gespeichert. Kabelwege zeigen den kürzeren Weg entlang des rechteckigen Raumrahmens mit Anschlussstrecken. Höhen und Reserve fließen in die Längenliste ein. Türen, Nischen und Hindernisse werden nicht umgangen. Subwoofer gelten als aktiv und sind nicht in der Passivkabelliste. Kanalzahl ist keine elektrische Kompatibilitätsprüfung. Keine gemessene Schallabdeckung. Test: `node tests/audio-cables.test.mjs`.

@@ -1142,8 +1142,8 @@ const KONRAD_CHECKLIST = [
   'Bett: Konrads jetziges Bett bleibt (120 × 200). Außenmaße nachmessen (geplant 126 × 206 cm). Es steht jetzt 25 cm vom Kniestock weg, damit man sich in der Bettmitte aufsetzen kann.',
   'Steckdosen kartieren, wenn der alte Schrank weg ist: an der Giebelwand neben dem Bett (Nachtkonsole, Leselicht, Laden) und am Schreibtisch. Am Tisch hängen Motor, PC, Monitor, Lautsprecher und Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt.',
   'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen. Der Schreibtisch beginnt jetzt erst 29 cm hinter der Ecke (y = 135) und steht 4 cm vor der Wand (Kabel, Hubweg).',
-  'Tür: Bodentürstopper (am besten magnetisch) so setzen, dass die Tür bei gut 90° stoppt – sonst schlägt sie gegen die Schiebetür des PAX.',
-  'Fenster: rechten Flügel 90° öffnen und messen, ob der Griff die PAX-Front erreicht (Front bei ca. 67 cm mit Sockelleiste). Linke MEHAMN-Tür in die hintere Schiene hängen, sonst Drehbegrenzer am Fenster.',
+  'Tür: Bodentürstopper (am besten magnetisch) so setzen, dass die Tür bei 90° stoppt – weiter geöffnet schlägt sie gegen die Schrankecke.',
+  'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der Kleiderschrank steht deshalb 77 cm von der Giebelwand entfernt, der Fensterflügel geht frei auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke bleibt frei.',
   'PAX: Deckenhöhe an allen vier Ecken der Stellfläche messen (mind. 240 cm, Kippdiagonale ca. 243 cm, keine Deckenleuchte im Kippbereich). Pakete sind 246 cm lang – im Erdgeschoss auspacken und Teile einzeln über die Treppe tragen.',
   'Rechte Wand für das String-Regal prüfen (Mauerwerk oder Gipskarton). Bei Gipskarton ein Seitenteil in einen Ständer schrauben, sonst Hohlraumdübel. Größte Lego-Modelle vorher ausmessen.',
   'Rollo erst nach dem PAX montieren, über der Laibung leicht Richtung Bett versetzt; im Heizbetrieb nur bis zur Fensterbank.',
@@ -1170,8 +1170,22 @@ const PANAMA_CHECKLIST = [
   'Monitor matt (entspiegelt) wählen und an einem Monitorarm mittig hinten befestigen – das Fenster liegt gegenüber.',
   'Teppich so legen, dass die Tür nicht darüber schleift und das Sideboard nicht auf der Kante steht (geplant x 42–202).',
 ];
+/* Fenster-Hinweis für 200 cm breite Schränke: sie können nicht weit genug abrücken */
+const KONRAD_FENSTER_BREIT = 'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der 200 cm breite Kleiderschrank kann nur 27 cm von der Giebelwand abrücken, sonst öffnet die Tür keine 90° mehr. Er steht damit seitlich vor dem Fensterrand: Der eckseitige Flügel lässt sich nur einen Spalt weit drehen (Kippen geht), und in die Ecke kommt weniger Licht. Wer das Fenster frei haben will, nimmt einen 150 cm breiten Schrank oder den Vorschlag „Industrial · PANAMA“.';
+const setWideWardrobe = set => { const x = set && !set.layout && set.items.find(i => i.key === 'schrank'); return !!x && x.dims.w > 175; };
+function konradChecklist(set) {
+  if (set && set.layout === 'bett-bestand') return PANAMA_CHECKLIST;
+  return setWideWardrobe(set) ? KONRAD_CHECKLIST.map(t => t.startsWith('Fenster:') ? KONRAD_FENSTER_BREIT : t) : KONRAD_CHECKLIST;
+}
+/* Ecke obere Wand / Giebelwand: Das Fenster beginnt dort schon 25 cm hinter der Ecke. Möbel an der oberen Wand, die tiefer sind, rücken von der Giebelwand ab –
+   um eine Fensterflügelbreite, höchstens aber so weit, dass die Ecktür noch 90° öffnet. Liefert den Abstand der linken Möbelkante zur Giebelwand in cm. */
+function cornerOffset(pl, w, d) {
+  const win = (pl.windows || []).find(x => x.wall === 'left'); if (!win || win.from >= d + 5) return 0;
+  const dr = pl.door, lim = dr && dr.type === 'corner' && (dr.corner || 'tr') === 'tr' ? pl.w - dr.leg + (dr.leg * Math.SQRT2 - dr.width) / Math.SQRT2 - d - 1.4 : pl.w;
+  return Math.max(0, Math.min(Math.ceil(win.width / 2) + 1, Math.round(lim - w)));
+}
 const KONRAD_DEFAULT_SET = 'ind_panama';
-function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.windowV1 = true; return ok; }
+function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.windowV1 = r.cornerV1 = true; return ok; }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
 const KONRAD_PHOTOS = [];
@@ -1909,7 +1923,7 @@ function setsDialog() {
         <div class="set-b">
           <div class="set-top"><strong>${esc(s.title || s.style)}</strong><span class="pill tier">${esc(s.tier)}</span>${s.id === KONRAD_DEFAULT_SET ? '<span class="pill idee">Standard</span>' : ''}${best === s.id ? '<span class="pill match">passt zu deinem Stück</span>' : ''}${r.activeSet === s.id ? '<span class="pill gekauft">aktiv</span>' : ''}</div>
           <span class="sw-row">${s.palette.map(p => `<i title="${esc(p.name)}" style="background:${esc(p.hex)}"></i>`).join('')}</span>
-          <p class="fine">${esc(s.summary || '')}</p>${s.generated ? '<span class="fine">Neue Kombination · Aufstellung prüfen</span>' : ''}${r.budget != null && setTotal(s) > r.budget ? `<span class="fine">${eur0(setTotal(s)-r.budget)} über dem Raumbudget (ohne Versand)</span>` : ''}
+          <p class="fine">${esc(s.summary || '')}</p>${s.generated ? '<span class="fine">Neue Kombination · Aufstellung prüfen</span>' : ''}${setWideWardrobe(s) ? '<span class="fine">Schrank 200 cm breit: schränkt den Fensterflügel in der Ecke ein</span>' : ''}${r.budget != null && setTotal(s) > r.budget ? `<span class="fine">${eur0(setTotal(s)-r.budget)} über dem Raumbudget (ohne Versand)</span>` : ''}
           <div class="set-f"><b>${eur0(setTotal(s))}</b><span class="fine">${s.items.filter(i => i.role !== 'alternative').length} Produkte</span><span class="grow"></span>
             <button type="button" class="btn sm ${r.activeSet === s.id ? '' : 'primary'}" data-act="set-apply" data-id="${s.id}" aria-label="${esc(setName(s))} ${r.activeSet === s.id ? 'neu anordnen' : 'übernehmen'}">${r.activeSet === s.id ? 'Neu anordnen' : 'Übernehmen'}</button></div>
         </div></article>`).join('') || '<p class="muted">Kein Vorschlag für diese Auswahl.</p>'}</div>
@@ -1934,8 +1948,8 @@ function layoutKonradSet(r, keep = new Set(), layout) {
   if (by.teppich) { const m = dm(by.teppich); put(by.teppich, (stay ? 42 : 35) + Math.min(m.w, 165) / 2, stay ? Math.max(rowD + 20 + m.d / 2, (rowD + bedTop) / 2) : 75 + m.d / 2); }   // stay: mittig zwischen Schrankreihe und Bett, 2 cm vor dem Sideboard
   const win = (P.windows || []).find(w => w.wall === 'left');   // Fenster in der Giebelwand
   // Beginnt das Fenster innerhalb der Schranktiefe, rückt die Reihe um eine Flügelbreite von der Giebelwand ab: nichts steht vor dem Fenster, der Flügel geht auf
-  if (stay) { let x = win && win.from < rowD + 5 ? Math.ceil(win.width / 2) + 1 : 0; for (const k of ['schrank', 'highboard', 'kommode']) if (by[k] && by[k] !== night) { const m = dm(by[k]); put(by[k], x + m.w / 2, m.d / 2); x += m.w + 2; } }   // Schrankreihe an der oberen Wand
-  else if (by.schrank) { const m = dm(by.schrank); put(by.schrank, m.w / 2, m.d / 2); }
+  if (stay) { const row = ['schrank', 'highboard', 'kommode'].filter(k => by[k] && by[k] !== night); let x = cornerOffset(P, row.reduce((a, k) => a + dm(by[k]).w + 2, -2), rowD); for (const k of row) { const m = dm(by[k]); put(by[k], x + m.w / 2, m.d / 2); x += m.w + 2; } }   // Schrankreihe an der oberen Wand
+  else if (by.schrank) { const m = dm(by.schrank); put(by.schrank, cornerOffset(P, m.w, m.d) + m.w / 2, m.d / 2); }   // neben dem Fenster, nicht davor
   const dd = by.schreibtisch ? dm(by.schreibtisch) : { w: 160, d: 80, h: 75 }, deskH = !dd.h || dd.h > 90 ? 75 : dd.h;
   const cy = stay ? Math.min(133, bedTop - 2 - (night ? dm(night).w + 2 : 0) - dd.w) + dd.w / 2 : 215;   // stay: Schreibtisch rückt so weit zur Tür, dass Nachttisch und Bett dahinter passen
   if (by.schreibtisch) put(by.schreibtisch, WALL - dd.d / 2, cy, 90);
@@ -2000,7 +2014,7 @@ function applyKonradSet(r, id, migrate = false) {
   }
   if (migrate) r.items.filter(i => i.bestand).forEach(i => keep.add(i.id));
   layoutKonradSet(r, keep, set.layout);
-  r.activeSet = id; r.palette = set.palette.map(p => ({ name: p.name, hex: p.hex })); r.checklist = set.layout === 'bett-bestand' ? PANAMA_CHECKLIST : KONRAD_CHECKLIST;
+  r.activeSet = id; r.palette = set.palette.map(p => ({ name: p.name, hex: p.hex })); r.checklist = konradChecklist(set);
   r.furnish = { ...furnishOf(r), style: set.style, tier: set.tier };
   r.productsV1 = r.productsV2 = r.productsV3 = r.setsV1 = r.setsV2 = true;
   if (!migrate) r.alignV1 = true;   // frisch gestellt = ausgerichtet; beim Aktualisieren mit alten Positionen richtet die Umstellung beim Laden aus
@@ -4164,6 +4178,17 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
       for (const ph of r.photos) { const ws = ph.plan && !ph.plan.scan && ph.plan.windows, w = ws && ws.find(w => w.wall === 'left' && w.from === 69 && w.width === 151); if (w) repaintPlan(ph, { windows: ws.map(x => x === w ? { ...x, from: 25 } : x) }); }
       if (r.activeSet === 'ind_panama') { applyKonradSet(r, 'ind_panama', true); delete r.alignV1; }
       r.windowV1 = true;
+      S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && KONRAD_SETS.length && !r.cornerV1) {
+      // Übrige Vorschläge: Steht der Schrank noch unverändert in der Ecke an der Giebelwand, rückt er neben das Fenster; alles andere bleibt, die Checkliste wird erneuert
+      const after = r.photos.find(p => p.plan && !p.plan.before), set = KONRAD_SETS.find(x => x.id === r.activeSet);
+      if (after && set && !set.layout) {
+        const it = r.items.find(i => i.pkey === 'schrank'), p = it && after.placements.find(q => q.itemId === it.id);
+        if (p) { const m = itemDims(it), [cx, cy] = plCm(p, after); if (!((p.rot || 0) % 360) && Math.abs(cx - m.w / 2) < 1.5 && Math.abs(cy - m.d / 2) < 1.5) [p.x, p.y] = relFromCm(after, cornerOffset(after.plan, m.w, m.d) + m.w / 2, m.d / 2); }
+        r.checklist = konradChecklist(set);
+      }
+      r.cornerV1 = true;
       S.storage && await DB.put(r);
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
