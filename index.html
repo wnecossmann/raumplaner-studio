@@ -1089,7 +1089,7 @@ function doRedo() { if (!S.redo.length) return; S.undo.push(snapState()); applyS
 
 /* Konrads Zimmer: Kinderzimmer neben „Arbeiten“ aus der Arbeitszeichnung Dachgeschoss 1:50.
    Innenmaße 3,58 × 4,575 m; Giebelfenster 1,51 m (2,805 m ab Außenecke); Tür 90 in abgeschrägter Ecke (30|90|30 = 1,50 m). */
-const KONRAD_BED = { name: 'Bett ca. 105 × 205 (Bestand)', dims: { w: 105, d: 205, h: 45 } };   // Angabe JC 16.11.2026 (vorher geschätzt 126 × 206)
+const KONRAD_BED = { name: 'Bett 100 × 200 (Bestand)', dims: { w: 105, d: 205, h: 45 } };   // Angabe JC 16.11.2026: außen ca. 105 × 205 cm, Liegefläche 100 × 200 (vorher geschätzt 126 × 206, benannt 120 × 200)
 const KONRAD_W = 350, KONRAD_D = 453, KONRAD_NOTE = 'Raummaße laut Aufmaß vom 16.11.2026 · Drempel und Dachneigung angenommen, bitte nachmessen';
 /* Grundriss auf neue Innenmaße bringen: Möbel und Lautsprecher behalten ihren Abstand zur jeweils näheren Wand */
 function resizePlanKeepWalls(ph, w, d, patch = {}) {
@@ -1215,7 +1215,7 @@ function cornerOffset(pl, w, d) {
   return Math.max(0, Math.min(Math.ceil(win.width / 2) + 1, Math.round(lim - w)));
 }
 const KONRAD_DEFAULT_SET = 'ind_panama_fenster';   // seit 16.11.2026: Schreibtisch am Fenster (vorher ind_panama, davor ind_premium)
-function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = r.bedV1 = true; return ok; }
+function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = r.bedV1 = r.bedV2 = true; return ok; }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
 const KONRAD_PHOTOS = [];
@@ -4344,6 +4344,28 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
         }
       }
       r.bedV1 = true;
+      S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && KONRAD_SETS.length && !r.bedV2) {
+      // Bett heißt nach seiner Liegefläche „Bett 100 × 200“ und steht bündig in seiner Ecke – auch in Räumen, in denen die Maße schon von Hand geändert wurden (dort griff bedV1 nicht)
+      const bed = r.items.find(i => i.bestand && /^Bett (120 × 200|ca. 105 × 205)/.test(i.name));
+      if (bed) {
+        try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {}
+        bed.name = KONRAD_BED.name;
+        const m = itemDims(bed);
+        for (const ph of r.photos) if (ph.plan) for (const q of ph.placements) if (q.itemId === bed.id) {   // steht es höchstens 30 cm neben einer Wand, rückt es bündig an sie
+          const a = (q.rot || 0) * Math.PI / 180, hx = (Math.abs(Math.cos(a)) * m.w + Math.abs(Math.sin(a)) * m.d) / 2, hy = (Math.abs(Math.sin(a)) * m.w + Math.abs(Math.cos(a)) * m.d) / 2, [x, y] = plCm(q, ph);
+          const tx = x > ph.plan.w / 2 ? ph.plan.w - hx : hx, ty = y > ph.plan.d / 2 ? ph.plan.d - hy : hy;
+          [q.x, q.y] = relFromCm(ph, Math.abs(tx - x) <= 30 ? tx : x, Math.abs(ty - y) <= 30 ? ty : y); q.w = m.w * ph.plan.ppc / ph.w;
+        }
+        const set = KONRAD_SETS.find(x => x.id === r.activeSet);
+        if (set) {   // Nachher-Plan: PANAMA-Vorschläge neu stellen (Schrankreihe schließt wieder ans Bett an), sonst nur Bett, Nachttisch und Leselampe
+          const fix = new Set(r.items.filter(i => i.pkey ? (set.layout ? i.status === 'gekauft' : !['nachttisch', 'leseleuchte'].includes(i.pkey)) : i.bestand && i.id !== bed.id).map(i => i.id));
+          layoutKonradSet(r, fix, set.layout);
+          r.checklist = konradChecklist(set);
+        }
+      }
+      r.bedV2 = true;
       S.storage && await DB.put(r);
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
