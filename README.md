@@ -68,6 +68,12 @@ Umstellung bestehender Räume (einmalig, Merker `defaultV3`): Räume auf „Indu
 
 In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, „1 Schublade, 2 Türen“, „1 Klappe“) als Holzkorpus im schwarzen Rahmen mit Metallschubladen oben und Türen oder Klappe unten gezeichnet (Modellart `framecab`).
 
+### Passprüfung mit Tür und Fenster, Bett 105 × 205 cm (16.11.2026)
+
+- **Türschwenk:** Ein Möbel, dessen Stellfläche im Viertelkreis liegt, den die Tür bis 90° überstreicht, meldet „Steht im Schwenkbereich der Tür“ (`doorSwing`, `inDoorSwing`; gleiche Geometrie wie die gezeichnete Tür, für Eck- und Wandtüren). Teppiche und Möbel, die höher als 200 cm hängen, sind ausgenommen.
+- **Fenster:** Ein Möbel, das höher ist als die Brüstung und dichter als 30 cm vor einem Fenster steht, meldet „Steht vor dem Fenster“. Die Brüstungshöhe ist mit 90 cm angenommen (`WIN_SILL`; je Fenster über `sill` im Grundriss überschreibbar, bisher ohne Eingabefeld). Rollos und Pflanzen sind ausgenommen. Ob ein Fensterflügel aufgeht, wird nicht geprüft.
+- **Bett (Bestand):** laut Angabe ca. 105 × 205 cm statt geschätzt 126 × 206 cm (`KONRAD_BED`). Umstellung bestehender Räume über den Merker `bedV1`: PANAMA-Vorschläge werden neu gestellt, bei den übrigen nur Bett, Nachttisch und Leselampe. Die Matratzen der Vorschläge sind weiterhin 120 × 200 cm und passen nicht mehr; die Checklisten weisen darauf hin, die Produkte sind noch nicht getauscht.
+
 ### Standard „Schreibtisch am Fenster“ (16.11.2026)
 
 Standard für Konrads Zimmer ist jetzt `ind_panama_fenster` („Industrial · PANAMA · Schreibtisch am Fenster“, 6.011,08 €). Umstellung (Merker `defaultV4`): Räume, die auf dem bisherigen Standard `ind_panama` stehen, wechseln beim Laden dorthin und werden neu gestellt. Gekaufte Möbel des Vorschlags behalten ihren Status und ziehen mit um, selbst hinzugefügte Möbel bleiben stehen, andere Vorschläge bleiben unberührt. `ind_panama` (ohne Highboard, Schreibtisch an der rechten Wand) bleibt wählbar.
@@ -89,9 +95,9 @@ Standard für Konrads Zimmer ist jetzt `ind_panama_fenster` („Industrial · PA
 
 Laut Aufmaß beginnt das Fenster in der Giebelwand schon 25 cm hinter der Ecke (Zeichnung: 69 cm). Möbel an der oberen Wand, die tiefer sind als dieser Abstand, rücken deshalb von der Giebelwand ab (`cornerOffset`): um eine Fensterflügelbreite (77 cm), höchstens aber so weit, dass die Ecktür noch 90° öffnet (rechte Möbelkante bei 227 cm für 66 cm Tiefe).
 
-- 150 cm breite Schränke (7 Vorschläge) stehen bei 77–227 cm: Fenster frei, Tür öffnet 90°.
-- 200 cm breite Schränke (23 Vorschläge) können nur 27 cm abrücken. Der eckseitige Fensterflügel lässt sich dann nur einen Spalt weit drehen. Diese Vorschläge sind auf der Karte gekennzeichnet und haben einen eigenen Checklistenpunkt (`KONRAD_FENSTER_BREIT`). An der rechten Wand wäre nur für die 201 cm hohen Platz (236 cm passen nicht unter die Schräge) und der Schreibtisch müsste umziehen; das ist nicht umgesetzt.
-- Die Passprüfung berücksichtigt Fenster und Türschwenk weiterhin nicht.
+- 150 cm breite Schränke (6 Vorschläge) stehen bei 77–227 cm: Fenster frei, Tür öffnet 90°.
+- 200 cm breite Schränke (24 Vorschläge) können nur 27 cm abrücken. Der eckseitige Fensterflügel lässt sich dann nur einen Spalt weit drehen. Diese Vorschläge sind auf der Karte gekennzeichnet und haben einen eigenen Checklistenpunkt (`KONRAD_FENSTER_BREIT`). An der rechten Wand wäre nur für die 201 cm hohen Platz (236 cm passen nicht unter die Schräge) und der Schreibtisch müsste umziehen; das ist nicht umgesetzt.
+- Seit dem Abend des 16.11.2026 prüft die Passprüfung auch Fenster und Türschwenk (siehe oben); die 24 Vorschläge mit 200-cm-Schrank melden deshalb „Steht vor dem Fenster“.
 
 Umstellung bestehender Räume (Merker `cornerV1`): Steht der Schrank eines anderen Vorschlags noch unverändert in der Ecke, rückt er auf die neue Position; von Hand verschobene Schränke und alle übrigen Möbel bleiben. Die Checkliste wird erneuert.
 

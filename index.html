@@ -1089,6 +1089,7 @@ function doRedo() { if (!S.redo.length) return; S.undo.push(snapState()); applyS
 
 /* Konrads Zimmer: Kinderzimmer neben „Arbeiten“ aus der Arbeitszeichnung Dachgeschoss 1:50.
    Innenmaße 3,58 × 4,575 m; Giebelfenster 1,51 m (2,805 m ab Außenecke); Tür 90 in abgeschrägter Ecke (30|90|30 = 1,50 m). */
+const KONRAD_BED = { name: 'Bett ca. 105 × 205 (Bestand)', dims: { w: 105, d: 205, h: 45 } };   // Angabe JC 16.11.2026 (vorher geschätzt 126 × 206)
 const KONRAD_W = 350, KONRAD_D = 453, KONRAD_NOTE = 'Raummaße laut Aufmaß vom 16.11.2026 · Drempel und Dachneigung angenommen, bitte nachmessen';
 /* Grundriss auf neue Innenmaße bringen: Möbel und Lautsprecher behalten ihren Abstand zur jeweils näheren Wand */
 function resizePlanKeepWalls(ph, w, d, patch = {}) {
@@ -1148,7 +1149,7 @@ const KONRAD_SKIP = new Set(['sitzsack']);
 const KONRAD_PALETTE = [{ name: 'Eiche warm', hex: '#C9A777' }, { name: 'Dunkelgrau', hex: '#3A3D40' }, { name: 'Schwarz', hex: '#1C1C1C' }, { name: 'Walnuss', hex: '#5A3E2B' }, { name: 'Salbeigrün', hex: '#8A9A8C' }, { name: 'Hell', hex: '#F2EFE9' }];
 const KONRAD_CHECKLIST = [
   'Dachschräge messen: Kniestockhöhe (an Bett, Lowboard und rechter Wand) und Deckenhöhe 50/100/150 cm vor dem Kniestock. Der Plan rechnet jetzt mit 90 cm und 40° – die Fotos sprechen für 85–95 cm. Echte Werte unter „Grundriss bearbeiten“ eintragen, die Passprüfung rechnet dann neu.',
-  'Bett: Konrads jetziges Bett bleibt (120 × 200). Außenmaße nachmessen (geplant 126 × 206 cm). Es steht jetzt 25 cm vom Kniestock weg, damit man sich in der Bettmitte aufsetzen kann.',
+  'Bett: Konrads jetziges Bett bleibt. Es misst außen ca. 105 × 205 cm – Liegefläche nachmessen (vermutlich 90 oder 100 × 200 cm). Die Matratze im Vorschlag ist noch für 120 × 200 cm ausgesucht und passt so nicht: vor dem Bestellen die passende Größe wählen. Das Bett steht 25 cm vom Kniestock weg, damit man sich in der Bettmitte aufsetzen kann.',
   'Steckdosen kartieren, wenn der alte Schrank weg ist: an der Giebelwand neben dem Bett (Nachtkonsole, Leselicht, Laden) und am Schreibtisch. Am Tisch hängen Motor, PC, Monitor, Lautsprecher und Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt.',
   'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen. Der Schreibtisch beginnt jetzt erst 29 cm hinter der Ecke (y = 135) und steht 4 cm vor der Wand (Kabel, Hubweg).',
   'Tür: Bodentürstopper (am besten magnetisch) so setzen, dass die Tür bei 90° stoppt – weiter geöffnet schlägt sie gegen die Schrankecke.',
@@ -1164,8 +1165,8 @@ const KONRAD_CHECKLIST = [
 /* Checkliste zur Aufstellung „bett-bestand“ (Set Industrial · PANAMA) */
 const PANAMA_CHECKLIST = [
   KONRAD_CHECKLIST[0],
-  'Bett: Konrads Bett (120 × 200) bleibt, wo es heute steht – rechte Ecke am Kniestock, Kopfende an der rechten Wand. Außenmaße nachmessen (geplant 126 × 206 cm).',
-  'Rechte Wand ausmessen: Zwischen Türecke und Bett sind es rechnerisch 221 cm. Schreibtisch (140 cm, ab 27 cm hinter der Ecke) und die Kommode als Nachttisch (50 cm) passen mit jeweils 2 cm Fuge.',
+  'Bett: Konrads Bett bleibt, wo es heute steht – rechte Ecke am Kniestock, Kopfende an der rechten Wand. Es misst außen ca. 105 × 205 cm; Liegefläche nachmessen (vermutlich 90 oder 100 × 200 cm). Die Matratze im Vorschlag ist noch für 120 × 200 cm ausgesucht und passt so nicht: vor dem Bestellen die passende Größe wählen.',
+  'Rechte Wand ausmessen: Zwischen Türecke und Bett sind es rechnerisch 242 cm: Schreibtisch (140 cm, ab 27 cm hinter der Ecke), dann gut 20 cm Luft, dann die Kommode als Nachttisch (50 cm) direkt am Bett.',
   'Kommode als Nachttisch: mit 73 cm deutlich höher als die Liegefläche (rund 45 cm). Am Bett ausprobieren, ob Wecker und Wasserglas so noch gut erreichbar sind.',
   'Steckdosen kartieren: am Schreibtisch (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
   'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen und frei bleiben – der Schreibtisch beginnt 27 cm hinter der Ecke und steht 4 cm vor der Wand (Kabel, Hubweg).',
@@ -1173,7 +1174,7 @@ const PANAMA_CHECKLIST = [
   'Ecke am Fenster: Das Fenster beginnt schon 25 cm hinter der Ecke. Der Dielenschrank steht deshalb 77 cm von der Giebelwand entfernt – so steht nichts vor dem Fenster und der Flügel geht auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke selbst bleibt frei.',
   'Tür: Im Schwenkbereich steht kein Möbel mehr, sie geht ganz auf. Ein Bodentürstopper schützt Wand und Türgriff.',
   'Sideboard an der Giebelwand direkt hinter dem Fenster: Abstand zu Fensterbank und Heizkörper prüfen.',
-  'Schuhschrank am Kniestock links (130 × 40 × 50 cm): Kniestockhöhe dort nachmessen; zwischen Schrank und Bettfuß bleiben rund 13 cm. Er hat eine große Klappe – vor dem Kauf ansehen, was hineinpasst.',
+  'Schuhschrank am Kniestock links (130 × 40 × 50 cm): Kniestockhöhe dort nachmessen; zwischen Schrank und Bettfuß bleiben rund 14 cm. Er hat eine große Klappe – vor dem Kauf ansehen, was hineinpasst.',
   'Lieferung: Dielenschrank, Highboard und Sideboard kommen von Kaufland per Spedition frei Bordsteinkante – Tragehilfe bis ins Dachgeschoss einplanen; dort waren am 16.11.2026 nur noch wenige Stück zum genannten Preis verfügbar. Der Schuhschrank kommt von home24 (Lieferung ca. 10.–17.12.2026, Versandkosten prüfen). Akazie ist Naturholz, Farbe und Maserung weichen je Stück ab.',
   'Altmöbel: Kiefernschrank, Hochregal, KALLAX 5 × 5 und der Rollcontainer haben in dieser Aufstellung keinen Platz mehr.',
   'Monitor matt (entspiegelt) wählen und an einem Monitorarm mittig hinten befestigen – das Fenster liegt gegenüber.',
@@ -1186,7 +1187,7 @@ const FENSTERPLATZ_CHECKLIST = (pc => [
   pc('Bett:'),
   'Schreibtisch an der oberen Wand, 40 cm von der Giebelwand: Das Fenster liegt links vom Bildschirm, das Tageslicht kommt von der Seite und spiegelt nicht. Brüstungshöhe messen und prüfen, ob der Fensterflügel über Tischplatte und linken Lautsprecher hinweg aufgeht; sonst den Tisch weiter zur Tür rücken (bis rund 200 cm rechte Tischkante bleibt die Tür frei).',
   'Heizkörper unter dem Fenster: Das linke Tischende steht davor. Die 40 cm Abstand zur Giebelwand lassen, damit die Wärme aufsteigen kann.',
-  'Rechte Wand ausmessen: Dielenschrank (80 cm), Highboard (75 cm) und Kommode (50 cm) stehen mit 2 cm Fugen als abgestufte Reihe vor dem Bett und beginnen 10 cm hinter der Türecke. Lichtschalter und Steckdose dort dürfen nicht hinter dem Dielenschrank verschwinden.',
+  'Rechte Wand ausmessen: Dielenschrank (80 cm), Highboard (75 cm) und Kommode (50 cm) stehen mit 2 cm Fugen als abgestufte Reihe vor dem Bett und beginnen 31 cm hinter der Türecke. Lichtschalter und Steckdose dort dürfen nicht hinter dem Dielenschrank verschwinden.',
   'Raumhöhe an der rechten Wand: Der Dielenschrank (180 cm) steht im hohen Bereich, das Highboard (110 cm) reicht bis kurz hinter den Beginn der Schräge. Kniestock und Neigung nachmessen.',
   pc('Kommode als Nachttisch:'),
   'Steckdosen kartieren: am Schreibtisch an der oberen Wand (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
@@ -1214,7 +1215,7 @@ function cornerOffset(pl, w, d) {
   return Math.max(0, Math.min(Math.ceil(win.width / 2) + 1, Math.round(lim - w)));
 }
 const KONRAD_DEFAULT_SET = 'ind_panama_fenster';   // seit 16.11.2026: Schreibtisch am Fenster (vorher ind_panama, davor ind_premium)
-function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = true; return ok; }
+function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = r.bedV1 = true; return ok; }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
 const KONRAD_PHOTOS = [];
@@ -1233,7 +1234,7 @@ function addKonradBefore(r) {
   const BIRCH = '#d6b47e', OAK = '#b5833f';
   const kallax = it({ name: 'Würfelregal 5 × 5 (Bestand)', cat: 'Regal', dims: { w: 182, d: 39, h: 182 }, color: '#e1cfa6', note: 'Mit Schubladen- und Stoffboxen, oben die Lego-Modelle. ' + N });
   const night = it({ name: 'Nachttisch (Bestand)', cat: 'Kommode', dims: { w: 45, d: 40, h: 55 }, color: BIRCH });
-  const bed = it({ name: 'Bett 120 × 200 (Bestand)', cat: 'Bett', dims: { w: 126, d: 206, h: 45 }, color: OAK });
+  const bed = it({ name: KONRAD_BED.name, cat: 'Bett', dims: { ...KONRAD_BED.dims }, color: OAK, note: 'Außenmaße laut Angabe vom 16.11.2026 ca. 105 × 205 cm. Liegefläche und Höhe bitte nachmessen.' });
   const ward = it({ name: 'Kleiderschrank 3-türig (Bestand)', cat: 'Kleiderschrank', dims: { w: 150, d: 60, h: 205 }, color: BIRCH });
   const cab = it({ name: 'Schränkchen (Bestand)', cat: 'Kommode', dims: { w: 80, d: 45, h: 85 }, color: BIRCH });
   const desk = it({ name: 'Schreibtisch Eiche (Bestand)', cat: 'Tisch', dims: { w: 140, d: 70, h: 76 }, color: OAK });
@@ -1246,7 +1247,7 @@ function addKonradBefore(r) {
   const put = (item, xc, yc, rot = 0) => ph.placements.push({ id: uid(), itemId: item.id, x: (P.M + xc) * P.ppc / out.w, y: (P.M + yc) * P.ppc / out.h, w: itemDims(item).w * P.ppc / out.w, rot, flip: false, op: 1, bri: 100, shadow: false, z: z++ });
   put(kallax, W - 19.5, 197, 90);
   put(night, W - 20, 310.5, 90);
-  put(bed, W - 103, P.d - 63, 90);
+  put(bed, W - KONRAD_BED.dims.d / 2, P.d - KONRAD_BED.dims.w / 2, 90);
   put(ward, 30, 297, -90);
   put(cab, 22.5, P.d - 42, -90);
   put(desk, 35, 148, -90);
@@ -1984,7 +1985,7 @@ function layoutKonradSet(r, keep = new Set(), layout) {
   const after = r.photos.find(p => p.plan && !p.plan.before); if (!after) return;
   const by = {}; r.items.forEach(i => { if (i.pkey && !i.pkey.startsWith('alt_')) by[i.pkey] = i; });
   const best = re => r.items.find(i => i.bestand && re.test(i.name));
-  const kallax = best(/^Würfelregal 5 × 5/), bed = best(/^Bett 120 × 200/), roll = best(/^Rollcontainer/);
+  const kallax = best(/^Würfelregal 5 × 5/), bed = best(/^Bett /), roll = best(/^Rollcontainer/);
   const mine = new Set([...r.items.filter(i => i.pkey).map(i => i.id), kallax && kallax.id, bed && bed.id, roll && roll.id].filter(id => id && !keep.has(id)));
   after.placements = after.placements.filter(q => !mine.has(q.itemId));
   const placed = new Set(after.placements.map(q => q.itemId));
@@ -1992,7 +1993,7 @@ function layoutKonradSet(r, keep = new Set(), layout) {
   const put = (it, xc, yc, rot = 0, elev = 0) => { if (!it || (keep.has(it.id) && placed.has(it.id))) return; const [x, y] = relFromCm(after, xc, yc); after.placements.push({ id: uid(), itemId: it.id, x, y, w: dm(it).w * P.ppc / after.w, rot, flip: false, op: 1, bri: 100, shadow: false, z: z++, elev }); };
   const WALL = W - 4, fen = layout === 'fensterplatz', stay = layout === 'bett-bestand' || fen;   // stay: Bett bleibt wie im Ist-Zustand in der rechten Ecke am Kniestock; fen: zusätzlich Schreibtisch am Fenster
   const night = by.nachttisch || (stay && by.kommode) || null;   // ohne eigenen Nachttisch steht die Kommode am Bett
-  const bm = bed ? dm(bed) : { w: 126, d: 206 }, bedTop = D - (stay ? 0 : 25) - bm.w;
+  const bm = bed ? dm(bed) : KONRAD_BED.dims, bedTop = D - (stay ? 0 : 25) - bm.w;
   const rowD = Math.max(0, ...['schrank', 'highboard', 'kommode'].filter(k => by[k] && by[k] !== night).map(k => dm(by[k]).d));   // Tiefe der Schrankreihe an der oberen Wand
   if (by.teppich && !fen) { const m = dm(by.teppich); put(by.teppich, (stay ? 42 : 35) + Math.min(m.w, 165) / 2, stay ? Math.max(rowD + 20 + m.d / 2, (rowD + bedTop) / 2) : 75 + m.d / 2); }   // stay: mittig zwischen Schrankreihe und Bett, 2 cm vor dem Sideboard
   const win = (P.windows || []).find(w => w.wall === 'left');   // Fenster in der Giebelwand
@@ -2455,6 +2456,26 @@ function headroom(p, it, ph = activePhoto()) {
   if (!ph || !ph.plan) return null;
   return Math.round(Math.min(...plCorners(p, it, ph).map(([x, y]) => ceilAt(ph.plan, x, y))));
 }
+/* Tür: Band (p), Richtung der geschlossenen Tür (u), Richtung bei 90° Öffnung (n), Türblattbreite (r) – so wie der Grundriss den Schwenk zeichnet */
+function doorSwing(pl) {
+  const dr = pl.door; if (!dr) return null; const W = pl.w, D = pl.d;
+  if (dr.type === 'corner') {
+    const L = dr.leg || 106, [A, B] = { tl: [[L, 0], [0, L]], tr: [[W - L, 0], [W, L]], br: [[W - L, D], [W, D - L]], bl: [[L, D], [0, D - L]] }[dr.corner || 'tr'];
+    const len = Math.hypot(B[0] - A[0], B[1] - A[1]), u = [(B[0] - A[0]) / len, (B[1] - A[1]) / len], mid = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2]; let n = [-u[1], u[0]];
+    if ((W / 2 - mid[0]) * n[0] + (D / 2 - mid[1]) * n[1] < 0) n = [-n[0], -n[1]];
+    const r = Math.min(dr.width || 90, len - 10), o = (len - r) / 2; return { p: [A[0] + u[0] * o, A[1] + u[1] * o], u, n, r };
+  }
+  const p = { top: [dr.from, 0], bottom: [dr.from, D], left: [0, dr.from], right: [W, dr.from] }[dr.wall]; if (!p) return null;
+  return { p, u: dr.wall === 'top' || dr.wall === 'bottom' ? [1, 0] : [0, 1], n: { top: [0, 1], bottom: [0, -1], left: [1, 0], right: [-1, 0] }[dr.wall], r: dr.width || 90 };
+}
+const inQuad = (cs, x, y) => { let sg = 0; for (let i = 0; i < 4; i++) { const a = cs[i], b = cs[(i + 1) % 4], c = (b[0] - a[0]) * (y - a[1]) - (b[1] - a[1]) * (x - a[0]); if (Math.abs(c) < 1e-9) continue; if (sg && Math.sign(c) !== sg) return false; sg = Math.sign(c); } return true; };
+/* Liegt die Stellfläche im Viertelkreis, den die Tür bis 90° überstreicht? (Raster aus Punkten, je 2 cm bzw. 4° Abstand zu den Rändern) */
+function inDoorSwing(cs, sw) {
+  for (let a = 4; a <= 86; a += 5) { const c = Math.cos(a * Math.PI / 180), si = Math.sin(a * Math.PI / 180); for (let r = 8; r <= sw.r - 2; r += 6) if (inQuad(cs, sw.p[0] + r * (c * sw.u[0] + si * sw.n[0]), sw.p[1] + r * (c * sw.u[1] + si * sw.n[1]))) return true; }
+  return false;
+}
+const WIN_SILL = 90, WIN_DEPTH = 30;   // angenommene Brüstungshöhe; Tiefe des Streifens vor dem Fenster, der frei bleiben soll (cm)
+const winZone = (pl, wn) => { const a = wn.from, b = wn.from + wn.width, t = WIN_DEPTH, W = pl.w, D = pl.d; return ({ left: [[0, a], [t, a], [t, b], [0, b]], right: [[W - t, a], [W, a], [W, b], [W - t, b]], top: [[a, 0], [b, 0], [b, t], [a, t]], bottom: [[a, D - t], [b, D - t], [b, D], [a, D]] })[wn.wall]; };
 function fitIssues(p, ph = activePhoto()) {
   if (!ph || !ph.plan || ph.plan.before) return [];
   const it = getItem(p.itemId); if (!it) return [];
@@ -2463,6 +2484,12 @@ function fitIssues(p, ph = activePhoto()) {
   if (!isFlat(it)) {
     const hr = Math.min(...cs.map(([x, y]) => ceilAt(pl, x, y)));
     if (el + dm.h > hr + .5) out.push(`Zu hoch: hier nur ≈ ${Math.round(hr)} cm Raumhöhe${slopeOf(pl) && hr < (pl.height || 250) ? ' unter der Schräge' : ''}`);
+    const sw = el < 200 ? doorSwing(pl) : null;
+    if (sw && inDoorSwing(cs, sw)) out.push('Steht im Schwenkbereich der Tür');
+    for (const wn of pl.windows || []) {   // höher als die Brüstung und dichter als 30 cm vor dem Fenster (Rollos und Pflanzen ausgenommen)
+      const sill = wn.sill ?? WIN_SILL, zone = el + dm.h > sill + .5 && el < sill + 130 && winZone(pl, wn);
+      if (zone && sat(cs, zone) && !['rollo', 'plant'].includes(kind3(it, dm))) { out.push(`Steht vor dem Fenster (höher als die Brüstung, angenommen ${sill} cm)`); break; }
+    }
     for (const q of ph.placements) {
       if (q === p) continue;
       const jt = getItem(q.itemId); if (!jt || isFlat(jt) || pairOK(it, jt)) continue;
@@ -2482,7 +2509,7 @@ function fitHTML(p, it, ph = activePhoto()) {
   if (ph.plan.before) return `<p class="hint">Ist-Zustand: Hier wird nichts geprüft, so steht es heute im Zimmer.</p>`;
   const iss = fitIssues(p, ph);
   if (iss.length) return `<div class="warnline" style="color:var(--bad)">${I('alert')}<div><strong>Passt hier nicht</strong><ul class="fit-list">${iss.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div></div>`;
-  return ownDims(it) ? `<p class="okline">${I('check')} Passt am Standort: Wände, Decke${slopeOf(ph.plan) ? ', Schräge' : ''} und andere Möbel geprüft (≥ ${headroom(p, it, ph)} cm Höhe frei).</p>`
+  return ownDims(it) ? `<p class="okline">${I('check')} Passt am Standort: Wände, Decke${slopeOf(ph.plan) ? ', Schräge' : ''}, Tür, Fenster und andere Möbel geprüft (≥ ${headroom(p, it, ph)} cm Höhe frei).</p>`
     : `<p class="hint">${I('ruler')} Mit Standardmaßen geprüft, kein Konflikt. Für eine verlässliche Prüfung die echten Maße eintragen.</p>`;
 }
 
@@ -3014,7 +3041,7 @@ async function render3D() {
   const ph = activePhoto();
   stageEl.innerHTML = `<div class="v3-wrap"><canvas class="v3" id="v3" aria-label="3D-Ansicht des Raums. Ziehen dreht, Mausrad zoomt, Antippen wählt ein Möbel."></canvas>
     <div class="v3-opts"><button class="btn sm" id="v3-reset">Ansicht zurücksetzen</button><button class="btn sm" id="v3-top">Draufsicht</button><button class="btn sm" id="v3-focus">Auswahl ansehen</button><label><input type="checkbox" id="v3-snap" ${V3OPT.snap?'checked':''}> 5-cm-Raster</label><label><input type="checkbox" id="v3-roof" ${V3OPT.roof?'checked':''}> Dach</label><button type="button" class="btn sm" data-act="v3-floor" title="Bodenbelag in der 3D-Ansicht wechseln">Boden: ${V3OPT.floor === 'plan' ? 'Plan' : 'Holz'}</button><button type="button" class="btn sm" data-act="v3-box" aria-pressed="${!!V3OPT.box}" title="Außenmaße aller Möbel als Rahmen in Prüffarbe zeigen">Maßrahmen</button></div>
-    <div class="v3-legend"><span><i style="background:#e3ac36"></i>gelber Rahmen: Auswahl</span><span><i style="background:#c0392b"></i>roter Rahmen: Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>grauer Bodenrahmen: Standardmaße, bitte messen</span><span id="v3-leg-ok" ${V3OPT.box ? '' : 'hidden'}><i style="background:#2f7a48"></i>passt</span><span class="hide-sm">· Ziehen verschiebt · Pfeiltasten: 1 cm, Umschalt: 10 cm · R: drehen</span></div>
+    <div class="v3-legend"><span><i style="background:#e3ac36"></i>gelber Rahmen: Auswahl</span><span><i style="background:#c0392b"></i>roter Rahmen: Kollision, Wand, Schräge, Tür oder Fenster</span><span><i style="background:#9aa09c"></i>grauer Bodenrahmen: Standardmaße, bitte messen</span><span id="v3-leg-ok" ${V3OPT.box ? '' : 'hidden'}><i style="background:#2f7a48"></i>passt</span><span class="hide-sm">· Ziehen verschiebt · Pfeiltasten: 1 cm, Umschalt: 10 cm · R: drehen</span></div>
     <p class="v3-msg" id="v3-msg">3D-Ansicht wird geladen …</p></div>`;
   let T;
   try { T = await loadThree(); } catch { const m = $('#v3-msg'); if (m) m.textContent = 'Die 3D-Ansicht braucht eine Internetverbindung, um Three.js zu laden. Der Grundriss funktioniert auch ohne.'; return; }
@@ -4292,6 +4319,28 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
         }
       }
       r.sizeV1 = true;
+      S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && KONRAD_SETS.length && !r.bedV1) {
+      // Bett (Bestand) misst ca. 105 × 205 cm statt geschätzt 126 × 206 cm – nur solange noch die alte Schätzung eingetragen ist.
+      // Vorher-Plan: Bett bleibt in seiner Ecke. Nachher-Plan: PANAMA-Vorschläge werden neu gestellt, bei den übrigen nur Bett, Nachttisch und Leselampe.
+      const bed = r.items.find(i => i.bestand && /^Bett 120 × 200/.test(i.name) && i.dims && i.dims.w === 126 && i.dims.d === 206);
+      if (bed) {
+        try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {}
+        const ow = bed.dims.w, od = bed.dims.d, nw = KONRAD_BED.dims.w, nd = KONRAD_BED.dims.d;
+        for (const ph of r.photos) if (ph.plan) for (const q of ph.placements) if (q.itemId === bed.id) {   // an der jeweils näheren Wand bleiben
+          const a = (q.rot || 0) * Math.PI / 180, ex = (Math.abs(Math.cos(a)) * (ow - nw) + Math.abs(Math.sin(a)) * (od - nd)) / 2, ey = (Math.abs(Math.sin(a)) * (ow - nw) + Math.abs(Math.cos(a)) * (od - nd)) / 2, [x, y] = plCm(q, ph);
+          [q.x, q.y] = relFromCm(ph, x + (x > ph.plan.w / 2 ? ex : -ex), y + (y > ph.plan.d / 2 ? ey : -ey)); q.w *= nw / ow;
+        }
+        Object.assign(bed, { name: KONRAD_BED.name, dims: { ...bed.dims, w: nw, d: nd } });
+        const set = KONRAD_SETS.find(x => x.id === r.activeSet);
+        if (set) {
+          const fix = new Set(r.items.filter(i => i.pkey ? (set.layout ? i.status === 'gekauft' : !['nachttisch', 'leseleuchte'].includes(i.pkey)) : i.bestand && i.id !== bed.id).map(i => i.id));
+          layoutKonradSet(r, fix, set.layout);
+          r.checklist = konradChecklist(set);
+        }
+      }
+      r.bedV1 = true;
       S.storage && await DB.put(r);
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
