@@ -1,4 +1,5 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Raumplaner Studio</title>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}.v3-controls{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.v3-controls label{background:#fffffff0;padding:6px 10px;border-radius:6px;font-size:12px}.v3-controls .btn{background:#fffffff0}
+</style></head><body><title>Raumplaner Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -489,6 +490,7 @@ details.best[open]>summary h4::before{content:"\25BE  "}
   .brand-name small{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.v3-controls{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.v3-controls label{background:#fffffff0;padding:6px 10px;border-radius:6px;font-size:12px}.v3-controls .btn{background:#fffffff0}
 </style>
 
 <header class="topbar">
@@ -2309,6 +2311,25 @@ function audioPanel(ph) {
 }
 
 /* ================= 3D-Ansicht (Three.js, bei Bedarf geladen) ================= */
+// Category geometry in a normalized box: preserves the measured outer dimensions.
+function furnitureModel3D(T, it, dm) {
+ const root=new T.Group(), col=it.color||catOf(it.cat).col, dark='#303632', fabric='#dedbd2';
+ const part=(x,y,z,w,h,d,color=col,metal=0)=>{const m=new T.Mesh(new T.BoxGeometry(w*dm.w,h*dm.h,d*dm.d),new T.MeshStandardMaterial({color,roughness:metal?.38:.82,metalness:metal}));m.position.set(x*dm.w,(y-.5)*dm.h,z*dm.d);m.castShadow=true;m.receiveShadow=true;root.add(m);return m;};
+ const legs=(top=.88)=>{for(const x of [-.42,.42])for(const z of [-.4,.4])part(x,top/2,z,.055,top,.055,dark,.3);};
+ const type=catOf(it.cat).sil;
+ if(type==='bett'&&/matratze|lattenrost|federholzrahmen/i.test(it.name||'')&&!/bettgestell/i.test(it.name||'')){part(0,.5,0,1,1,1,fabric);}
+ else if(type==='bett'){part(0,.27,0,1,.28,1);part(0,.48,.035,.94,.2,.91,fabric);part(0,.57,-.28,.82,.12,.22,'#f8f5ed');part(0,.58,.2,.94,.05,.58,col);part(0,.77,-.47,1,.46,.06);}
+ else if(type==='sofa'||type==='sessel'){legs(.15);part(0,.33,0,1,.36,.96);part(0,.78,-.4,1,.44,.2);for(const x of [-.44,.44])part(x,.59,0,.12,.38,1);const n=type==='sessel'?1:2;for(let i=0;i<n;i++)part(-.38+.76*(i+.5)/n,.56,.07,.74/n,.12,.76,fabric);}
+ else if(type==='tisch'||type==='couchtisch'){legs(.92);part(0,.96,0,1,.08,1);if(type==='couchtisch')part(0,.2,0,.82,.055,.8);}
+ else if(type==='stuhl'){legs(.45);part(0,.48,0,1,.08,1);part(0,.76,-.44,.9,.48,.12);}
+ else if(type==='regal'){for(const x of [-.48,.48])part(x,.5,0,.04,1,1);part(0,.5,-.48,.92,1,.04,dark);for(let j=0;j<=4;j++)part(0,.02+.96*j/4,0,.92,.04,1);}
+ else if(type==='schrank'||type==='kommode'||type==='vitrine'){part(0,.5,-.035,1,1,.93);if(type==='kommode'){for(let j=0;j<3;j++){part(0,.18+j*.31,.455,.94,.29,.09);part(0,.18+j*.31,.49,.18,.025,.02,dark,.4);}}else{for(const x of [-.245,.245]){part(x,.5,.455,.47,.96,.09,type==='vitrine'?'#8fa9a5':col);part(x*.16,.5,.49,.02,.13,.02,dark,.5);}}}
+ else if(type==='lampe'){part(0,.02,0,.65,.04,.65,dark,.3);part(0,.48,0,.05,.9,.05,dark,.5);part(0,.87,0,1,.26,1,'#e8ddbd');}
+ else if(type==='speaker'){part(0,.5,0,1,1,1,dark);for(const [y,r] of [[.33,.3],[.77,.12]]){const m=new T.Mesh(new T.CylinderGeometry(Math.min(dm.w,dm.h)*r,Math.min(dm.w,dm.h)*r,dm.d*.015,24),new T.MeshStandardMaterial({color:'#101815',roughness:.55}));m.rotation.x=Math.PI/2;m.position.set(0,(y-.5)*dm.h,dm.d*.49);root.add(m);}}
+ else part(0,.5,0,1,1,1);
+ return root;
+}
+
 let THREE_P = null, V3 = null;
 function loadThree() {
   if (!THREE_P) THREE_P = import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js').catch(e => { THREE_P = null; throw e; });
@@ -2316,7 +2337,7 @@ function loadThree() {
 }
 function disposeV3() {
   if (!V3) return;
-  try { V3.ro.disconnect(); V3.clearDyn(); V3.tex.forEach(t => t.dispose()); V3.renderer.dispose(); } catch {}
+  try { cancelAnimationFrame(V3.raf); V3.ro.disconnect(); V3.clearDyn(); V3.scene.traverse(o=>{o.geometry?.dispose();if(o.material)[].concat(o.material).forEach(m=>m.dispose());}); V3.tex.forEach(t => t.dispose()); V3.renderer.dispose(); } catch {}
   V3 = null;
 }
 function update3D() { if (V3) { cancelAnimationFrame(V3.raf); V3.raf = requestAnimationFrame(() => { if (V3) { V3.buildDyn(); V3.draw(); } }); } }
@@ -2324,20 +2345,24 @@ async function render3D() {
   disposeV3();
   const ph = activePhoto();
   stageEl.innerHTML = `<div class="v3-wrap"><canvas class="v3" id="v3" aria-label="3D-Ansicht des Raums. Ziehen dreht, Mausrad zoomt, Antippen wählt ein Möbel."></canvas>
-    <div class="v3-legend"><span><i style="background:#2f7a48"></i>passt</span><span><i style="background:#c0392b"></i>Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>Standardmaße, bitte messen</span><span class="hide-sm">· Möbel ziehen verschiebt, freie Fläche ziehen dreht, Mausrad zoomt</span></div>
+    <div class="v3-controls"><button class="btn sm" id="v3-reset">Ansicht zurücksetzen</button><button class="btn sm" id="v3-top">Draufsicht</button><label><input type="checkbox" id="v3-roof"> Dach zeigen</label><label><input type="checkbox" id="v3-plan"> Plan auf Boden</label></div>
+    <div class="v3-legend"><span><i style="background:#2f7a48"></i>passt</span><span><i style="background:#c0392b"></i>Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>Standardmaße, bitte messen</span><span class="hide-sm">· schematische Möbel · ziehen verschiebt · freie Fläche dreht</span></div>
     <p class="v3-msg" id="v3-msg">3D-Ansicht wird geladen …</p></div>`;
   let T;
   try { T = await loadThree(); } catch { const m = $('#v3-msg'); if (m) m.textContent = 'Die 3D-Ansicht braucht eine Internetverbindung, um Three.js zu laden. Der Grundriss funktioniert auch ohne.'; return; }
   const cv = $('#v3'); if (!S.v3d || activePhoto() !== ph || !cv) return;
   $('#v3-msg').remove();
   const pl = ph.plan, W = pl.w, D = pl.d, H = pl.height || 250;
-  const renderer = new T.WebGLRenderer({ canvas: cv, antialias: true, preserveDrawingBuffer: true });
+  let renderer;
+  try { renderer = new T.WebGLRenderer({ canvas: cv, antialias: true, preserveDrawingBuffer: true }); } catch { stageEl.innerHTML='<p class="hint">3D konnte nicht gestartet werden. Bitte WebGL aktivieren oder den Grundriss verwenden.</p>'; return; }
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
   renderer.outputColorSpace = T.SRGBColorSpace;
-  const scene = new T.Scene(); scene.background = new T.Color('#dfe3dc');
+  renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
+  renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+  const scene = new T.Scene(); scene.background = new T.Color('#e8ece7');
   const cam = new T.PerspectiveCamera(42, 1, 5, 20000);
   scene.add(new T.HemisphereLight(0xffffff, 0x9a8f7a, 2.1));
-  const sun = new T.DirectionalLight(0xffffff, 1.6); sun.position.set(W * .2, H * 3, D * 1.4); scene.add(sun);
+  const sun = new T.DirectionalLight(0xffffff, 1.6); sun.position.set(W * .2, H * 3, D * 1.4); scene.add(sun);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const shadowSpan=Math.max(W,D);Object.assign(sun.shadow.camera,{left:-shadowSpan,right:shadowSpan,top:shadowSpan,bottom:-shadowSpan,near:1,far:H*6+shadowSpan*3});sun.shadow.normalBias=1;sun.target.position.set(W/2,0,D/2);scene.add(sun.target);
   const tex = new Map();
   const loadTex = (key, src) => { if (!tex.has(key)) { const t = new T.TextureLoader().load(src, () => V3 && V3.draw()); t.colorSpace = T.SRGBColorSpace; tex.set(key, t); } return tex.get(key); };
   // Raumhülle
@@ -2352,7 +2377,9 @@ async function render3D() {
     const n = cross(sub(v3(...b, 0), v3(...a, 0)), sub(v3(...c, 0), v3(...a, 0))); if (n[1] < 0) [b, c] = [c, b];
     for (const p of [a, b, c]) { floorArr.push(...v3(p[0], p[1], 0)); floorUv.push(...uvOf(p)); }
   }
-  scene.add(new T.Mesh(geo(floorArr, floorUv), new T.MeshStandardMaterial({ map: loadTex('floor', ph.src), roughness: .95 })));
+  const floorMaterial=new T.MeshStandardMaterial({color:'#c4a67d',roughness:.9});
+  const floorMesh=new T.Mesh(geo(floorArr,floorUv),floorMaterial);floorMesh.receiveShadow=true;scene.add(floorMesh);
+  $('#v3-plan').onchange=e=>{floorMaterial.map=e.target.checked?loadTex('floor',ph.src):null;floorMaterial.color.set(e.target.checked?'#ffffff':'#c4a67d');floorMaterial.needsUpdate=true;draw();};
   const run = sl ? (H - (sl.knee || 0)) / slopeTan(sl) : 0, fK = p => slopeDist(pl, sl, p[0], p[1]) - run;
   const walls = [], inward = (n, a) => n[0] * (cx - a[0]) + n[2] * (cz - a[2]) > 0;
   for (let i = 0; i < poly.length; i++) {
@@ -2367,7 +2394,7 @@ async function render3D() {
   scene.add(new T.Mesh(geo(walls), new T.MeshStandardMaterial({ color: '#efece4', roughness: .95 })));
   const ceil = [], parts = sl ? [clipHalf(poly, fK, true), clipHalf(poly, fK, false)] : [poly];
   for (const pg of parts) for (let i = 1; i < pg.length - 1; i++) tri(ceil, ...[pg[0], pg[i], pg[i + 1]].map(p => v3(p[0], p[1], ceilAt(pl, ...p))), n => n[1] < 0);
-  if (ceil.length) scene.add(new T.Mesh(geo(ceil), new T.MeshStandardMaterial({ color: '#f6f4ee', roughness: 1 })));
+  const roofMesh=new T.Mesh(geo(ceil),new T.MeshStandardMaterial({color:'#f6f4ee',roughness:1,side:T.DoubleSide,transparent:true,opacity:.3,depthWrite:false}));roofMesh.visible=false;scene.add(roofMesh);$('#v3-roof').onchange=e=>{roofMesh.visible=e.target.checked;draw();};
   // Fenster und Tür
   const quad = (A, B, h0, h1, color, op = 1) => {
     const len = Math.hypot(B[0] - A[0], B[1] - A[1]) || 1, nx = -(B[1] - A[1]) / len, ny = (B[0] - A[0]) / len, s = (cx - A[0]) * nx + (cz - A[1]) * ny > 0 ? 1 : -1;
@@ -2393,16 +2420,12 @@ async function render3D() {
     for (const p of [...ph.placements].sort((a, b) => (a.z || 0) - (b.z || 0))) {
       const it = getItem(p.itemId); if (!it) continue;
       const dm = itemDims(it), h = Math.max(1, dm.h), [x, y] = plCm(p, ph), col = it.color || catOf(it.cat).col || '#b98d5e';
-      const side = new T.MeshStandardMaterial({ color: col, roughness: .8 });
-      const flatImg = isFlat(it) && it.img && it.img.startsWith('data:') ? it.img : null;
-      const top = new T.MeshStandardMaterial({ map: loadTex('it:' + it.id + ':' + dm.w + 'x' + dm.d + ':' + (it.color || '') + (flatImg ? ':img' : ''), flatImg ? it.img : planSrc(it)), roughness: .8 });
-      const mats = [side, side.clone(), top, side.clone(), side.clone(), side.clone()];
-      if (it.img && !isFlat(it) && h >= 8) frontTexSrc(it).then(src => { if (!src || !V3) return; mats[4].map = loadTex('front:' + it.id + ':' + dm.w + 'x' + dm.h + ':' + it.img.length, src); mats[4].color.set('#ffffff'); mats[4].needsUpdate = true; V3.draw(); });
-      if (S.sel === p.id) mats.forEach(m => { m.emissive = new T.Color('#2c5a4b'); m.emissiveIntensity = .45; });
-      const g = new T.BoxGeometry(dm.w, h, dm.d), mesh = new T.Mesh(g, mats);
-      mesh.position.set(x, (p.elev || 0) + h / 2, y); mesh.rotation.y = -(p.rot || 0) * Math.PI / 180; mesh.userData.pid = p.id;
-      const iss = fitIssues(p, ph), ecol = ph.plan.before ? '#5f6b64' : iss.length ? '#c0392b' : ownDims(it) ? '#2f7a48' : '#9aa09c';
-      mesh.add(new T.LineSegments(new T.EdgesGeometry(g), new T.LineBasicMaterial({ color: ecol })));
+      const mesh=furnitureModel3D(T,it,{w:dm.w,h,d:dm.d});
+      mesh.position.set(x,(p.elev||0)+h/2,y);mesh.rotation.y=-(p.rot||0)*Math.PI/180;mesh.userData.pid=p.id;
+      const iss=fitIssues(p,ph),ecol=ph.plan.before?'#5f6b64':iss.length?'#c0392b':ownDims(it)?'#2f7a48':'#9aa09c';
+      // Keep the conservative measured box visible when selected, colliding or unmeasured.
+      if(S.sel===p.id||iss.length||!ownDims(it)){const g=new T.BoxGeometry(dm.w,h,dm.d);mesh.add(new T.LineSegments(new T.EdgesGeometry(g),new T.LineBasicMaterial({color:S.sel===p.id?'#e3ac36':ecol})));g.dispose();}
+      mesh.traverse(o=>{if(o.isMesh&&S.sel===p.id){o.material.emissive=new T.Color('#365e4c');o.material.emissiveIntensity=.15;}});
       dyn.add(mesh); pick.push(mesh);
     }
     if (ph.audio && ph.audio.on) for (const sp of speakers(ph).spk) {
@@ -2426,7 +2449,7 @@ async function render3D() {
   // Steuerung: Möbel ziehen verschiebt auf dem Boden, freie Fläche ziehen dreht, Mausrad/zwei Finger zoomen, Antippen wählt
   const ptr = new Map(); let moved = false, pinch = 0, dragO = null;
   const rayAt = e => { const r = cv.getBoundingClientRect(), ray = new T.Raycaster(); ray.setFromCamera(new T.Vector2((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), cam); return ray; };
-  const hitMesh = e => { let o = rayAt(e).intersectObjects(pick, false)[0]; o = o && o.object; while (o && !o.userData.pid) o = o.parent; return o; };
+  const hitMesh = e => { let o = rayAt(e).intersectObjects(pick, true)[0]; o = o && o.object; while (o && !o.userData.pid) o = o.parent; return o; };
   const floor0 = new T.Plane(new T.Vector3(0, 1, 0), 0), floorAt = e => rayAt(e).ray.intersectPlane(floor0, new T.Vector3());
   cv.addEventListener('pointerdown', e => {
     try { cv.setPointerCapture(e.pointerId); } catch {}
@@ -2459,6 +2482,8 @@ async function render3D() {
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('wheel', e => { e.preventDefault(); C.R = clamp(C.R * Math.exp(e.deltaY * .001), 150, 8000); draw(); }, { passive: false });
   V3 = { T, renderer, scene, cam, ro, tex, draw, buildDyn, clearDyn, raf: 0 };
+  $('#v3-reset').onclick=()=>{Object.assign(C,{th:.55,ph:.95,R:Math.max(W,D)*2});draw();};
+  $('#v3-top').onclick=()=>{Object.assign(C,{th:0,ph:.02,R:Math.max(W,D)*1.9});draw();};
   buildDyn(); resize();
 }
 

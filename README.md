@@ -26,3 +26,11 @@ Möbel ausprobieren, bevor man sie kauft: Raumfoto hochladen oder einen maßstä
 ## Nutzung
 
 `index.html` im Browser öffnen – keine Installation nötig. Alle Räume werden nur lokal im Browser gespeichert (IndexedDB).
+
+### Verbesserte 3D-Grafik
+
+Die 3D-Ansicht stellt Möbel nun als räumliche, aus Einzelteilen aufgebaute Kategorienmodelle dar: Tischbeine, offene Regalböden, Schranktüren, Schubladen, Sitzflächen, Bett und Kissen. Materialien orientieren sich an der gespeicherten Möbelfarbe; weiche Schatten und ein neutraler Holzboden erleichtern die räumliche Orientierung. Die Geometrie bleibt innerhalb der äußeren Möbelmaße. Es sind schematische Modelle, keine rekonstruierten Originalprodukte. Produktfotos sind weiterhin in Auswahl und Moodboard verfügbar.
+
+Über der Ansicht stehen „Ansicht zurücksetzen“, „Draufsicht“, „Dach zeigen“ und „Plan auf Boden“ zur Verfügung. Das Dach startet ausgeblendet. Möbel können weiterhin direkt gezogen werden. Kollisionsrahmen zeigen die konservative Maßprüfung; Auswahl ist gelb markiert. Die 3D-Bibliothek wird wie bisher beim ersten Öffnen aus dem Netz geladen.
+
+Zusätzliche Entwicklerprüfungen: `THREE_MODULE=<Pfad zur Three.js-Moduldatei> node tests/geometry3d.test.mjs` prüft die äußeren Modellgrenzen. `tests/graphics-browser.mjs` prüft echte WebGL-Darstellung, Kameraschalter, Möbelziehen und Mobilansicht (Playwright, Chromium und `THREE_TEST_FILE` für die Three.js-0.160-Moduldatei).
