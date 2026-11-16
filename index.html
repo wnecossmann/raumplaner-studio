@@ -1213,8 +1213,8 @@ function cornerOffset(pl, w, d) {
   const dr = pl.door, lim = dr && dr.type === 'corner' && (dr.corner || 'tr') === 'tr' ? pl.w - dr.leg + (dr.leg * Math.SQRT2 - dr.width) / Math.SQRT2 - d - 1.4 : pl.w;
   return Math.max(0, Math.min(Math.ceil(win.width / 2) + 1, Math.round(lim - w)));
 }
-const KONRAD_DEFAULT_SET = 'ind_panama';
-function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.windowV1 = r.cornerV1 = r.sizeV1 = true; return ok; }
+const KONRAD_DEFAULT_SET = 'ind_panama_fenster';   // seit 16.11.2026: Schreibtisch am Fenster (vorher ind_panama, davor ind_premium)
+function addKonradProducts(r) { const ok = applyKonradSet(r, KONRAD_DEFAULT_SET); r.defaultV2 = r.defaultV3 = r.defaultV4 = r.windowV1 = r.cornerV1 = r.sizeV1 = true; return ok; }
 
 /* Ist-Zustand aus den Fotos vom 15.11.2026: gleicher Grundriss, heutige Möbel (Maße geschätzt) */
 const KONRAD_PHOTOS = [];
@@ -1942,7 +1942,7 @@ const PANAMA_DEKO = [
     items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], PANAMA_ITEMS[2], PANAMA_ITEMS[3]] : [x]), ...PANAMA_DEKO] });
   // Eigener Vorschlag (Claude, 16.11.2026): Schreibtisch neben dem Fenster, alle hohen Möbel abgestuft an der rechten Wand, Highboard bleibt
   if (base) KONRAD_SETS.splice(i + 2, 0, { id: 'ind_panama_fenster', title: 'Industrial · PANAMA · Schreibtisch am Fenster', style: base.style, tier: base.tier, layout: 'fensterplatz', palette: base.palette,
-    summary: 'Vorschlag von Claude: Schreibtisch an die obere Wand neben das Fenster (Tageslicht von der Seite), Dielenschrank, Highboard und Kommode abgestuft an der rechten Wand, Tür und Fenster frei.', coherence: base.coherence,
+    summary: 'Schreibtisch mit matt schwarzer Platte an der oberen Wand neben dem Fenster (Tageslicht von der Seite), Dielenschrank, Highboard und Kommode abgestuft an der rechten Wand, Tür und Fenster frei. Konrads Bett bleibt an seinem Platz.', coherence: base.coherence,
     items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]), ...PANAMA_DEKO] });
 }
 const PANAMA_REV = 3;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
@@ -4247,7 +4247,7 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
       // Standard seit 16.11.2026: Industrial · PANAMA. Räume auf dem alten Standard (nie selbst gewählt) wechseln dorthin.
       // Räume, die PANAMA schon haben, bekommen den Schuhschrank statt Lowboard: mit eigener Aufstellung (Nachttisch schon entfernt) bleiben alle Positionen, sonst wird neu gestellt.
       const after = r.photos.find(p => p.plan && !p.plan.before), own = !!after && !after.placements.some(q => (r.items.find(i => i.id === q.itemId) || {}).pkey === 'nachttisch');
-      if (r.activeSet === 'ind_panama' || (r.activeSet === 'ind_premium' && !r.setPicked)) { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} applyKonradSet(r, KONRAD_DEFAULT_SET, r.activeSet === 'ind_panama' && own); }
+      if (r.activeSet === 'ind_panama' || (r.activeSet === 'ind_premium' && !r.setPicked)) { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} applyKonradSet(r, 'ind_panama', r.activeSet === 'ind_panama' && own); }
       r.defaultV3 = true;
       S.storage && await DB.put(r);
     }
@@ -4296,8 +4296,15 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
       // Ausgerichtete Aufstellung vom 16.11.2026 (Wandbretter mittig, gleiche Fugen): Räume mit PANAMA werden einmalig neu gestellt; gekaufte Möbel bleiben stehen
-      if (r.activeSet === 'ind_panama') { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} layoutKonradSet(r, new Set(r.items.filter(i => i.pkey && i.status === 'gekauft').map(i => i.id)), 'bett-bestand'); }
+      const set = KONRAD_SETS.find(x => x.id === r.activeSet);
+      if (set && set.layout) { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} layoutKonradSet(r, new Set(r.items.filter(i => i.pkey && i.status === 'gekauft').map(i => i.id)), set.layout); }
       r.alignV1 = true;
+      S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && KONRAD_SETS.length && !r.defaultV4) {
+      // Standard seit 16.11.2026 abends: „Schreibtisch am Fenster“. Räume auf dem bisherigen Standard PANAMA wechseln dorthin und werden neu gestellt – auch gekaufte Möbel des Vorschlags (Status bleibt); eigene Möbel bleiben stehen.
+      if (r.activeSet === 'ind_panama') { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} if (applyKonradSet(r, KONRAD_DEFAULT_SET)) layoutKonradSet(r, new Set(), 'fensterplatz'); }
+      r.defaultV4 = true;
       S.storage && await DB.put(r);
     }
   }

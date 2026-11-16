@@ -68,6 +68,10 @@ Umstellung bestehender Räume (einmalig, Merker `defaultV3`): Räume auf „Indu
 
 In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, „1 Schublade, 2 Türen“, „1 Klappe“) als Holzkorpus im schwarzen Rahmen mit Metallschubladen oben und Türen oder Klappe unten gezeichnet (Modellart `framecab`).
 
+### Standard „Schreibtisch am Fenster“ (16.11.2026)
+
+Standard für Konrads Zimmer ist jetzt `ind_panama_fenster` („Industrial · PANAMA · Schreibtisch am Fenster“, 6.011,08 €). Umstellung (Merker `defaultV4`): Räume, die auf dem bisherigen Standard `ind_panama` stehen, wechseln beim Laden dorthin und werden neu gestellt. Gekaufte Möbel des Vorschlags behalten ihren Status und ziehen mit um, selbst hinzugefügte Möbel bleiben stehen, andere Vorschläge bleiben unberührt. `ind_panama` (ohne Highboard, Schreibtisch an der rechten Wand) bleibt wählbar.
+
 ### Raummaße 3,50 × 4,53 m und schwarzer Schreibtisch (16.11.2026)
 
 - **Raummaße:** Konrads Zimmer misst laut Aufmaß 350 × 453 cm (Zeichnung: 358 × 457,5 cm; `KONRAD_W`, `KONRAD_D`). Alle 32 Vorschläge bestehen damit die Passprüfung, kein Möbel steht im 90°-Schwenk der Tür. Der Schrank der übrigen Vorschläge steht jetzt bei 69–219 cm (150 cm breit) bzw. 19–219 cm (200 cm breit).
