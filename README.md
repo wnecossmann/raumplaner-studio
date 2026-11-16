@@ -15,7 +15,7 @@ Möbel ausprobieren, bevor man sie kauft: Raumfoto hochladen oder einen maßstä
 - **Freistellen:** zusätzlich Radierer und Zuschnitt für Produktbilder; im Raumfoto Höhe und Neigung eines Möbels anpassbar.
 - **Einrichtungs-Assistent:** 18 Stile (z. B. Industrial, Skandinavisch, Japandi, Modern & Dunkel) und drei Preisklassen (Budget, Mittel, Premium). Stil und Preisklasse fließen als Suchbegriff und Preisfilter in die Shop-Suche ein.
 - **Lieblingsstück hochladen:** Foto eines Möbels, das gefällt – Farben, Materialien und der passende Stil werden abgeleitet (im Browser per Farbanalyse, in der claude.ai-Version optional durch Claude). Suche, Farben und Vorschläge richten sich danach.
-- **Fertige Vorschläge:** für das Beispiel „Konrads Zimmer“ 12 geprüfte Einrichtungen (4 Stile × 3 Preisklassen) mit echten Produkten, Preisen (Stand 15.11.2026) und Passprüfung. Standard ist „Industrial · Premium“. Die Produktfotos werden direkt von den Servern der Shops geladen (nicht im Repo gespeichert); dabei sieht der jeweilige Shop die Anfrage des Browsers.
+- **Fertige Vorschläge:** für das Beispiel „Konrads Zimmer“ 30 Einrichtungen (10 Stile × 3 Preisklassen; davon 18 neue Katalogkombinationen) mit echten Produkten, Preisen (Stand 15.11.2026) und Passprüfung. Standard ist „Industrial · Premium“. Die Produktfotos werden direkt von den Servern der Shops geladen (nicht im Repo gespeichert); dabei sieht der jeweilige Shop die Anfrage des Browsers.
 - **36 Händler und Suchportale:** IKEA, OTTO, home24, XXXLutz, JYSK, mömax, POCO, ROLLER, porta, Höffner, Möbel Kraft, Segmüller, Westwing, Connox, AmbienteDirect, KARE, Tikamoon, massivum, Car-Möbel, Lampenwelt, benuta, Thomann, MediaMarkt, Amazon, moebel.de, Google Shopping, eBay, Kleinanzeigen sowie SKLUM, Beliani, Maisons du Monde, Kave Home, Tylko, Nordic Nest, BAUR und Rugvista – sortiert nach Möbelart und Preisklasse, mit Preisfilter, wo der Shop ihn in der Adresse unterstützt.
 - **3D direkt ziehen:** Möbel im 3D-Raum mit Maus oder Finger auf dem Boden verschieben, „3D“ an jedem Möbel öffnet es im Raum.
 - **Moodboard:** alle gewählten Produkte mit Bild, Preis und Farbpalette, als Bild speicherbar.
@@ -51,3 +51,7 @@ Neue Produktquellen (abgerufen am 16.11.2026):
 - [Maisons du Monde Griffith Kommode](https://www.maisonsdumonde.com/DE/de/p/vintage-kommode-mit-3-schubladen-w91-griffith-248546.htm): 399 €, 90,8 × 45 × 89,8 cm; Hinweis auf die beim Abruf schwachen Kundenbewertungen.
 
 Prüfungen: `node --test tests/recommendations.test.mjs` prüft Stile, Händlervielfalt, Produktarten und Budgetgrenzen. `tests/browser-smoke.mjs` prüft Auswahl, Preisfilter, offene Preise, Übernahme, Speicherung und Mobilansicht mit Playwright/Chromium.
+
+### Zusätzliche Komplettvorschläge
+
+18 neue Kombinationen für Konrads Zimmer: Japandi, Boho, Mid-Century, Minimalistisch, Vintage und Soft Modern, jeweils Budget, Mittel und Premium. Die Kombinationen verwenden reale Produkte aus dem bestehenden Katalog mit unveränderten Preisen und Maßen. Sie sind stilistische Annäherungen. Die gesamte Aufstellung muss nach dem Übernehmen mit der Passprüfung geprüft werden; es gibt keine pauschale Passgarantie. Karten zeigen Überschreitungen des Raumbudgets ohne Versand. Prüfung: `node tests/sets.test.mjs`.
