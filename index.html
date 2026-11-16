@@ -1149,7 +1149,7 @@ const KONRAD_SKIP = new Set(['sitzsack']);
 const KONRAD_PALETTE = [{ name: 'Eiche warm', hex: '#C9A777' }, { name: 'Dunkelgrau', hex: '#3A3D40' }, { name: 'Schwarz', hex: '#1C1C1C' }, { name: 'Walnuss', hex: '#5A3E2B' }, { name: 'Salbeigrün', hex: '#8A9A8C' }, { name: 'Hell', hex: '#F2EFE9' }];
 const KONRAD_CHECKLIST = [
   'Dachschräge messen: Kniestockhöhe (an Bett, Lowboard und rechter Wand) und Deckenhöhe 50/100/150 cm vor dem Kniestock. Der Plan rechnet jetzt mit 90 cm und 40° – die Fotos sprechen für 85–95 cm. Echte Werte unter „Grundriss bearbeiten“ eintragen, die Passprüfung rechnet dann neu.',
-  'Bett: Konrads jetziges Bett bleibt. Es misst außen ca. 105 × 205 cm – Liegefläche nachmessen (vermutlich 90 oder 100 × 200 cm). Die Matratze im Vorschlag ist noch für 120 × 200 cm ausgesucht und passt so nicht: vor dem Bestellen die passende Größe wählen. Das Bett steht 25 cm vom Kniestock weg, damit man sich in der Bettmitte aufsetzen kann.',
+  'Bett: Konrads jetziges Bett bleibt. Es misst außen ca. 105 × 205 cm, die Liegefläche laut Angabe 100 × 200 cm. Die Matratze in diesem Vorschlag ist noch für 120 × 200 cm ausgesucht und passt so nicht: vor dem Bestellen die Größe 100 × 200 cm wählen. Das Bett steht 25 cm vom Kniestock weg, damit man sich in der Bettmitte aufsetzen kann.',
   'Steckdosen kartieren, wenn der alte Schrank weg ist: an der Giebelwand neben dem Bett (Nachtkonsole, Leselicht, Laden) und am Schreibtisch. Am Tisch hängen Motor, PC, Monitor, Lautsprecher und Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt.',
   'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen. Der Schreibtisch beginnt jetzt erst 29 cm hinter der Ecke (y = 135) und steht 4 cm vor der Wand (Kabel, Hubweg).',
   'Tür: Bodentürstopper (am besten magnetisch) so setzen, dass die Tür bei 90° stoppt – weiter geöffnet schlägt sie gegen die Schrankecke.',
@@ -1165,7 +1165,7 @@ const KONRAD_CHECKLIST = [
 /* Checkliste zur Aufstellung „bett-bestand“ (Set Industrial · PANAMA) */
 const PANAMA_CHECKLIST = [
   KONRAD_CHECKLIST[0],
-  'Bett: Konrads Bett bleibt, wo es heute steht – rechte Ecke am Kniestock, Kopfende an der rechten Wand. Es misst außen ca. 105 × 205 cm; Liegefläche nachmessen (vermutlich 90 oder 100 × 200 cm). Die Matratze im Vorschlag ist noch für 120 × 200 cm ausgesucht und passt so nicht: vor dem Bestellen die passende Größe wählen.',
+  'Bett: Konrads Bett bleibt, wo es heute steht – rechte Ecke am Kniestock, Kopfende an der rechten Wand. Es misst außen ca. 105 × 205 cm, die Liegefläche laut Angabe 100 × 200 cm; die Matratze im Vorschlag ist dafür ausgesucht. Liegefläche und Einlegetiefe vor dem Bestellen nachmessen.',
   'Rechte Wand ausmessen: Zwischen Türecke und Bett sind es rechnerisch 242 cm: Schreibtisch (140 cm, ab 27 cm hinter der Ecke), dann gut 20 cm Luft, dann die Kommode als Nachttisch (50 cm) direkt am Bett.',
   'Kommode als Nachttisch: mit 73 cm deutlich höher als die Liegefläche (rund 45 cm). Am Bett ausprobieren, ob Wecker und Wasserglas so noch gut erreichbar sind.',
   'Steckdosen kartieren: am Schreibtisch (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
@@ -1924,6 +1924,9 @@ const PANAMA_ITEMS = [
 /* Schreibtisch mit matt schwarzer Platte (JC 16.11.2026): neben der Akazie kein zweiter Holzton. 140 cm, damit an der rechten Wand Luft zur Türecke bleibt. */
 const PANAMA_DESK = { key: 'schreibtisch', role: 'main', cat: 'Tisch', name: 'IKEA MITTZON Schreibtisch sitz/steh, elektrisch, schwarz gebeiztes Eschenfurnier/schwarz, 140x80 cm', retailer: 'IKEA Deutschland', url: 'https://www.ikea.com/de/de/p/mittzon-schreibtisch-sitz-steh-elektrisch-schwarz-gebeiztes-eschenfurnier-schwarz-s79528942/', price: 429, qty: 1, dims: { w: 140, d: 80, h: 75 }, color: '#1E1E1F',
   why: 'Matt schwarze Platte auf schwarzem Gestell: Neben der Akazie gibt es keinen zweiten Holzton mehr, Bildschirm und Technik treten zurück.', note: 'Echtholzfurnier, schwarz gebeizt: matt, aber Staub und Fingerabdrücke sieht man eher als auf Eiche. Die Größe 160x80 cm kostet 449 €, lässt an der rechten Wand aber kaum Luft zur Türecke.', checkedAt: '2026-11-16', img: 'https://www.ikea.com/de/de/images/products/mittzon-schreibtisch-sitz-steh-elektrisch-schwarz-gebeiztes-eschenfurnier-schwarz__1210942_pe909894_s5.jpg' };
+/* Matratze passend zum Bestandsbett (Liegefläche laut JC 100 × 200 cm) */
+const panamaMattress = x => ({ ...x, name: 'Emma Original Matratze 100x200 cm (Hybrid, 25 cm, weißer Bezug)', url: 'https://www.emma-matratze.de/matratzen/emma-original-matratze/original/sku-EMAHE100200AAE/', price: 410.39, dims: { w: 100, d: 200, h: 25 },
+  why: 'Hochwertige 5-Zonen-Hybridmatratze mit Taschenfedern und MemoryAdapt-Schaum, in 100 × 200 cm für Konrads vorhandenes Bett.', note: 'Angebotspreis beim Abruf (statt 719,99 €). Liegefläche und Einlegetiefe des Betts vor dem Bestellen nachmessen.', checkedAt: '2026-11-16' });
 const panamaDesk = x => [PANAMA_DESK, { ...x, key: 'alt_schreibtisch', short: 'Eichentisch', role: 'alternative' }];
 /* Deko-Ideen ohne konkretes Produkt: Richtwerte, zählen nicht zum Budget (Rolle „alternative“), stehen aber im Plan */
 const PANAMA_DEKO = [
@@ -1940,13 +1943,13 @@ const PANAMA_DEKO = [
   const i = KONRAD_SETS.findIndex(s => s.id === 'ind_premium'), base = KONRAD_SETS[i];
   if (base) KONRAD_SETS.splice(i + 1, 0, { id: 'ind_panama', title: 'Industrial · PANAMA', style: base.style, tier: base.tier, layout: 'bett-bestand', palette: base.palette,
     summary: 'Alle Schränke aus der Serie PANAMA von SIT: Dielenschrank, Sideboard, Schuhschrank und die Kommode als Nachttisch, dazu ein Schreibtisch mit matt schwarzer Platte. Konrads Bett bleibt an seinem heutigen Platz, die Tür geht frei auf.', coherence: base.coherence,
-    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], PANAMA_ITEMS[2], PANAMA_ITEMS[3]] : [x]), ...PANAMA_DEKO] });
+    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'matratze' ? [panamaMattress(x)] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], PANAMA_ITEMS[2], PANAMA_ITEMS[3]] : [x]), ...PANAMA_DEKO] });
   // Eigener Vorschlag (Claude, 16.11.2026): Schreibtisch neben dem Fenster, alle hohen Möbel abgestuft an der rechten Wand, Highboard bleibt
   if (base) KONRAD_SETS.splice(i + 2, 0, { id: 'ind_panama_fenster', title: 'Industrial · PANAMA · Schreibtisch am Fenster', style: base.style, tier: base.tier, layout: 'fensterplatz', palette: base.palette,
     summary: 'Schreibtisch mit matt schwarzer Platte an der oberen Wand neben dem Fenster (Tageslicht von der Seite), Dielenschrank, Highboard und Kommode abgestuft an der rechten Wand, Tür und Fenster frei. Konrads Bett bleibt an seinem Platz.', coherence: base.coherence,
-    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]), ...PANAMA_DEKO] });
+    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'matratze' ? [panamaMattress(x)] : x.key === 'schreibtisch' ? panamaDesk(x) : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]), ...PANAMA_DEKO] });
 }
-const PANAMA_REV = 3;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
+const PANAMA_REV = 4;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
 const setName = s => s.title || s.style + ' · ' + s.tier;
 const SET_SHORT = { highboard: 'Highboard', kommode: 'Kommode', sideboard: 'Sideboard', schrank: 'Kleiderschrank', schreibtisch: 'Schreibtisch', stuhl: 'Stuhl', teppich: 'Teppich', lowboard: 'Lowboard', regal: 'Regal', nachttisch: 'Nachttisch', lautsprecher: 'Lautsprecher', lautsprecher_staender: 'Ständer', schreibtischlampe: 'Lampe', leseleuchte: 'Leselampe', matratze: 'Matratze', rollo: 'Rollo' };
 const setTotal = set => set.items.filter(i => i.role !== 'alternative').reduce((a, i) => a + (i.price || 0) * (i.qty || 1), 0);
