@@ -2466,7 +2466,7 @@ function kind3(it, dm) {
   if (/nachttisch|nachtkonsole|ablagetisch|beistelltisch/.test(n)) return 'nightstand';
   if (c === 'Bett') return /lattenrost/.test(n) ? 'slats' : /matratze|topper/.test(n) ? 'mattress' : 'bed';
   if (c === 'Kleiderschrank') return 'wardrobe';
-  if (c === 'Kommode') return /rollcontainer/.test(n) ? 'rollcontainer' : /lowboard|tv-?bank|tv-?board|sideboard|phono/.test(n) || (h <= 60 && dm.w >= 100) ? 'lowboard' : h > 80 && dm.w <= 95 ? 'cupboard' : 'dresser';
+  if (c === 'Kommode') return /rollcontainer/.test(n) ? 'rollcontainer' : /hi-?fi/.test(n) ? 'hifirack' :/lowboard|tv-?bank|tv-?board|sideboard|phono/.test(n) || (h <= 60 && dm.w >= 100) ? 'lowboard' : h > 80 && dm.w <= 95 ? 'cupboard' : 'dresser';
   if (c === 'Vitrine') return 'vitrine';
   if (c === 'Regal') return h <= 6 || (/wandregal|wandboard/.test(n) && h <= 30) ? 'wallshelf' : /string/.test(n) ? 'string' : /würfel|kallax|eket/.test(n) ? 'cube' : /hochschrank|schubladen|türen/.test(n) ? 'tallcab' : 'shelf';
   if (c === 'Tisch') return /rund/.test(n) ? 'roundtable' : /schreibtisch|laptoptisch|desk|office/.test(n) && /sitz|steh|elektr|höhenverstell|gestell|stahl|metall|mittzon|schwarz|desk|office/.test(n) ? 'desk' : 'table';
@@ -2477,7 +2477,7 @@ function kind3(it, dm) {
   if (c === 'Beleuchtung') return /wand/.test(n) ? 'walllamp' : /pendel|hänge|decken/.test(n) ? 'pendant' : h >= 100 || /steh/.test(n) ? 'floorlamp' : /arbeits|gelenk|anglepoise|architekt|schreibtisch/.test(n) ? 'tasklamp' : 'tablelamp';
   if (c === 'Teppich') return 'rug';
   if (c === 'Deko & Pflanzen') return /spiegel|poster|\bbild|leinwand/.test(n) ? 'frame' : /vase/.test(n) ? 'vase' : /kissen/.test(n) ? 'cushion' : 'plant';
-  if (c === 'Audio') return /ständer|staender|stand\b|absorber|standfuß|iso-/.test(n) ? 'spkstand' : /subwoofer/.test(n) ? 'sub' : /soundbar/.test(n) ? 'soundbar' : 'speaker';
+  if (c === 'Audio') return /ständer|staender|stand\b|absorber|standfuß|iso-/.test(n) ? 'spkstand' : /subwoofer/.test(n) ? 'sub' : /soundbar/.test(n) ? 'soundbar' : /plattenspieler|turntable/.test(n) ? 'turntable' : !/lautsprecher|boxen|monitor|speaker/.test(n) && /verstärker|verstaerker|receiver|endstufe|streamer|cd-?player|\bdac\b|\bamp\b/.test(n) ? 'amp' : 'speaker';
   if (/monitor|fernseher|bildschirm/.test(n)) return 'screen';
   return h <= 3 ? 'rug' : 'generic';
 }
@@ -2553,6 +2553,7 @@ function makeKit(T, ctex, loadTex) {
       else if (kind === 'matte') o.roughness = .92;
       const m = new T.MeshStandardMaterial(o); m.userData.kind = kind; mc.set(key, m); return m;
     };
+    const extra = [];   // Teile außerhalb der Außenmaße (Konsolen unter Wandbrettern): werden nicht eingepasst
     const put = (geo, m, x, y, z) => { const o = new T.Mesh(geo, m); o.position.set(x, y, z); g.add(o); return o; };
     const B = (bw, bh, bd, m, x = 0, y = 0, z = 0, gv) => put(boxGeo(bw, bh, bd, gv), m, x, y + bh / 2, z);   // y = Unterkante
     const Rb = (bw, bh, bd, r, m, x = 0, y = 0, z = 0) => put(rGeo(bw, bh, bd, r), m, x, y, z);
@@ -2595,14 +2596,15 @@ function makeKit(T, ctex, loadTex) {
       for (let i = 0; i < ns; i++) { const x = -iw / 2 + cw * (i + .5); Rb(cw - 1, 13, sd - 1, 4.5, fab2, x, sh - 13, -d / 2 + bd + sd / 2); Rb(cw - 2, Math.max(12, Math.min(40, h - sh - 3)), 13, 5, fab2, x, sh - 1, -d / 2 + bd + 5).rotation.x = -.16; }
     };
     const speaker = () => {
-      Rb(w, h, d, Math.min(1.2, w * .07), mat(col, bk));
-      B(w - 1.4, h - 1.4, .3, mat(bk === 'wood' || lum3(col) > .4 ? '#19191b' : shade(col, -.35), 'matte'), 0, .7, d / 2 + .05);
-      const drv = (r, y) => { disc(r, .5, mat('#2c2d30'), 0, y, d / 2 + .3); disc(r * .84, .5, mat('#0f0f10', 'matte'), 0, y, d / 2 + .4); Sp(r * .34, r * .34, r * .16, mat('#3c3d41'), 0, y, d / 2 + .5); };
+      const fz = d / 2 - 1;   // Gehäusefront 1 cm zurückgesetzt: Bespannung und Chassis bleiben in der Außentiefe
+      Rb(w, h, d - 1, Math.min(1.2, w * .07), mat(col, bk), 0, 0, -.5);
+      B(w - 1.4, h - 1.4, .3, mat(bk === 'wood' || lum3(col) > .4 ? '#19191b' : shade(col, -.35), 'matte'), 0, .7, fz + .05);
+      const drv = (r, y) => { disc(r, .4, mat('#2c2d30'), 0, y, fz + .35); disc(r * .84, .4, mat('#0f0f10', 'matte'), 0, y, fz + .5); Sp(r * .34, r * .34, Math.min(r * .16, .28), mat('#3c3d41'), 0, y, fz + .7); };
       if (K === 'sub') drv(Math.min(w, h) * .36, h * .5); else { drv(Math.min(w * .38, h * .23), h * .35); drv(Math.min(w * .16, h * .1), h * .76); }
     };
     switch (K) {
       case 'bed': {
-        const top = h > 60 ? Math.min(48, h * .55) : h, mt = Math.min(20, top * .45), ft = top - mt + 4, rail = Math.min(16, ft * .6), leg = ft - rail, hb = h > 60 ? 4 : 0, fm = mat(col, bk), lin = '#cdd2c9';
+        const top = h > 60 ? Math.min(48, h * .55) : Math.max(h - 8, h * .6), mt =Math.min(20, top * .45), ft = top - mt + 4, rail = Math.min(16, ft * .6), leg = ft - rail, hb = h > 60 ? 4 : 0, fm = mat(col, bk), lin = '#cdd2c9';
         legs4(6, leg + 1, mat(shade(col, -.25), bk), 5, 5);
         B(w, rail, d, fm, 0, leg, 0);
         if (hb) B(w, h - leg, hb, fm, 0, leg, -d / 2 + hb / 2);
@@ -2638,6 +2640,11 @@ function makeKit(T, ctex, loadTex) {
       case 'lowboard': cabinet([{ f: 1, cols: Math.max(2, Math.round(w / 45)), t: 't' }], h >= 45 ? 12 : 5, /metall|stahl|schwarz|gestell|eisen/.test(n) ? 'metal' : 'wood'); break;
       case 'dresser': { const nr = Math.max(2, Math.round((h - 8) / 22)); cabinet(Array.from({ length: nr }, () => ({ f: 1 / nr, cols: w >= 100 ? 2 : 1, t: 'd' })), 8, 'wood'); break; }
       case 'cupboard': cabinet([{ f: .76, cols: 2, t: 't' }, { f: .24, cols: 2, t: 'd' }], 6, 'plinth'); break;
+      case 'hifirack': {   // HiFi-Möbel: unten Türen, oben offenes Gerätefach mit angedeutetem Verstärker
+        const nc = Math.max(1, Math.round(w / 55)), leg = h >= 45 ? 10 : 4, fh = h - leg - 3, oy = leg + .9 + fh * .56, oh = fh * .44, gw = Math.min(43, (w - 1.2) / nc - 6), gh = Math.min(12, oh * .6), gx = -w / 2 + .6 + (w - 1.2) / nc / 2, gm = mat('#b4b8bd', 'metal');
+        cabinet([{ f: .56, cols: nc, t: 't' }, { f: .44, cols: nc, t: 'o' }], leg, /metall|stahl|schwarz|gestell|eisen|industrial/.test(n) ? 'metal' : 'wood');
+        if (gh >= 4 && gw >= 14) { B(gw, gh, .5, mat('#1c1d1f', 'metal'), gx, oy + .6, d / 2 - .9); disc(gh * .28, .5, gm, gx + gw * .32, oy + .6 + gh / 2, d / 2 - .5); B(gw * .34, gh * .3, .2, mat('#0b0c0e', 'smoked'), gx - gw * .12, oy + .6 + gh * .38, d / 2 - .6); }
+        break; }
       case 'rollcontainer': cabinet([{ f: .4, cols: 1, t: 'd' }, { f: .3, cols: 1, t: 'd' }, { f: .3, cols: 1, t: 'd' }], 5, 'caster'); break;
       case 'tallcab': cabinet([{ f: .12, cols: 1, t: 'd' }, { f: .12, cols: 1, t: 'd' }, { f: .12, cols: 1, t: 'd' }, { f: .64, cols: w >= 50 ? 2 : 1, t: 't' }], 6, 'plinth'); break;
       case 'nightstand': {
@@ -2675,9 +2682,10 @@ function makeKit(T, ctex, loadTex) {
         }
         break; }
       case 'wallshelf': {
-        const t = Math.min(h, 3), m = mat(col, bk), fm = mat(metalC, 'metal'), bh = h > 6 ? h - t : 12;
+        // Dünnes Brett (Maße = nur das Brett): volle Brettstärke, Konsolen hängen darunter und zählen nicht zu den Außenmaßen.
+        const thin = h <= 6, t = thin ? h : Math.min(h, 3), m = mat(col, bk), fm = mat(metalC, 'metal'), bh = thin ? Math.min(12, d * .5) : h - t, keep = thin ? o => (extra.push(o), o) : o => o;
         B(w, t, d, m, 0, h - t, 0);
-        for (const s of [-1, 1]) { const x = s * w * .34; B(1.4, bh, .8, fm, x, h - t - bh, -d / 2 + .4); B(1.4, .8, d * .82, fm, x, h - t - .8, -d * .09); rod([x, h - t - bh + 1, -d / 2 + .6], [x, h - t - .6, d * .28], .4, fm); }
+        for (const s of [-1, 1]) { const x = s * w * .34; keep(B(1.4, bh, .8, fm, x, h - t - bh, -d / 2 + .4)); keep(B(1.4, .8, d * .82, fm, x, h - t - .8, -d * .09)); keep(rod([x, h - t - bh + 1, -d / 2 + .6], [x, h - t - .6, d * .28], .4, fm)); }
         break; }
       case 'string': {
         const fm = mat(lum3(col) < .35 ? col : '#222325', 'metal'), nb = Math.max(2, +(n.match(/(\d)\s*regalb/) || [0, 3])[1]), bm = mat(col, lum3(col) < .25 ? 'lack' : bk);
@@ -2720,20 +2728,23 @@ function makeKit(T, ctex, loadTex) {
       case 'stool': { const r = Math.min(w, d) / 2, lm = mat(shade(col, -.25), bk); Cy(r, r * .96, 4, mat(col, bk === 'wood' ? 'wood' : 'fabric'), 0, h - 4, 0, 36); for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + .78; rod([Math.sin(a) * r * .6, h - 4, Math.cos(a) * r * .6], [Math.sin(a) * r * .9, 0, Math.cos(a) * r * .9], 1.5, lm); } break; }
       case 'bench': { const m = mat(col, bk); Rb(w, 4.5, d, 1, m, 0, h - 4.5, 0); for (const s of [-1, 1]) B(4, h - 4.5, d - 6, mat(shade(col, -.15), bk), s * (w / 2 - 8), 0, 0, true); break; }
       case 'sofa': case 'armchair': sofa(); break;
-      case 'beanbag': { const fab = mat(col, 'fabric'); Sp(w / 2, h * .5, d / 2, fab, 0, h * .36, 0); Sp(w * .37, h * .36, d * .33, fab, 0, h * .66, -d * .13); break; }
+      case 'beanbag': { const fab = mat(col, 'fabric'); Sp(w / 2, h * .46, d / 2, fab, 0, h * .46, 0); Sp(w * .37, h * .35, d * .33, fab, 0, h * .63, -d * .13); break; }
       case 'floorlamp': { const r = Math.min(w, d) / 2, sh = Math.min(42, h * .24), mm = mat(metalC, 'metal'); Cy(r * .8, r * .84, 2.4, mm, 0, 0, 0, 36); Cy(1.1, 1.1, h - sh - 1, mm, 0, 2, 0, 14); Cy(r * .82, r, sh, mat('#f4ead2', 'glow'), 0, h - sh, 0, 36); break; }
       case 'tablelamp': { const r = Math.min(w, d) / 2, mm = mat(col, lum3(col) < .3 ? 'metal' : 'lack'); Cy(r * .55, r * .62, 2.6, mm, 0, 0, 0, 32); Cy(1, 1, h * .64, mm, 0, 2, 0, 14); Cy(r * .6, r, h * .34, mat('#f4ead2', 'glow'), 0, h * .66, 0, 36); break; }
       case 'tasklamp': {
-        const mm = mat(col, 'metal'), b = Math.min(w, d, 18) / 2, rr = Math.max(w, d) / 2, p0 = [0, 2, -b * .3], p1 = [0, h * .62, -rr * .5], p2 = [0, h * .92, rr * .45];
+        // Arm entlang der längeren Seite; Kopfgröße und Ausladung richten sich nach den Maßen, damit nichts gestaucht wird
+        const mm = mat(col, 'metal'), b = Math.min(w, d, 18) / 2, ax = w > d * 1.15, rr = (ax ? w : d) / 2, hr = Math.min(5.5, rr * .45), P = (a, y) => ax ? [a, y, 0] : [0, y, a];
+        const p0 = P(-b * .3, 2), p1 = P(-rr * .5, h * .62), p2 = P(rr - hr * 1.6, h - hr * .45 - .4), hc = P(rr - hr * 1.3, p2[1] - hr * .35), gl = P(rr - hr * 1.1, p2[1] - hr * .6);
         Cy(b, b, 2, mm, 0, 0, 0, 32); rod(p0, p1, .7, mm); rod(p1, p2, .7, mm); Sp(1.2, 1.2, 1.2, mm, ...p1);
-        const hd = put(new T.CylinderGeometry(1.6, 5.5, 8, 28, 1, true), mm, p2[0], p2[1] - 2, p2[2] + 2); hd.rotation.x = -.7; hd.material.side = T.DoubleSide;
-        Sp(2.2, 2.2, 2.2, mat('#fff3d6', 'glow'), 0, p2[1] - 3.6, p2[2] + 3.4);
+        const hd = put(new T.CylinderGeometry(hr * .3, hr, hr * 1.45, 28, 1, true), mm, ...hc); ax ? hd.rotation.z = .6 : hd.rotation.x = -.6; hd.material.side = T.DoubleSide;
+        Sp(hr * .4, hr * .4, hr * .4, mat('#fff3d6', 'glow'), ...gl);
         break; }
       case 'walllamp': {
-        const mm = mat(lum3(col) < .3 ? col : '#222325', 'metal'), reach = clamp(d, 20, 60), zw = -d / 2, y = h / 2;
-        B(8, 12, 2, mm, 0, y - 6, zw + 1); rod([0, y, zw + 2], [0, y + 2, zw + reach * .5], .7, mm); rod([0, y + 2, zw + reach * .5], [0, y + 1, zw + reach - 6], .7, mm);
-        const sd = put(new T.CylinderGeometry(3.4, 6.5, 11, 28, 1, true), mat(col, 'lack'), 0, y - 5, zw + reach - 6); sd.material.side = T.DoubleSide;
-        Sp(2.4, 2.4, 2.4, mat('#fff3d6', 'glow'), 0, y - 8, zw + reach - 6);
+        // Schirm, Wandplatte und Armhöhe passen sich Breite und Höhe an, statt über die Außenmaße zu ragen
+        const mm = mat(lum3(col) < .3 ? col : '#222325', 'metal'), reach = Math.min(d, 60), zw = -d / 2, sr = Math.min(6.5, w / 2), sh = Math.min(11, h * .6), y = clamp(h / 2, sh, Math.max(sh, h - 3)), pw = Math.min(8, w), pp = Math.min(12, h), zs = Math.max(zw + sr, zw + reach - sr - .2);
+        B(pw, pp, 2, mm, 0, clamp(y - pp / 2, 0, h - pp), zw + 1); rod([0, y, zw + 2], [0, y + 2, zw + reach * .5], .7, mm); rod([0, y + 2, zw + reach * .5], [0, y + 1, zs], .7, mm);
+        const sd = put(new T.CylinderGeometry(sr * .52, sr, sh, 28, 1, true), mat(col, 'lack'), 0, y - sh / 2 + .5, zs); sd.material.side = T.DoubleSide;
+        Sp(sr * .37, sr * .37, sr * .37, mat('#fff3d6', 'glow'), 0, y - sh * .7, zs);
         break; }
       case 'pendant': { const r = Math.min(w, d) / 2, sh = Math.min(h, Math.max(14, r * 1.1)); Cy(.3, .3, Math.max(1, h - sh), mat('#222325'), 0, sh, 0, 8); const o = put(new T.CylinderGeometry(r * .3, r, sh, 36, 1, true), mat(col, 'lack'), 0, sh / 2, 0); o.material.side = T.DoubleSide; Sp(r * .28, r * .28, r * .28, mat('#fff3d6', 'glow'), 0, sh * .4, 0); break; }
       case 'rug': {
@@ -2745,13 +2756,27 @@ function makeKit(T, ctex, loadTex) {
       case 'plant': {
         const pr = Math.min(w, d) * .3, ph = Math.min(h * .28, 34), lm = [mat(col, 'matte'), mat(shade(col, -.18), 'matte'), mat(shade(col, .14), 'matte')], R = Math.min(w, d) / 2;
         Cy(pr, pr * .76, ph, mat('#c9b8a3', 'matte'), 0, 0, 0, 30); Cy(pr * .92, pr * .92, .6, mat('#3b2e24', 'matte'), 0, ph - 1.2, 0, 30); Cy(.9, 1.2, (h - ph) * .55, mat('#5a4a36', 'matte'), 0, ph - 1, 0, 8);
-        for (let i = 0; i < 11; i++) { const a = rnd() * 6.28, rr = rnd() * R * .55, s = R * (.34 + rnd() * .3), o = Sp(s, s * (.8 + rnd() * .5), s, lm[i % 3], Math.sin(a) * rr, ph + (h - ph) * (.3 + rnd() * .55), Math.cos(a) * rr, true); o.rotation.set(rnd() * 3, rnd() * 3, rnd() * 3); o.material.flatShading = true; }
+        for (let i = 0; i < 11; i++) { const a = rnd() * 6.28, rr = rnd() * R * .3, s = R * (.3 + rnd() * .26), sy = s * (.8 + rnd() * .4), sm = Math.max(s, sy), o = Sp(s, sy, s, lm[i % 3], Math.sin(a) * rr, Math.min(h - sm, ph + (h - ph) * (.3 + rnd() * .6)), Math.cos(a) * rr, true); o.rotation.set(rnd() * 3, rnd() * 3, rnd() * 3); o.material.flatShading = true; }
         break; }
       case 'frame': { const t = clamp(d, 1.5, 4), mir = /spiegel/.test(n); B(w, h, t, mat(col, bk), 0, 0, 0); B(w - 6, h - 6, .4, mir ? mat('#cfd6d9', 'mirror') : mat('#ece7dc', 'matte'), 0, 3, t / 2 + .1); break; }
       case 'vase': { const r = Math.min(w, d) / 2; Cy(r * .5, r * .7, h * .5, mat(col), 0, 0, 0); Sp(r, h * .28, r, mat(col), 0, h * .5, 0); Cy(r * .45, r * .55, h * .3, mat(col), 0, h * .7, 0); break; }
       case 'cushion': Rb(w, h, d, Math.min(h * .45, 8), mat(col, 'fabric')); break;
       case 'speaker': case 'sub': speaker(); break;
       case 'soundbar': Rb(w, h, d, Math.min(h, d) * .3, mat(col, 'fabric')); break;
+      case 'amp': {   // Verstärker/Receiver: flaches Metallgehäuse mit Anzeige und Reglern, Front 1 cm zurückgesetzt
+        const m = mat(lum3(col) > .6 ? col : '#1c1d1f', 'metal'), km = mat('#b4b8bd', 'metal'), ft = Math.min(1.2, h * .12), bh = h - ft, kr = Math.min(bh * .28, w * .07);
+        for (const sx of [-1, 1]) for (const sz of [-1, 1]) Cy(1.4, 1.4, ft, mat('#111213', 'matte'), sx * (w / 2 - 4), 0, sz * (d / 2 - 4), 12);
+        Rb(w, bh, d - 1, .5, m, 0, ft, -.5);
+        B(w * .34, bh * .34, .3, mat('#0b0c0e', 'smoked'), -w * .1, ft + bh * .36, d / 2 - .85);
+        disc(kr, .8, km, w * .32, ft + bh / 2, d / 2 - .6);
+        for (let i = 0; i < 3; i++) disc(kr * .4, .6, km, -w * .42 + i * kr * 1.3, ft + bh * .3, d / 2 - .7);
+        break; }
+      case 'turntable': {   // Plattenspieler: Zarge, Teller mit Platte, Tonarm, bei genug Höhe eine Haube
+        const pb = Math.max(2, Math.min(h * .45, 7)), r = Math.min(w * .36, d * .42), mm = mat('#b4b8bd', 'metal'), px = -w * .12;
+        Rb(w, pb, d, .8, mat(col, bk)); Cy(r, r, 1.2, mm, px, pb, 0, 40); Cy(r * .94, r * .94, .3, mat('#0f0f10', 'matte'), px, pb + 1.2, 0, 40); Cy(r * .3, r * .3, .1, mat('#b5472e', 'matte'), px, pb + 1.5, 0, 24);
+        Cy(1.2, 1.2, 2.2, mm, w * .36, pb, -d * .3, 16); rod([w * .36, pb + 2, -d * .3], [w * .12, pb + 1.8, d * .18], .35, mm);
+        if (h > pb + 5) B(w - 1, h - pb, d - 1, mat('#dfe6ea', 'glass'), 0, pb, 0);
+        break; }
       case 'spkstand': {
         const m = mat(lum3(col) < .4 ? col : '#222325', h <= 5 ? 'matte' : 'metal');
         if (h <= 5) Rb(w, h, d, .6, m); else { B(w, .8, d, m, 0, 0, 0); B(w, .8, d, m, 0, h - .8, 0); legs4(1.6, h - .8, m, 2, 2, true); }
@@ -2766,10 +2791,12 @@ function makeKit(T, ctex, loadTex) {
     }
     g.traverse(o => { if (!o.isMesh) return; const k = [].concat(o.material)[0].userData.kind; o.castShadow = k !== 'glass' && k !== 'glow'; o.receiveShadow = k !== 'glow'; });
     // Fit decorative parts inside the measured box without changing collision dimensions.
-    const bounds=new T.Box3().setFromObject(g), extent=bounds.getSize(new T.Vector3());
-    const shape=new T.Group();shape.add(...[...g.children]);
-    shape.scale.set(Math.min(1,w/Math.max(extent.x,.001)),Math.min(1,h/Math.max(extent.y,.001)),Math.min(1,d/Math.max(extent.z,.001)));
-    shape.position.set(-(bounds.min.x+bounds.max.x)/2*shape.scale.x,-bounds.min.y*shape.scale.y,-(bounds.min.z+bounds.max.z)/2*shape.scale.z);g.add(shape);
+    // Je Achse: nur stauchen, wenn das Modell größer ist als das Maß; sonst höchstens so weit schieben, dass es im Maß liegt.
+    const shape=new T.Group();shape.add(...g.children.filter(o=>!extra.includes(o)));
+    const bounds=new T.Box3().setFromObject(shape);
+    const fitAx=(mn,mx,lo,hi)=>{const s=Math.min(1,(hi-lo)/Math.max(mx-mn,.001));return [s,s<1?lo-mn*s:Math.max(0,lo-mn)+Math.min(0,hi-mx)];};
+    const fx=fitAx(bounds.min.x,bounds.max.x,-w/2,w/2),fy=fitAx(bounds.min.y,bounds.max.y,0,h),fzz=fitAx(bounds.min.z,bounds.max.z,-d/2,d/2);
+    shape.scale.set(fx[0],fy[0],fzz[0]);shape.position.set(fx[1],fy[1],fzz[1]);g.clear();g.add(shape,...extra);
     g.userData.mats = [...mc.values()];
     return g;
   };
@@ -2779,7 +2806,7 @@ async function render3D() {
   const ph = activePhoto();
   stageEl.innerHTML = `<div class="v3-wrap"><canvas class="v3" id="v3" aria-label="3D-Ansicht des Raums. Ziehen dreht, Mausrad zoomt, Antippen wählt ein Möbel."></canvas>
     <div class="v3-opts"><button class="btn sm" id="v3-reset">Ansicht zurücksetzen</button><button class="btn sm" id="v3-top">Draufsicht</button><button class="btn sm" id="v3-focus">Auswahl ansehen</button><label><input type="checkbox" id="v3-snap" ${V3OPT.snap?'checked':''}> 5-cm-Raster</label><label><input type="checkbox" id="v3-roof" ${V3OPT.roof?'checked':''}> Dach</label><button type="button" class="btn sm" data-act="v3-floor" title="Bodenbelag in der 3D-Ansicht wechseln">Boden: ${V3OPT.floor === 'plan' ? 'Plan' : 'Holz'}</button><button type="button" class="btn sm" data-act="v3-box" aria-pressed="${!!V3OPT.box}" title="Außenmaße aller Möbel als Rahmen in Prüffarbe zeigen">Maßrahmen</button></div>
-    <div class="v3-legend"><span><i style="background:#c0392b"></i>roter Rahmen: Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>grauer Bodenrahmen: Standardmaße, bitte messen</span>${V3OPT.box ? '<span><i style="background:#2f7a48"></i>passt</span>' : ''}<span class="hide-sm">· Ziehen verschiebt · Pfeiltasten: 1 cm, Umschalt: 10 cm · R: drehen</span></div>
+    <div class="v3-legend"><span><i style="background:#e3ac36"></i>gelber Rahmen: Auswahl</span><span><i style="background:#c0392b"></i>roter Rahmen: Kollision, Wand oder Schräge</span><span><i style="background:#9aa09c"></i>grauer Bodenrahmen: Standardmaße, bitte messen</span><span id="v3-leg-ok" ${V3OPT.box ? '' : 'hidden'}><i style="background:#2f7a48"></i>passt</span><span class="hide-sm">· Ziehen verschiebt · Pfeiltasten: 1 cm, Umschalt: 10 cm · R: drehen</span></div>
     <p class="v3-msg" id="v3-msg">3D-Ansicht wird geladen …</p></div>`;
   let T;
   try { T = await loadThree(); } catch { const m = $('#v3-msg'); if (m) m.textContent = 'Die 3D-Ansicht braucht eine Internetverbindung, um Three.js zu laden. Der Grundriss funktioniert auch ohne.'; return; }
@@ -2821,16 +2848,21 @@ async function render3D() {
   const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]], cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
   const tri = (arr, a, b, c, want) => { const n = cross(sub(b, a), sub(c, a)); if (!want(n, a)) [b, c] = [c, b]; arr.push(...a, ...b, ...c); };
   const geo = (arr, uv) => { const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(arr, 3)); if (uv) g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); g.computeVertexNormals(); return g; };
-  const woodFloor = V3OPT.floor !== 'plan';
-  const floorArr = [], floorUv = [], uvOf = ([x, y]) => woodFloor ? [x / 240, y / 240] : [(plOX(pl) + x) * pl.ppc / ph.w, 1 - (plOY(pl) + y) * pl.ppc / ph.h];
+  const floorArr = [], floorUv = [], woodUv = [], uvOf = ([x, y]) => [(plOX(pl) + x) * pl.ppc / ph.w, 1 - (plOY(pl) + y) * pl.ppc / ph.h];
   for (let i = 1; i < poly.length - 1; i++) {
     let a = poly[0], b = poly[i], c = poly[i + 1];
     const n = cross(sub(v3(...b, 0), v3(...a, 0)), sub(v3(...c, 0), v3(...a, 0))); if (n[1] < 0) [b, c] = [c, b];
-    for (const p of [a, b, c]) { floorArr.push(...v3(p[0], p[1], 0)); floorUv.push(...uvOf(p)); }
+    for (const p of [a, b, c]) { floorArr.push(...v3(p[0], p[1], 0)); floorUv.push(...uvOf(p)); woodUv.push(p[0] / 240, p[1] / 240); }
   }
-  let floorMap;
-  if (woodFloor) { floorMap = ctex('floor', () => texCanvas('floor')); floorMap.wrapS = floorMap.wrapT = T.RepeatWrapping; } else floorMap = loadTex('floor', ph.src);
-  const floor = new T.Mesh(geo(floorArr, floorUv), new T.MeshStandardMaterial({ map: floorMap, roughness: woodFloor ? .58 : .95 })); floor.receiveShadow = true; scene.add(floor);
+  // Boden: beide Texturkoordinaten liegen bereit, „Boden: Holz/Plan“ schaltet ohne Neuaufbau der Szene um
+  const floor = new T.Mesh(geo(floorArr, floorUv), new T.MeshStandardMaterial({ roughness: .58 })), planAttr = floor.geometry.getAttribute('uv'), woodAttr = new T.Float32BufferAttribute(woodUv, 2);
+  floor.receiveShadow = true; scene.add(floor);
+  const setFloor = () => {
+    const plan = V3OPT.floor === 'plan', fm = floor.material; let m;
+    if (plan) m = loadTex('floor', ph.src); else { m = ctex('woodfloor', () => texCanvas('floor')); m.wrapS = m.wrapT = T.RepeatWrapping; }
+    floor.geometry.setAttribute('uv', plan ? planAttr : woodAttr); fm.map = m; fm.roughness = plan ? .95 : .58; fm.needsUpdate = true;
+  };
+  setFloor();
   const run = sl ? (H - (sl.knee || 0)) / slopeTan(sl) : 0, fK = p => slopeDist(pl, sl, p[0], p[1]) - run;
   const TH = 10, BASE = 12, facers = [], quadTo = (arr, a, b, c, e) => arr.push(...a, ...b, ...c, ...a, ...c, ...e);
   const wallM = new T.MeshStandardMaterial({ color: '#f3f0e9', roughness: .94, side: T.DoubleSide }), capM = new T.MeshStandardMaterial({ color: '#aeb2aa', roughness: 1, side: T.DoubleSide });
@@ -2894,10 +2926,11 @@ async function render3D() {
       const it = getItem(p.itemId); if (!it) continue;
       const dm = itemDims(it), h = Math.max(1, dm.h), [x, y] = plCm(p, ph), grp = build(it, dm);
       grp.position.set(x, p.elev || 0, y); grp.rotation.y = -(p.rot || 0) * Math.PI / 180; grp.userData.pid = p.id;
-      if (S.sel === p.id) grp.userData.mats.forEach(m => { if (m.userData.kind !== 'glow') { m.emissive = new T.Color('#2f6b57'); m.emissiveIntensity = .4; } });
+      const sel = S.sel === p.id;   // Auswahl: gelber Maßrahmen, das Möbel selbst nur leicht aufgehellt, damit Farbe und Material erkennbar bleiben
+      if (sel) grp.userData.mats.forEach(m => { if (m.userData.kind !== 'glow') { m.emissive = new T.Color('#365e4c'); m.emissiveIntensity = .18; } });
       const hit = new T.Mesh(new T.BoxGeometry(Math.max(dm.w, 14), Math.max(h, 4), Math.max(dm.d, 14)), pickM); hit.position.y = Math.max(h, 4) / 2; grp.add(hit); pick.push(hit);
       const before = !!ph.plan.before, bad = fitIssues(p, ph).length > 0, std = !ownDims(it), ecol = before ? '#5f6b64' : bad ? '#c0392b' : std ? '#9aa09c' : '#2f7a48';
-      if (V3OPT.box || (bad && !before)) { const bg=new T.BoxGeometry(dm.w,h,dm.d), edges=new T.EdgesGeometry(bg);bg.dispose();const e = new T.LineSegments(edges, new T.LineBasicMaterial({ color: ecol })); e.position.y = h / 2; grp.add(e); }
+      if (sel || V3OPT.box || (bad && !before)) { const bg=new T.BoxGeometry(dm.w,h,dm.d), edges=new T.EdgesGeometry(bg);bg.dispose();const e = new T.LineSegments(edges, new T.LineBasicMaterial({ color: sel && !(bad && !before) ? '#e3ac36' : ecol })); e.position.y = h / 2; grp.add(e); }
       if (!before && (bad || std)) { const fm = new T.MeshBasicMaterial({ color: ecol, toneMapped: false }), fy = p.elev ? .3 : 3, fw = 1.4; for (const s of [-1, 1]) { const a = new T.Mesh(new T.BoxGeometry(dm.w + 4, .3, fw), fm); a.position.set(0, fy, s * (dm.d / 2 + 2)); const b = new T.Mesh(new T.BoxGeometry(fw, .3, dm.d + 4), fm); b.position.set(s * (dm.w / 2 + 2), fy, 0); grp.add(a, b); } }
       dyn.add(grp);
     }
@@ -2964,7 +2997,7 @@ async function render3D() {
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('wheel', e => { e.preventDefault(); C.R = clamp(C.R * Math.exp(e.deltaY * .001), 150, 8000); draw(); }, { passive: false });
-  V3 = { T, renderer, scene, cam, ro, tex, draw, buildDyn, clearDyn, shot, raf: 0 };
+  V3 = { T, renderer, scene, cam, ro, tex, draw, buildDyn, clearDyn, shot, setFloor, raf: 0 };
   V3.disposeExtra=()=>{environmentTarget?.dispose();pickM.dispose();};
   const resetCamera=()=>{target.set(W/2,Math.min(H,220)*.3,D/2);Object.assign(C,{th:.55,ph:.95,R:Math.max(W,D)*2});draw();};
   $('#v3-reset').onclick=resetCamera;
@@ -3754,8 +3787,9 @@ const ACT = {
   'edit-plan'() { const ph = activePhoto(); if (ph && ph.plan) (ph.plan.scan ? scanDialog(ph) : planDialog(ph)); },
   'new-scan'() { $('#file-scan').click(); },
   'v3d'() { S.v3d = !S.v3d; renderToolbar(); renderStage(); renderInspector(); },
-  'v3-floor'() { V3OPT.floor = V3OPT.floor === 'plan' ? 'wood' : 'plan'; LS.set('v3opt', V3OPT); render3D(); },
-  'v3-box'() { V3OPT.box = !V3OPT.box; LS.set('v3opt', V3OPT); render3D(); },
+  // Boden und Maßrahmen schalten in der laufenden Szene um (kein Neuaufbau, Kamera und Auswahl bleiben stehen)
+  'v3-floor'(t) { V3OPT.floor = V3OPT.floor === 'plan' ? 'wood' : 'plan'; LS.set('v3opt', V3OPT); if (!V3 || !V3.setFloor) return render3D(); V3.setFloor(); t.textContent = 'Boden: ' + (V3OPT.floor === 'plan' ? 'Plan' : 'Holz'); V3.draw(); },
+  'v3-box'(t) { V3OPT.box = !V3OPT.box; LS.set('v3opt', V3OPT); if (!V3) return render3D(); t.setAttribute('aria-pressed', V3OPT.box); const l = $('#v3-leg-ok'); if (l) l.hidden = !V3OPT.box; V3.buildDyn(); V3.draw(); },
   'audio-preset'(t) { audSet(a=>{a.mode=t.dataset.preset==='room'?'coverage':'cinema';a.count=4;a.system=t.dataset.preset==='movie'?'5.1':'2.0';a.listener=null;a.cables=true;},true); },
   'audio-rack'() { const style=furnishOf().style||'Minimalistisch', meta=STYLE_META[style]||STYLE_META.Minimalistisch; itemDialog(null,{name:'HiFi-Möbel · '+style,cat:'Kommode',color:meta.pal[0],price:null,dims:{},note:meta.desc+' Offenes Gerätefach, Belüftung und Traglast gemäß Gerätehandbuch einplanen. Eigene Außenmaße und Preis ergänzen; Planungsidee, kein konkretes Kaufangebot.'}); },
   'aud-toggle'() { const ph = activePhoto(); if (!ph || !ph.plan) return; snapshot(); if (!ph.audio) ph.audio = AUD_DEF(); else ph.audio.on = !ph.audio.on; S.sel = null; touch(); renderToolbar(); renderStage(); renderInspector(); },
