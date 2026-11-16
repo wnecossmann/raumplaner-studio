@@ -25,12 +25,18 @@ cases.push(...CATS.map(c => ({ name: c.q || c.k, cat: c.k })),
   { name: 'Sitzsack', cat: 'Sessel', dims: { w: 90, d: 90, h: 70 } }, { name: 'Stehleuchte', cat: 'Beleuchtung', dims: { w: 35, d: 35, h: 155 } }, { name: 'Pendelleuchte', cat: 'Beleuchtung', dims: { w: 40, d: 40, h: 60 } },
   { name: 'Spiegel', cat: 'Deko & Pflanzen', dims: { w: 60, d: 3, h: 160 } }, { name: 'Zimmerpflanze', cat: 'Deko & Pflanzen', dims: { w: 40, d: 40, h: 120 } },
   { name: 'Subwoofer', cat: 'Audio', dims: { w: 30, d: 30, h: 34 } }, { name: 'Stereo-Verstärker', cat: 'Audio', dims: { w: 43, d: 35, h: 12 } }, { name: 'Plattenspieler', cat: 'Audio', dims: { w: 45, d: 36, h: 13 } },
-  { name: 'Verdunklungsrollo', cat: 'Sonstiges', dims: { w: 165, d: 5, h: 195 } }, { name: 'Fernseher', cat: 'Sonstiges', dims: { w: 123, d: 25, h: 78 } });
+  { name: 'Verdunklungsrollo', cat: 'Sonstiges', dims: { w: 165, d: 5, h: 195 } }, { name: 'Fernseher', cat: 'Sonstiges', dims: { w: 123, d: 25, h: 78 } },
+  // Wunschmöbel Serie PANAMA: Holzkorpus im Metallrahmen, Fronten laut Name
+  { name: 'SIT Dielenschrank PANAMA 09264-01, Akazie natur mit Altmetall antikschwarz, 2 Türen, 3 Böden, Kleiderstange', cat: 'Kleiderschrank', dims: { w: 80, d: 45, h: 180 } }, { name: 'SIT Highboard PANAMA 09269-01, Akazie natur mit Altmetall antikschwarz, 1 Schublade, 2 Türen', cat: 'Kommode', dims: { w: 75, d: 35, h: 110 } },
+  { name: 'SIT Kommode PANAMA 09208-01, Akazie natur mit Altmetall antikschwarz, 1 Schublade, 1 Tür', cat: 'Kommode', dims: { w: 50, d: 34, h: 73 } }, { name: 'SIT Sideboard PANAMA, Akazie natur mit Altmetall antikschwarz, 3 Schubladen, 3 Türen, 140 cm', cat: 'Kommode', dims: { w: 140, d: 40, h: 90 } },
+  { name: 'Schubladenkommode Metallgestell, 4 Schubladen', cat: 'Kommode', dims: { w: 80, d: 40, h: 95 } });
 const real = cases.length;
 cases.push(...CATS.map(c => ({ name: c.q || c.k, cat: c.k, dims: { w: 130, d: 61, h: 190 } })));   // bewusst unpassende Maße: hier darf gestaucht werden, aber nichts übersteht
 
 for (const [name, kind] of [['Stereo-Verstärker', 'amp'], ['Plattenspieler', 'turntable'], ['Aktivlautsprecher mit Verstärker', 'speaker']]) assert.equal(kind3({ name, cat: 'Audio' }, { w: 40, d: 30, h: 12 }), kind);
 assert.equal(kind3({ name: 'HiFi-Möbel · Japandi', cat: 'Kommode' }, { w: 120, d: 42, h: 60 }), 'hifirack');
+assert.equal(kind3({ name: 'SIT Sideboard PANAMA, Altmetall, 3 Schubladen, 3 Türen', cat: 'Kommode' }, { w: 140, d: 40, h: 90 }), 'framecab');
+assert.equal(kind3({ name: 'SIT Lowboard PANAMA 09215-01, Akazie mit antikschwarzem Altmetall', cat: 'Kommode' }, { w: 112, d: 40, h: 55 }), 'lowboard');
 
 const SINGLE = new Set(['generic', 'rug', 'cushion', 'soundbar']);   // dürfen aus einem Teil bestehen
 const kinds = new Set(); let worst = [1, ''];

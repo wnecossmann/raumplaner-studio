@@ -58,6 +58,14 @@ Prüfungen: `node --test tests/recommendations.test.mjs` prüft Stile, Händlerv
 
 18 neue Kombinationen für Konrads Zimmer: Japandi, Boho, Mid-Century, Minimalistisch, Vintage und Soft Modern, jeweils Budget, Mittel und Premium. Die Kombinationen verwenden reale Produkte aus dem bestehenden Katalog mit unveränderten Preisen und Maßen. Sie sind stilistische Annäherungen. Die gesamte Aufstellung muss nach dem Übernehmen mit der Passprüfung geprüft werden; es gibt keine pauschale Passgarantie. Karten zeigen Überschreitungen des Raumbudgets ohne Versand. Prüfung: `node tests/sets.test.mjs`.
 
+### Wunschmöbel „Industrial · PANAMA“ (16.11.2026)
+
+Zusätzlicher 31. Vorschlag für Konrads Zimmer mit vier Möbeln der Serie PANAMA von SIT (Kaufland-Angebote vom 16.11.2026): Dielenschrank 80 × 45 × 180 cm (912,25 €), Highboard 75 × 35 × 110 cm (676,66 €), Kommode 50 × 34 × 73 cm (208,51 €) und Sideboard 140 × 40 × 90 cm (969 €). Sie ersetzen den PAX aus „Industrial · Premium“; alle übrigen Produkte stammen von dort. Der Vorschlag steht als lesbarer Block direkt hinter der Zeile `KONRAD_SETS` (`PANAMA_ITEMS`), nicht in der erzeugten JSON-Zeile – `tests/sets.test.mjs` zählt deshalb weiter 30.
+
+Der Vorschlag hat eine eigene Aufstellung (`layout: 'bett-bestand'` in `layoutKonradSet`): Konrads Bett bleibt wie im Ist-Zustand in der rechten Ecke am Kniestock, Kopfende an der rechten Wand. Dielenschrank, Highboard und Kommode stehen an der oberen Wand, das Sideboard mit den Wandbrettern an der Giebelwand unterhalb des Fensters, das Lowboard links am Kniestock, Schreibtisch und Nachttisch an der rechten Wand. Der Rollcontainer aus dem Bestand hat darin keinen Platz. Die Passprüfung meldet für diese Aufstellung keinen Konflikt; zwischen Schreibtisch, Nachttisch und Bett bleiben aber nur rund 2 cm Luft. Die Checkliste des Raums wird beim Übernehmen durch `PANAMA_CHECKLIST` ersetzt.
+
+In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, „1 Schublade, 2 Türen“) als Holzkorpus im schwarzen Rahmen mit Metallschubladen oben und Türen unten gezeichnet (Modellart `framecab`).
+
 ### HiFi und Kabelplanung
 
 Im Grundriss „Audio“ öffnen: Stereo-Hörplatz, vier verteilte Boxen oder 5.1-Heimkino vorschlagen lassen. Die Stilpalette beeinflusst den HiFi-Möbelentwurf; seine Maße und Preise müssen eingetragen werden. Verstärkername, unabhängige Kanalzahl, X/Y-Position, Anschlusshöhe und Kabelreserve werden pro Plan gespeichert. Kabelwege zeigen den kürzeren Weg entlang des rechteckigen Raumrahmens mit Anschlussstrecken. Höhen und Reserve fließen in die Längenliste ein. Türen, Nischen und Hindernisse werden nicht umgangen. Subwoofer gelten als aktiv und sind nicht in der Passivkabelliste. Kanalzahl ist keine elektrische Kompatibilitätsprüfung. Keine gemessene Schallabdeckung. Test: `node tests/audio-cables.test.mjs`.
