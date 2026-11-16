@@ -1160,21 +1160,41 @@ const PANAMA_CHECKLIST = [
   'Kommode als Nachttisch: mit 73 cm deutlich höher als die Liegefläche (rund 45 cm). Am Bett ausprobieren, ob Wecker und Wasserglas so noch gut erreichbar sind.',
   'Steckdosen kartieren: am Schreibtisch (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
   'Lichtschalter und Steckdose rechts neben der Tür: prüfen, ob sie auf dem schrägen Wandstück sitzen und frei bleiben – der Schreibtisch beginnt schon 21 cm hinter der Ecke und steht 4 cm vor der Wand (Kabel, Hubweg).',
-  'Dielenschrank: nur 80 cm breit, eine Kleiderstange und drei Böden. Vor dem Kauf prüfen, ob das zusammen mit Highboard und Sideboard für Konrads Kleidung reicht – sonst bleibt der PAX aus „Industrial · Premium“ die bessere Wahl.',
-  'Ecke am Fenster: Das Fenster beginnt schon 25 cm hinter der Ecke. Dielenschrank und Highboard stehen deshalb 77 cm von der Giebelwand entfernt – so steht nichts vor dem Fenster und der Flügel geht auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke selbst bleibt frei.',
-  'Tür: Sie öffnet bis etwa 115°, dann stößt sie an das Highboard. Bodentürstopper (am besten magnetisch) setzen.',
+  'Dielenschrank: nur 80 cm breit, eine Kleiderstange und drei Böden. Vor dem Kauf prüfen, ob das zusammen mit Sideboard und Kommode für Konrads Kleidung reicht (das Highboard ist entfallen, damit die Tür frei aufgeht) – sonst den Vorschlag „Schreibtisch am Fenster“ mit Highboard oder den PAX aus „Industrial · Premium“ nehmen.',
+  'Ecke am Fenster: Das Fenster beginnt schon 25 cm hinter der Ecke. Der Dielenschrank steht deshalb 77 cm von der Giebelwand entfernt – so steht nichts vor dem Fenster und der Flügel geht auf. Flügelbreite und Anschlagseite vor Ort prüfen; die Ecke selbst bleibt frei.',
+  'Tür: Im Schwenkbereich steht kein Möbel mehr, sie geht ganz auf. Ein Bodentürstopper schützt Wand und Türgriff.',
   'Sideboard an der Giebelwand direkt hinter dem Fenster: Abstand zu Fensterbank und Heizkörper prüfen.',
   'Schuhschrank am Kniestock links (130 × 40 × 50 cm): Kniestockhöhe dort nachmessen; zwischen Schrank und Bettfuß bleiben rund 21 cm. Er hat eine große Klappe – vor dem Kauf ansehen, was hineinpasst.',
   'Lieferung: Dielenschrank, Highboard und Sideboard kommen von Kaufland per Spedition frei Bordsteinkante – Tragehilfe bis ins Dachgeschoss einplanen; dort waren am 16.11.2026 nur noch wenige Stück zum genannten Preis verfügbar. Der Schuhschrank kommt von home24 (Lieferung ca. 10.–17.12.2026, Versandkosten prüfen). Akazie ist Naturholz, Farbe und Maserung weichen je Stück ab.',
   'Altmöbel: Kiefernschrank, Hochregal, KALLAX 5 × 5 und der Rollcontainer haben in dieser Aufstellung keinen Platz mehr.',
   'Monitor matt (entspiegelt) wählen und an einem Monitorarm mittig hinten befestigen – das Fenster liegt gegenüber.',
   'Teppich so legen, dass die Tür nicht darüber schleift und das Sideboard nicht auf der Kante steht (geplant x 42–202).',
+  'Deko-Ideen (nicht im Budget, Maße und Preise sind Richtwerte): zwei Bilder über dem Sideboard, eine Pflanze am Fenster, zwei Kissen auf dem Bett, eine Lochplatte über dem Schreibtisch. Dazu passt ein warmweißes, dimmbares LED-Band hinter dem Sideboard oder unter der Bettkante – indirektes Licht lässt die Schräge abends höher wirken.',
 ];
+/* Checkliste zum eigenen Vorschlag „Schreibtisch am Fenster“ (Aufstellung „fensterplatz“) */
+const FENSTERPLATZ_CHECKLIST = (pc => [
+  KONRAD_CHECKLIST[0],
+  pc('Bett:'),
+  'Schreibtisch an der oberen Wand, 40 cm von der Giebelwand: Das Fenster liegt links vom Bildschirm, das Tageslicht kommt von der Seite und spiegelt nicht. Brüstungshöhe messen und prüfen, ob der Fensterflügel über Tischplatte und linken Lautsprecher hinweg aufgeht; sonst den Tisch weiter zur Tür rücken (bis 207 cm rechte Tischkante bleibt die Tür frei).',
+  'Heizkörper unter dem Fenster: Das linke Tischende steht davor. Die 40 cm Abstand zur Giebelwand lassen, damit die Wärme aufsteigen kann.',
+  'Rechte Wand ausmessen: Dielenschrank (80 cm), Highboard (75 cm) und Kommode (50 cm) stehen mit 2 cm Fugen als abgestufte Reihe vor dem Bett und beginnen 14 cm hinter der Türecke. Lichtschalter und Steckdose dort dürfen nicht hinter dem Dielenschrank verschwinden.',
+  'Raumhöhe an der rechten Wand: Der Dielenschrank (180 cm) steht im hohen Bereich, das Highboard (110 cm) reicht bis kurz hinter den Beginn der Schräge. Kniestock und Neigung nachmessen.',
+  pc('Kommode als Nachttisch:'),
+  'Steckdosen kartieren: am Schreibtisch an der oberen Wand (Motor, PC, Monitor, Lautsprecher, Lampe – Kabelwanne unter die Platte und eine Steckdosenleiste, die mit hochfährt) und am Kopfende des Betts für Leselicht und Ladegerät.',
+  'Dielenschrank: nur 80 cm breit, eine Kleiderstange und drei Böden. Vor dem Kauf prüfen, ob das zusammen mit Highboard, Sideboard und Kommode für Konrads Kleidung reicht.',
+  pc('Sideboard an der Giebelwand'),
+  pc('Schuhschrank am Kniestock'),
+  pc('Lieferung:'),
+  pc('Altmöbel:'),
+  'Teppich liegt quer in der Raummitte; der Schreibtischstuhl rollt auf dem Holzboden davor, die Tür erreicht ihn nicht.',
+  pc('Deko-Ideen'),
+].filter(Boolean))(p => PANAMA_CHECKLIST.find(t => t.startsWith(p)));
 /* Fenster-Hinweis für 200 cm breite Schränke: sie können nicht weit genug abrücken */
 const KONRAD_FENSTER_BREIT = 'Fenster: Es beginnt schon 25 cm hinter der Ecke. Der 200 cm breite Kleiderschrank kann nur 27 cm von der Giebelwand abrücken, sonst öffnet die Tür keine 90° mehr. Er steht damit seitlich vor dem Fensterrand: Der eckseitige Flügel lässt sich nur einen Spalt weit drehen (Kippen geht), und in die Ecke kommt weniger Licht. Wer das Fenster frei haben will, nimmt einen 150 cm breiten Schrank oder den Vorschlag „Industrial · PANAMA“.';
 const setWideWardrobe = set => { const x = set && !set.layout && set.items.find(i => i.key === 'schrank'); return !!x && x.dims.w > 175; };
 function konradChecklist(set) {
   if (set && set.layout === 'bett-bestand') return PANAMA_CHECKLIST;
+  if (set && set.layout === 'fensterplatz') return FENSTERPLATZ_CHECKLIST;
   return setWideWardrobe(set) ? KONRAD_CHECKLIST.map(t => t.startsWith('Fenster:') ? KONRAD_FENSTER_BREIT : t) : KONRAD_CHECKLIST;
 }
 /* Ecke obere Wand / Giebelwand: Das Fenster beginnt dort schon 25 cm hinter der Ecke. Möbel an der oberen Wand, die tiefer sind, rücken von der Giebelwand ab –
@@ -1891,12 +1911,28 @@ const PANAMA_ITEMS = [
   { key: 'lowboard', short: 'Schuhschrank', role: 'main', cat: 'Kommode', name: 'SIT Schuhschrank PANAMA 09258-01, Akazie natur mit Altmetall antikschwarz, 1 Klappe, 130 cm', retailer: 'home24 (Verkauf und Versand durch SIT Möbel)', url: 'https://www.home24.de/produkt/panama-schuhschrank-schwarz-braun-akazie-130-x-50-x-40-cm', price: 729.99, qty: 1, dims: { w: 130, d: 40, h: 50 }, color: PANAMA_COL,
     why: 'Der flache Schrank passt unter den Kniestock und ersetzt das Lowboard – damit kommen alle Schränke aus derselben Serie.', note: 'Eigentlich eine Schuhkippe mit einer großen Klappe: vor dem Kauf prüfen, ob die Inneneinteilung für Konsole, Spiele oder Technik taugt. Versandkosten im Shop prüfen; Lieferung laut home24 ca. 10.–17.12.2026.', checkedAt: '2026-11-16', img: 'https://cdn1.home24.net/images/media/catalog/product/455x455/jpg/6/e/6e3974de790f494fa1cda7275983c1bd.webp' },
 ];
+/* Deko-Ideen ohne konkretes Produkt: Richtwerte, zählen nicht zum Budget (Rolle „alternative“), stehen aber im Plan */
+const PANAMA_DEKO = [
+  { key: 'deko_bild', short: 'Bild', idea: true, role: 'alternative', cat: 'Deko & Pflanzen', name: 'Bilderrahmen 40 × 50 cm, schwarz, mit Poster oder eigenem Foto', retailer: '', url: '', price: 15, qty: 2, dims: { w: 40, d: 3, h: 50 }, color: '#1C1C1C',
+    why: 'Zwei schwarz gerahmte Bilder über dem Sideboard nehmen das Schwarz der Metallrahmen auf. Motive nach Konrads Geschmack: Technik, Architektur oder eigene Fotos.', checkedAt: '2026-11-16', img: null },
+  { key: 'deko_pflanze', short: 'Pflanze', idea: true, role: 'alternative', cat: 'Deko & Pflanzen', name: 'Zimmerpflanze im Topf, ca. 45 cm (z. B. Efeutute oder Bogenhanf)', retailer: '', url: '', price: 20, qty: 1, dims: { w: 30, d: 30, h: 45 }, color: '#5F7D5A',
+    why: 'Etwas Grün auf dem Sideboard am Fenster lockert das viele Braun und Schwarz auf; beide Arten sind pflegeleicht.', checkedAt: '2026-11-16', img: null },
+  { key: 'deko_kissen', short: 'Kissen', idea: true, role: 'alternative', cat: 'Deko & Pflanzen', name: 'Kissen 45 × 45 cm, Rostbraun (Bezug Baumwolle oder Leinen)', retailer: '', url: '', price: 15, qty: 2, dims: { w: 45, d: 45, h: 14 }, color: '#B5542A',
+    why: 'Zwei Kissen an der Wandseite machen das Bett tagsüber zur Sitzecke und wiederholen das Rost des Teppichs.', checkedAt: '2026-11-16', img: null },
+  { key: 'deko_lochplatte', short: 'Lochplatte', idea: true, role: 'alternative', cat: 'Deko & Pflanzen', name: 'Lochplatte oder Pinnwand, schwarz, ca. 76 × 56 cm', retailer: '', url: '', price: 25, qty: 1, dims: { w: 76, d: 2, h: 56 }, color: '#1C1C1C',
+    why: 'Über dem Schreibtisch: Kopfhörer, Kabel und Zettel hängen an der Wand statt auf der Platte.', checkedAt: '2026-11-16', img: null },
+];
 {
   const i = KONRAD_SETS.findIndex(s => s.id === 'ind_premium'), base = KONRAD_SETS[i];
   if (base) KONRAD_SETS.splice(i + 1, 0, { id: 'ind_panama', title: 'Industrial · PANAMA', style: base.style, tier: base.tier, layout: 'bett-bestand', palette: base.palette,
-    summary: 'Alle Schränke aus der Serie PANAMA von SIT: Dielenschrank, Highboard, Sideboard, Schuhschrank und die Kommode als Nachttisch. Konrads Bett bleibt an seinem heutigen Platz.', coherence: base.coherence,
-    items: base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]) });
+    summary: 'Alle Schränke aus der Serie PANAMA von SIT: Dielenschrank, Sideboard, Schuhschrank und die Kommode als Nachttisch. Konrads Bett bleibt an seinem heutigen Platz, die Tür geht frei auf.', coherence: base.coherence,
+    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], PANAMA_ITEMS[2], PANAMA_ITEMS[3]] : [x]), ...PANAMA_DEKO] });
+  // Eigener Vorschlag (Claude, 16.11.2026): Schreibtisch neben dem Fenster, alle hohen Möbel abgestuft an der rechten Wand, Highboard bleibt
+  if (base) KONRAD_SETS.splice(i + 2, 0, { id: 'ind_panama_fenster', title: 'Industrial · PANAMA · Schreibtisch am Fenster', style: base.style, tier: base.tier, layout: 'fensterplatz', palette: base.palette,
+    summary: 'Vorschlag von Claude: Schreibtisch an die obere Wand neben das Fenster (Tageslicht von der Seite), Dielenschrank, Highboard und Kommode abgestuft an der rechten Wand, Tür und Fenster frei.', coherence: base.coherence,
+    items: [...base.items.flatMap(x => x.key === 'schrank' ? [PANAMA_ITEMS[0]] : x.key === 'nachttisch' || x.key === 'regal' ? [] : x.key === 'lowboard' ? [PANAMA_ITEMS[4], ...PANAMA_ITEMS.slice(1, 4)] : [x]), ...PANAMA_DEKO] });
 }
+const PANAMA_REV = 2;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
 const setName = s => s.title || s.style + ' · ' + s.tier;
 const SET_SHORT = { highboard: 'Highboard', kommode: 'Kommode', sideboard: 'Sideboard', schrank: 'Kleiderschrank', schreibtisch: 'Schreibtisch', stuhl: 'Stuhl', teppich: 'Teppich', lowboard: 'Lowboard', regal: 'Regal', nachttisch: 'Nachttisch', lautsprecher: 'Lautsprecher', lautsprecher_staender: 'Ständer', schreibtischlampe: 'Lampe', leseleuchte: 'Leselampe', matratze: 'Matratze', rollo: 'Rollo' };
 const setTotal = set => set.items.filter(i => i.role !== 'alternative').reduce((a, i) => a + (i.price || 0) * (i.qty || 1), 0);
@@ -1941,12 +1977,40 @@ function layoutKonradSet(r, keep = new Set(), layout) {
   const placed = new Set(after.placements.map(q => q.itemId));
   const P = after.plan, W = P.w, D = P.d, dm = it => itemDims(it); let z = Math.max(0, ...after.placements.map(q => q.z || 0)) + 1;
   const put = (it, xc, yc, rot = 0, elev = 0) => { if (!it || (keep.has(it.id) && placed.has(it.id))) return; const [x, y] = relFromCm(after, xc, yc); after.placements.push({ id: uid(), itemId: it.id, x, y, w: dm(it).w * P.ppc / after.w, rot, flip: false, op: 1, bri: 100, shadow: false, z: z++, elev }); };
-  const WALL = W - 4, stay = layout === 'bett-bestand';   // stay: Bett bleibt wie im Ist-Zustand in der rechten Ecke am Kniestock
+  const WALL = W - 4, fen = layout === 'fensterplatz', stay = layout === 'bett-bestand' || fen;   // stay: Bett bleibt wie im Ist-Zustand in der rechten Ecke am Kniestock; fen: zusätzlich Schreibtisch am Fenster
   const night = by.nachttisch || (stay && by.kommode) || null;   // ohne eigenen Nachttisch steht die Kommode am Bett
   const bm = bed ? dm(bed) : { w: 126, d: 206 }, bedTop = D - (stay ? 0 : 25) - bm.w;
   const rowD = Math.max(0, ...['schrank', 'highboard', 'kommode'].filter(k => by[k] && by[k] !== night).map(k => dm(by[k]).d));   // Tiefe der Schrankreihe an der oberen Wand
-  if (by.teppich) { const m = dm(by.teppich); put(by.teppich, (stay ? 42 : 35) + Math.min(m.w, 165) / 2, stay ? Math.max(rowD + 20 + m.d / 2, (rowD + bedTop) / 2) : 75 + m.d / 2); }   // stay: mittig zwischen Schrankreihe und Bett, 2 cm vor dem Sideboard
+  if (by.teppich && !fen) { const m = dm(by.teppich); put(by.teppich, (stay ? 42 : 35) + Math.min(m.w, 165) / 2, stay ? Math.max(rowD + 20 + m.d / 2, (rowD + bedTop) / 2) : 75 + m.d / 2); }   // stay: mittig zwischen Schrankreihe und Bett, 2 cm vor dem Sideboard
   const win = (P.windows || []).find(w => w.wall === 'left');   // Fenster in der Giebelwand
+  // Deko-Ideen: Pflanze und Bilder am Sideboard, Kissen an der Wandseite des Betts, Lochplatte über dem Schreibtisch (lx/ly/lrot = Wandplatz über der Tischmitte)
+  const sideY = win ? win.from + win.width + 6 : 226;   // Sideboard an der Giebelwand, 6 cm hinter dem Fenster
+  const deko = (lx, ly, lrot, deskH) => {
+    const sm = by.sideboard ? dm(by.sideboard) : null, pm = by.deko_pflanze ? dm(by.deko_pflanze) : null;
+    if (pm && sm) put(by.deko_pflanze, sm.d / 2, sideY + 6 + pm.w / 2, 0, sm.h);
+    if (by.deko_bild && sm) { const m = dm(by.deko_bild), n = by.deko_bild.qty || 1, o = pm ? pm.w + 12 : 0, g = (sm.w - o - n * m.w) / (n + 1); for (let i = 0; i < n; i++) put(by.deko_bild, m.d / 2, sideY + o + g + m.w / 2 + i * (m.w + g), -90, sm.h + 22); }
+    if (by.deko_kissen && bed) { const m = dm(by.deko_kissen), n = by.deko_kissen.qty || 1; for (let i = 0; i < n; i++) put(by.deko_kissen, W - bm.d + 40 + m.w / 2 + i * (m.w + 6), D - 6 - m.d / 2, 0, dm(bed).h); }
+    if (by.deko_lochplatte) put(by.deko_lochplatte, lx, ly, lrot, deskH + 40);
+  };
+  if (fen) {
+    // Eigener Vorschlag: Schreibtisch an der oberen Wand neben dem Fenster (Licht von der Seite), hohe Möbel als abgestufte Reihe an der rechten Wand bis zum Bett, Tür frei
+    const dd = by.schreibtisch ? dm(by.schreibtisch) : { w: 150, d: 80, h: 75 }, deskH = !dd.h || dd.h > 90 ? 75 : dd.h, cx = 40 + dd.w / 2, cm = by.stuhl ? dm(by.stuhl) : null, chairY = 4 + dd.d + (cm ? cm.d / 2 - 15 : 17);
+    if (by.teppich) { const m = dm(by.teppich), y0 = chairY + (cm ? cm.d / 2 : 20) + 8; put(by.teppich, (40 + W - 45) / 2, Math.max(y0 + m.w / 2, (y0 + bedTop) / 2), 90); }   // quer in der Raummitte, der Stuhl rollt davor
+    if (by.schreibtisch) put(by.schreibtisch, cx, 4 + dd.d / 2, 0);
+    if (by.stuhl) put(by.stuhl, cx, chairY, 180);
+    const spk = by.lautsprecher, st = by.lautsprecher_staender; let off = 0, sy0 = 14, se = deskH, inner = cx + dd.w / 2 - 3;
+    if (spk) { const m = dm(spk); off = dd.w / 2 - m.w / 2 - 3; sy0 = 14 + m.d / 2; se = deskH + (st ? dm(st).h || 0 : 0); for (const x of [cx - off, cx + off]) { if (st) put(st, x, sy0, 0, deskH); put(spk, x, sy0, 0, se); } inner = cx + off - m.w / 2; }
+    if (by.schreibtischlampe) { const m = dm(by.schreibtischlampe); put(by.schreibtischlampe, inner - 4 - m.w / 2, 14 + m.d / 2, 0, deskH); }   // an der Türseite: der Fensterflügel bleibt frei
+    if (bed) put(bed, W - bm.d / 2, D - bm.w / 2, 90);
+    let y = bedTop - 2;
+    for (const it of [night, by.highboard, by.schrank]) if (it) { const m = dm(it); put(it, W - m.d / 2, y - m.w / 2, 90); y -= m.w + 2; }
+    if (by.leseleuchte) { const m = dm(by.leseleuchte); put(by.leseleuchte, W - m.d / 2, bedTop + 12 + m.w / 2, 90, 115); }
+    if (by.sideboard) { const m = dm(by.sideboard); put(by.sideboard, m.d / 2, sideY + m.w / 2, -90); }
+    if (by.lowboard) { const m = dm(by.lowboard); put(by.lowboard, 1 + m.w / 2, D - m.d / 2, 180); }
+    deko(cx, by.deko_lochplatte ? dm(by.deko_lochplatte).d / 2 : 1, 0, deskH);
+    if (!(spk && keep.has(spk.id) && placed.has(spk.id))) after.audio = spk ? { ...AUD_DEF(), amp: after.audio?.amp, cables: after.audio?.cables, on: false, mode: 'cinema', system: '2.0', front: 'top', listener: [cx, chairY], height: se, ov: { FL: [cx - off, sy0], FR: [cx + off, sy0] } } : after.audio;
+    return;
+  }
   // Beginnt das Fenster innerhalb der Schranktiefe, rückt die Reihe um eine Flügelbreite von der Giebelwand ab: nichts steht vor dem Fenster, der Flügel geht auf
   if (stay) { const row = ['schrank', 'highboard', 'kommode'].filter(k => by[k] && by[k] !== night); let x = cornerOffset(P, row.reduce((a, k) => a + dm(by[k]).w + 2, -2), rowD); for (const k of row) { const m = dm(by[k]); put(by[k], x + m.w / 2, m.d / 2); x += m.w + 2; } }   // Schrankreihe an der oberen Wand
   else if (by.schrank) { const m = dm(by.schrank); put(by.schrank, cornerOffset(P, m.w, m.d) + m.w / 2, m.d / 2); }   // neben dem Fenster, nicht davor
@@ -1967,7 +2031,7 @@ function layoutKonradSet(r, keep = new Set(), layout) {
     if (bed) put(bed, W - bm.d / 2, D - bm.w / 2, 90);
     if (night) { const m = dm(night); put(night, W - m.d / 2, bedTop - 2 - m.w / 2, 90); }
     if (by.leseleuchte) { const m = dm(by.leseleuchte); put(by.leseleuchte, W - m.d / 2, bedTop + 12 + m.w / 2, 90, 115); }
-    const sb = by.sideboard, sm = sb ? dm(sb) : null, sy = win ? win.from + win.width + 6 : 226;   // Giebelwand, 6 cm hinter dem Fenster
+    const sb = by.sideboard, sm = sb ? dm(sb) : null, sy = sideY;
     if (sb) put(sb, sm.d / 2, sy + sm.w / 2, -90);
     if (by.regal) {
       // mittig über dem Sideboard; die Bretter teilen sich die Höhe bis 8 cm unter die Schräge gleichmäßig (Abstand höchstens 36, mindestens Brett + 22 cm)
@@ -1976,6 +2040,7 @@ function layoutKonradSet(r, keep = new Set(), layout) {
       else { let n = Math.max(1, by.regal.qty || 1); const gap = k => k > 1 ? Math.min(36, Math.floor((top - base - h) / (k - 1))) : 0; while (n > 1 && gap(n) < h + 22) n--; for (let i = 0; i < n; i++) put(by.regal, m.d / 2, y, -90, base + i * gap(n)); }
     }
     if (by.lowboard) { const m = dm(by.lowboard); put(by.lowboard, 1 + m.w / 2, D - m.d / 2, 180); }
+    deko(W - (by.deko_lochplatte ? dm(by.deko_lochplatte).d / 2 : 1), cy, 90, deskH);
     // der Rollcontainer aus dem Bestand hat in dieser Aufstellung keinen Platz und wird nicht gestellt
   } else {
   if (bed) put(bed, bm.d / 2, D - 25 - bm.w / 2, -90);
@@ -2009,7 +2074,7 @@ function applyKonradSet(r, id, migrate = false) {
     if (keptKeys.has(x.key)) continue;
     r.items.push({ id: uid(), name: x.name, cat: x.cat, price: x.price, qty: x.qty || 1, retailer: x.retailer, url: x.url, img: x.img || null,
       dims: { w: x.dims.w, d: x.dims.d, h: x.dims.h }, status: x.role === 'alternative' ? 'idee' : 'favorit', counts: x.role !== 'alternative',
-      note: (x.why || '') + (x.note ? ' ' + x.note : '') + ` Preis vom ${(x.checkedAt || '2026-11-15').split('-').reverse().join('.')}, vor dem Kauf prüfen.`,
+      note: (x.why || '') + (x.note ? ' ' + x.note : '') + (x.idea ? ' Idee ohne konkretes Produkt: Maße und Preis sind Richtwerte.' : ` Preis vom ${(x.checkedAt || '2026-11-15').split('-').reverse().join('.')}, vor dem Kauf prüfen.`),
       color: x.color || null, pkey: x.key, short: x.short || SET_SHORT[x.key] || undefined });
   }
   if (migrate) r.items.filter(i => i.bestand).forEach(i => keep.add(i.id));
@@ -2017,6 +2082,7 @@ function applyKonradSet(r, id, migrate = false) {
   r.activeSet = id; r.palette = set.palette.map(p => ({ name: p.name, hex: p.hex })); r.checklist = konradChecklist(set);
   r.furnish = { ...furnishOf(r), style: set.style, tier: set.tier };
   r.productsV1 = r.productsV2 = r.productsV3 = r.setsV1 = r.setsV2 = true;
+  if (set.layout) r.panamaRev = PANAMA_REV;
   if (!migrate) r.alignV1 = true;   // frisch gestellt = ausgerichtet; beim Aktualisieren mit alten Positionen richtet die Umstellung beim Laden aus
   return true;
 }
@@ -2589,7 +2655,7 @@ function kind3(it, dm) {
   if (c === 'Sessel') return /sitzsack/.test(n) ? 'beanbag' : 'armchair';
   if (c === 'Beleuchtung') return /wand/.test(n) ? 'walllamp' : /pendel|hänge|decken/.test(n) ? 'pendant' : h >= 100 || /steh/.test(n) ? 'floorlamp' : /arbeits|gelenk|anglepoise|architekt|schreibtisch/.test(n) ? 'tasklamp' : 'tablelamp';
   if (c === 'Teppich') return 'rug';
-  if (c === 'Deko & Pflanzen') return /spiegel|poster|\bbild|leinwand/.test(n) ? 'frame' : /vase/.test(n) ? 'vase' : /kissen/.test(n) ? 'cushion' : 'plant';
+  if (c === 'Deko & Pflanzen') return /spiegel|poster|\bbild|leinwand|lochplatte|pinnwand/.test(n) ? 'frame' : /vase/.test(n) ? 'vase' : /kissen/.test(n) ? 'cushion' : 'plant';
   if (c === 'Audio') return /ständer|staender|stand\b|absorber|standfuß|iso-/.test(n) ? 'spkstand' : /subwoofer/.test(n) ? 'sub' : /soundbar/.test(n) ? 'soundbar' : /plattenspieler|turntable/.test(n) ? 'turntable' : !/lautsprecher|boxen|monitor|speaker/.test(n) && /verstärker|verstaerker|receiver|endstufe|streamer|cd-?player|\bdac\b|\bamp\b/.test(n) ? 'amp' : 'speaker';
   if (/monitor|fernseher|bildschirm/.test(n)) return 'screen';
   return h <= 3 ? 'rug' : 'generic';
@@ -2887,7 +2953,7 @@ function makeKit(T, ctex, loadTex) {
         Cy(pr, pr * .76, ph, mat('#c9b8a3', 'matte'), 0, 0, 0, 30); Cy(pr * .92, pr * .92, .6, mat('#3b2e24', 'matte'), 0, ph - 1.2, 0, 30); Cy(.9, 1.2, (h - ph) * .55, mat('#5a4a36', 'matte'), 0, ph - 1, 0, 8);
         for (let i = 0; i < 11; i++) { const a = rnd() * 6.28, rr = rnd() * R * .3, s = R * (.3 + rnd() * .26), sy = s * (.8 + rnd() * .4), sm = Math.max(s, sy), o = Sp(s, sy, s, lm[i % 3], Math.sin(a) * rr, Math.min(h - sm, ph + (h - ph) * (.3 + rnd() * .6)), Math.cos(a) * rr, true); o.rotation.set(rnd() * 3, rnd() * 3, rnd() * 3); o.material.flatShading = true; }
         break; }
-      case 'frame': { const t = clamp(d, 1.5, 4), mir = /spiegel/.test(n); B(w, h, t, mat(col, bk), 0, 0, 0); B(w - 6, h - 6, .4, mir ? mat('#cfd6d9', 'mirror') : mat('#ece7dc', 'matte'), 0, 3, t / 2 + .1); break; }
+      case 'frame': { const t = clamp(d, 1.5, 4), mir = /spiegel/.test(n), brd = /lochplatte|pinnwand/.test(n); B(w, h, t - .4, mat(col, bk), 0, 0, -.2); B(w - 6, h - 6, .4, mir ? mat('#cfd6d9', 'mirror') : mat(brd ? shade(col, .28) : '#ece7dc', 'matte'), 0, 3, t / 2 - .2); break; }   // Bildfläche schließt mit der Außentiefe ab
       case 'vase': { const r = Math.min(w, d) / 2; Cy(r * .5, r * .7, h * .5, mat(col), 0, 0, 0); Sp(r, h * .28, r, mat(col), 0, h * .5, 0); Cy(r * .45, r * .55, h * .3, mat(col), 0, h * .7, 0); break; }
       case 'cushion': Rb(w, h, d, Math.min(h * .45, 8), mat(col, 'fabric')); break;
       case 'speaker': case 'sub': speaker(); break;
@@ -4190,6 +4256,11 @@ window.addEventListener('beforeunload', () => { if (S.room && S.storage) DB.put(
       }
       r.cornerV1 = true;
       S.storage && await DB.put(r);
+    }
+    if (r.seed === 'konrad' && KONRAD_SETS.length && r.panamaRev !== PANAMA_REV) {
+      // PANAMA-Räume auf den aktuellen Stand: entfallene Produkte (Highboard) gehen, neue Deko-Ideen kommen in den Plan; vorhandene Positionen, Gekauftes und eigene Möbel bleiben
+      const set = KONRAD_SETS.find(x => x.id === r.activeSet);
+      if (set && set.layout) { try { await Promise.race([document.fonts.ready, new Promise(res => setTimeout(res, 1500))]); } catch {} applyKonradSet(r, set.id, true); S.storage && await DB.put(r); }
     }
     if (r.seed === 'konrad' && KONRAD_SETS.length && !r.alignV1) {
       // Ausgerichtete Aufstellung vom 16.11.2026 (Wandbretter mittig, gleiche Fugen): Räume mit PANAMA werden einmalig neu gestellt; gekaufte Möbel bleiben stehen

@@ -29,12 +29,14 @@ cases.push(...CATS.map(c => ({ name: c.q || c.k, cat: c.k })),
   // Wunschmöbel Serie PANAMA: Holzkorpus im Metallrahmen, Fronten laut Name
   { name: 'SIT Dielenschrank PANAMA 09264-01, Akazie natur mit Altmetall antikschwarz, 2 Türen, 3 Böden, Kleiderstange', cat: 'Kleiderschrank', dims: { w: 80, d: 45, h: 180 } }, { name: 'SIT Highboard PANAMA 09269-01, Akazie natur mit Altmetall antikschwarz, 1 Schublade, 2 Türen', cat: 'Kommode', dims: { w: 75, d: 35, h: 110 } },
   { name: 'SIT Kommode PANAMA 09208-01, Akazie natur mit Altmetall antikschwarz, 1 Schublade, 1 Tür', cat: 'Kommode', dims: { w: 50, d: 34, h: 73 } }, { name: 'SIT Sideboard PANAMA, Akazie natur mit Altmetall antikschwarz, 3 Schubladen, 3 Türen, 140 cm', cat: 'Kommode', dims: { w: 140, d: 40, h: 90 } },
-  { name: 'Schubladenkommode Metallgestell, 4 Schubladen', cat: 'Kommode', dims: { w: 80, d: 40, h: 95 } }, { name: 'SIT Schuhschrank PANAMA 09258-01, Akazie natur mit Altmetall antikschwarz, 1 Klappe, 130 cm', cat: 'Kommode', dims: { w: 130, d: 40, h: 50 } });
+  { name: 'Schubladenkommode Metallgestell, 4 Schubladen', cat: 'Kommode', dims: { w: 80, d: 40, h: 95 } }, { name: 'SIT Schuhschrank PANAMA 09258-01, Akazie natur mit Altmetall antikschwarz, 1 Klappe, 130 cm', cat: 'Kommode', dims: { w: 130, d: 40, h: 50 } },
+  { name: 'Bilderrahmen 40 × 50 cm, schwarz, mit Poster oder eigenem Foto', cat: 'Deko & Pflanzen', dims: { w: 40, d: 3, h: 50 } }, { name: 'Lochplatte oder Pinnwand, schwarz, ca. 76 × 56 cm', cat: 'Deko & Pflanzen', dims: { w: 76, d: 2, h: 56 } }, { name: 'Kissen 45 × 45 cm, Rostbraun', cat: 'Deko & Pflanzen', dims: { w: 45, d: 45, h: 14 } });
 const real = cases.length;
 cases.push(...CATS.map(c => ({ name: c.q || c.k, cat: c.k, dims: { w: 130, d: 61, h: 190 } })));   // bewusst unpassende Maße: hier darf gestaucht werden, aber nichts übersteht
 
 for (const [name, kind] of [['Stereo-Verstärker', 'amp'], ['Plattenspieler', 'turntable'], ['Aktivlautsprecher mit Verstärker', 'speaker']]) assert.equal(kind3({ name, cat: 'Audio' }, { w: 40, d: 30, h: 12 }), kind);
 assert.equal(kind3({ name: 'HiFi-Möbel · Japandi', cat: 'Kommode' }, { w: 120, d: 42, h: 60 }), 'hifirack');
+assert.equal(kind3({ name: 'Lochplatte oder Pinnwand, schwarz', cat: 'Deko & Pflanzen' }, { w: 76, d: 2, h: 56 }), 'frame');
 assert.equal(kind3({ name: 'SIT Sideboard PANAMA, Altmetall, 3 Schubladen, 3 Türen', cat: 'Kommode' }, { w: 140, d: 40, h: 90 }), 'framecab');
 assert.equal(kind3({ name: 'SIT Lowboard PANAMA 09215-01, Akazie mit antikschwarzem Altmetall', cat: 'Kommode' }, { w: 112, d: 40, h: 55 }), 'lowboard');
 

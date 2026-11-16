@@ -68,6 +68,13 @@ Umstellung bestehender Räume (einmalig, Merker `defaultV3`): Räume auf „Indu
 
 In 3D werden Möbel mit Metallrahmen und Frontangabe im Namen („Altmetall“, „1 Schublade, 2 Türen“, „1 Klappe“) als Holzkorpus im schwarzen Rahmen mit Metallschubladen oben und Türen oder Klappe unten gezeichnet (Modellart `framecab`).
 
+### PANAMA ohne Highboard, Deko-Ideen und eigener Vorschlag (16.11.2026)
+
+- **Standard „Industrial · PANAMA“:** Das Highboard ist entfallen, damit die Tür frei aufgeht (5.754,42 €). An der oberen Wand steht nur noch der Dielenschrank.
+- **Deko-Ideen (`PANAMA_DEKO`):** zwei Bilderrahmen über dem Sideboard, eine Pflanze am Fenster, zwei Kissen auf dem Bett, eine Lochplatte über dem Schreibtisch. Ohne konkretes Produkt, Maße und Preise sind Richtwerte; sie stehen im Plan, zählen aber nicht zum Budget (Rolle „alternative“, Status „Idee“).
+- **Eigener Vorschlag „Industrial · PANAMA · Schreibtisch am Fenster“** (`ind_panama_fenster`, Aufstellung `fensterplatz`, 32. Vorschlag, 6.431,08 € mit Highboard): Schreibtisch an der oberen Wand 40 cm neben der Giebelwand (Tageslicht von der Seite), Dielenschrank, Highboard und Kommode als abgestufte Reihe an der rechten Wand bis zum Bett, Teppich quer in der Raummitte, Tür und Fenster frei. Eigene Checkliste `FENSTERPLATZ_CHECKLIST`.
+- **Stand nachziehen:** `PANAMA_REV` wird beim Übernehmen im Raum gemerkt (`panamaRev`). Räume mit älterem Stand werden beim Laden einmal aktualisiert: entfallene Produkte gehen, neue kommen in den Plan; vorhandene Positionen, Gekauftes und eigene Möbel bleiben.
+
 ### Fenster in der Ecke und Schrankposition (16.11.2026)
 
 Laut Aufmaß beginnt das Fenster in der Giebelwand schon 25 cm hinter der Ecke (Zeichnung: 69 cm). Möbel an der oberen Wand, die tiefer sind als dieser Abstand, rücken deshalb von der Giebelwand ab (`cornerOffset`): um eine Fensterflügelbreite (77 cm), höchstens aber so weit, dass die Ecktür noch 90° öffnet (rechte Möbelkante bei 227 cm für 66 cm Tiefe).
