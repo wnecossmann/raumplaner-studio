@@ -116,3 +116,7 @@ Im Grundriss „Audio“ öffnen: Stereo-Hörplatz, vier verteilte Boxen oder 5.
 ### Raumaufteilungen und Schrank an der Schräge
 
 Im Nachher-Grundriss „Raumaufteilungen“ öffnen: links/rechts oder vorne/hinten tauschen, 180° drehen, 90° quer stellen und einen platzierten Schrank an der Schrägenseite aufstellen. Jede Option zeigt eine Grundrissvorschau mit Kollisionsmarkierungen. Die Schrägenvariante braucht eingetragene Möbelmaße, berechnet den Wandabstand einschließlich 2 cm Höhenreserve und sucht in 5-cm-Schritten einen freien Standort. Ohne passenden Standort bleibt sie gesperrt. Andere Varianten dürfen als problematischer Entwurf übernommen werden. Raummaße, Dachschräge und Audio bleiben unverändert; Türen, Laufwege und Fensterzugang sind manuell zu prüfen. Änderungen sind rückgängig machbar. Test: `node tests/room-variants.test.mjs`.
+
+### Beamer-Spots
+
+Im Grundriss „Beamer“ wählen: Tisch, hinteres Regal oder Decke als Startposition. Vier Projektionswände, Modellname, Objektivabstand, Projektionsverhältnis, Objektivhöhe und Höhe der Bildmitte sind einstellbar. Die 16:9-Bildfläche wird aus Abstand / Verhältnis berechnet; 1,5 ist ein editierbarer Beispielwert. Im Grundriss erscheinen Spot, Projektionsdreieck und Leinwandlinie, auch im Bildexport. Übernehmen wechselt zur Grundrissansicht. Einstellungen bleiben gespeichert und sind rückgängig machbar. Warnungen prüfen Wandbreite und Raum-/Schrägenhöhe; freie Sicht, Möbel, Fenster, Türen, Lens-Shift, Offset und Montagefreigaben werden nicht geprüft. Test: `node tests/projector.test.mjs`.

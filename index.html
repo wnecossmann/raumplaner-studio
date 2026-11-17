@@ -1075,11 +1075,11 @@ function catColors(r) {
 }
 
 /* ================= Undo ================= */
-const snapState = () => JSON.stringify(S.room.photos.map(p => ({ id: p.id, placements: p.placements, scale: p.scale || null, audio: p.audio || null })));
+const snapState = () => JSON.stringify(S.room.photos.map(p => ({ id: p.id, placements: p.placements, scale: p.scale || null, audio: p.audio || null, projector:p.projector||null })));
 function snapshot() { S.undo.push(snapState()); if (S.undo.length > 80) S.undo.shift(); S.redo = []; renderToolbar(); }
 function applySnap(json) {
   const arr = JSON.parse(json);
-  for (const s of arr) { const ph = S.room.photos.find(p => p.id === s.id); if (ph) { ph.placements = s.placements; ph.scale = s.scale; if (s.audio) ph.audio = s.audio; } }
+  for (const s of arr) { const ph = S.room.photos.find(p => p.id === s.id); if (ph) { ph.placements = s.placements; ph.scale = s.scale; ph.projector=s.projector||null; if (s.audio) ph.audio = s.audio; } }
   if (S.sel && !getPl(S.sel)) S.sel = null;
 }
 function doUndo() { if (!S.undo.length) return; S.redo.push(snapState()); applySnap(S.undo.pop()); touch(); renderToolbar(); renderStage(); renderInspector(); renderToolbar(); renderSide(); }
@@ -1420,7 +1420,7 @@ function renderToolbar() {
     <span class="sep"></span>
     ${ph && ph.plan ? `<button class="btn sm ghost" data-act="edit-plan" title="Maße, Fenster, Tür und Dachschräge ändern">${I('ruler')} <span class="hide-sm">${ph.plan.scan ? 'Hausplan' : 'Grundriss'}</span> bearbeiten</button>
       <button class="btn sm ghost" data-act="variants" ${ph.plan.before ? 'disabled' : ''}>Raumaufteilungen</button><button class="btn sm ghost" data-act="aud-toggle" aria-pressed="${!!(ph.audio && ph.audio.on)}" title="Lautsprecher-Positionen vorschlagen">${I('speaker')} Audio</button>
-      <button class="btn sm ghost" data-act="v3d" aria-pressed="${!!S.v3d}" title="Raum in 3D mit Passprüfung">${I('cube')} 3D</button>`
+      <button class="btn sm ghost" data-act="projector">Beamer</button><button class="btn sm ghost" data-act="v3d" aria-pressed="${!!S.v3d}" title="Raum in 3D mit Passprüfung">${I('cube')} 3D</button>`
       : `<button class="btn sm ghost" data-act="measure" aria-pressed="${!!S.measure}" ${ph ? '' : 'disabled'} title="Maßstab aus einer bekannten Strecke setzen">${I('ruler')} Maßstab</button>`}
     ${ph && !ph.plan ? `<button class="btn sm ghost" data-act="roof-find" title="Lange diagonale Kanten als mögliche Dachschräge vorschlagen">${I('roof')} <span class="hide-sm">Dachkanten</span></button>` : ''}
     <button class="btn sm ghost" data-act="toggle-furn" aria-pressed="${S.hideFurn}" ${ph && !(ph.plan && S.v3d) ? '' : 'disabled'} title="Raum ohne Möbel zeigen">${I(S.hideFurn ? 'eyeoff' : 'eye')} ${ph && ph.plan ? 'Leer' : 'Vorher'}</button>
@@ -2420,7 +2420,7 @@ async function composeCanvas(ph, furn = true) {
       }
     }
   }
-  if (ph.plan && ((ph.audio && ph.audio.on) || ph.plan.scan)) {
+  if (ph.plan && ((ph.audio && ph.audio.on) || ph.plan.scan || ph.projector?.on)) {
     try { const ov = await loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(overlaySVG(ph, true))); g.drawImage(ov, 0, 0, W, H); } catch {}
   }
   return c;
@@ -2598,6 +2598,19 @@ function clipHalf(poly, f, keepNeg = true) {
   return out;
 }
 /* SVG-Overlay im Plan-Pixelraster: Hausplan-Rahmen, Schräge (bei Hausplänen), Lautsprecher */
+function projectorOf(ph){return {on:true,wall:'top',mount:'ceiling',model:'',distance:Math.min(250,ph.plan.d-30),ratio:1.5,height:200,screenHeight:130,...ph.projector};}
+function projectorGeometry(ph,p){const pl=ph.plan,{FW,FL}=audFrame(pl,p.wall),width=p.distance/p.ratio,screenH=width*9/16,point=audToPlan(pl,p.wall,FW/2,p.distance),ends=[audToPlan(pl,p.wall,(FW-width)/2,0),audToPlan(pl,p.wall,(FW+width)/2,0)],warnings=[];
+ if(p.distance>FL-15)warnings.push('Projektor zu nah an oder außerhalb der Rückwand.');
+ if(width>FW-10)warnings.push('Das Bild ist breiter als die verfügbare Wand.');
+ if(p.height+15>ceilAt(pl,...point))warnings.push('Projektorhöhe kollidiert mit Decke oder Dachschräge (15 cm Gerätehöhe angenommen).');
+ if(p.screenHeight-screenH/2<0||ends.some(pt=>p.screenHeight+screenH/2>ceilAt(pl,...pt)))warnings.push('Die 16:9-Bildfläche passt nicht vollständig unter Decke / Dachschräge.');
+ return {point,ends,width,screenH,warnings};}
+function projectorDialog(draft){const ph=activePhoto();if(!ph?.plan)return;const p=draft||projectorOf(ph),g=projectorGeometry(ph,p);
+ openDlg(dlg,`<form id="projector-form"><div class="dlg-h"><h2>Beamer-Spots</h2><button type="button" class="icon-btn" data-close aria-label="Schließen">${I('x')}</button></div><div class="dlg-b"><p class="hint">Positionen für 16:9-Projektion mittig vor der Leinwand vergleichen. Die Entfernung wird ab Objektiv bis Bildfläche gemessen.</p><div class="chips">${[['desk','Tisch'],['shelf','Regal hinten'],['ceiling','Decke']].map(([id,label])=>`<button type="button" class="btn" data-act="projector-preset" data-mount="${id}">${label}</button>`).join('')}</div><label class="field"><span>Beamer-Modell</span><input class="input" id="pj-model" value="${esc(p.model)}" placeholder="Eigenes Modell eintragen"></label><label class="field"><span>Projektionswand</span><select class="input" id="pj-wall">${Object.entries(WALL_N).map(([k,v])=>`<option value="${k}" ${p.wall===k?'selected':''}>${v}</option>`).join('')}</select></label><p class="fine">Aufstellung: ${esc(({desk:'Tisch',shelf:'Regal',ceiling:'Decke'})[p.mount])}</p><input type="hidden" id="pj-mount" value="${p.mount}"><div class="row2">${[['distance','Objektivabstand (cm)',10,2000],['ratio','Projektionsverhältnis (Abstand / Bildbreite)',.1,5],['height','Objektivhöhe (cm)',0,500],['screenHeight','Bildmitte über Boden (cm)',0,500]].map(([k,label,min,max])=>`<label class="field"><span>${label}</span><input class="input" type="number" id="pj-${k}" value="${p[k]}" min="${min}" max="${max}" step="any" required></label>`).join('')}</div><button type="button" class="btn" data-act="projector-preview">Vorschau berechnen</button><div id="pj-result"><strong>Bild: ${Math.round(g.width)} × ${Math.round(g.screenH)} cm · ${Math.round(Math.hypot(g.width,g.screenH)/2.54)} Zoll</strong><p>${g.warnings.map(esc).join('<br>')||'Keine Wand- oder Höhenüberschreitung erkannt.'}</p></div><label class="check"><input type="checkbox" id="pj-on" ${p.on?'checked':''}> Beamer und Projektion im Plan anzeigen</label><p class="fine">Standardverhältnis 1,5 ist nur ein Beispiel. Zoom, Lens-Shift, Offset, Montageabstände und Eignung für Deckenbetrieb im Gerätehandbuch prüfen. Möbel, Personen, Fenster, Türen und Kabelwege werden nicht auf freie Sicht geprüft. Keine automatische Keystone-Korrektur; Spot ist eine Planungshilfe.</p></div><div class="dlg-f"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn primary" type="submit">Spot übernehmen</button></div></form>`);
+ $('#projector-form').onsubmit=e=>{e.preventDefault();const v=readProjector();if(!v)return;snapshot();ph.projector=v;S.v3d=false;touch();closeDlg(dlg);renderEditorAll();};
+}
+function readProjector(){const form=$('#projector-form');if(!form?.reportValidity())return null;return {on:$('#pj-on').checked,wall:$('#pj-wall').value,mount:$('#pj-mount').value,model:$('#pj-model').value.slice(0,150),...Object.fromEntries(['distance','ratio','height','screenHeight'].map(k=>[k,Number($('#pj-'+k).value)]))};}
+
 function overlaySVG(ph, standalone) {
   const pl = ph.plan; if (!pl) return '';
   const k = pl.ppc, X = x => ((plOX(pl) + x) * k).toFixed(1), Y = y => ((plOY(pl) + y) * k).toFixed(1);
@@ -2637,6 +2650,7 @@ function overlaySVG(ph, standalone) {
     }
     s += cones + marks;
   }
+  if(ph.projector?.on){const p=projectorOf(ph),g=projectorGeometry(ph,p);s+=`<g pointer-events="none"><polygon points="${pts([g.point,...g.ends])}" fill="rgba(100,80,180,.14)" stroke="#7353a2" stroke-width="${k}"/><polyline points="${pts(g.ends)}" stroke="#513471" stroke-width="${4*k}"/><circle cx="${X(g.point[0])}" cy="${Y(g.point[1])}" r="${10*k}" fill="#7353a2"/><text x="${X(g.point[0])}" y="${Y(g.point[1]-17)}" text-anchor="middle" font-size="${12*k}" fill="#513471">Beamer · ${Math.round(g.width)} cm Bildbreite</text></g>`;}
   return `<svg ${standalone ? `xmlns="http://www.w3.org/2000/svg" width="${ph.w}" height="${ph.h}" ` : ''}viewBox="0 0 ${ph.w} ${ph.h}" preserveAspectRatio="none">${s}</svg>`;
 }
 function refreshOverlay() { const el = $('#ov-layer'); const ph = activePhoto(); if (el && ph) el.innerHTML = overlaySVG(ph); if (S.v3d) update3D(); }
@@ -4042,6 +4056,9 @@ const ACT = {
   'v3-box'(t) { V3OPT.box = !V3OPT.box; LS.set('v3opt', V3OPT); if (!V3) return render3D(); t.setAttribute('aria-pressed', V3OPT.box); const l = $('#v3-leg-ok'); if (l) l.hidden = !V3OPT.box; V3.buildDyn(); V3.draw(); },
   'audio-preset'(t) { audSet(a=>{a.mode=t.dataset.preset==='room'?'coverage':'cinema';a.count=4;a.system=t.dataset.preset==='movie'?'5.1':'2.0';a.listener=null;a.cables=true;},true); },
   'audio-rack'() { const style=furnishOf().style||'Minimalistisch', meta=STYLE_META[style]||STYLE_META.Minimalistisch; itemDialog(null,{name:'HiFi-Möbel · '+style,cat:'Kommode',color:meta.pal[0],price:null,dims:{},note:meta.desc+' Offenes Gerätefach, Belüftung und Traglast gemäß Gerätehandbuch einplanen. Eigene Außenmaße und Preis ergänzen; Planungsidee, kein konkretes Kaufangebot.'}); },
+  projector() { projectorDialog(); },
+  'projector-preview'(){const p=readProjector();if(p)projectorDialog(p);},
+  'projector-preset'(t){const p=readProjector(),ph=activePhoto();if(!p)return;const {FL}=audFrame(ph.plan,p.wall);p.mount=t.dataset.mount;p.distance=Math.max(10,FL*(p.mount==='desk'?.45:p.mount==='shelf'?.85:.65));const point=audToPlan(ph.plan,p.wall,audFrame(ph.plan,p.wall).FW/2,p.distance);p.height=p.mount==='desk'?80:p.mount==='shelf'?150:Math.max(0,ceilAt(ph.plan,...point)-30);projectorDialog(p);},
   'aud-toggle'() { const ph = activePhoto(); if (!ph || !ph.plan) return; snapshot(); if (!ph.audio) ph.audio = AUD_DEF(); else ph.audio.on = !ph.audio.on; S.sel = null; touch(); renderToolbar(); renderStage(); renderInspector(); },
   'aud-mode'(t) { audSet(a => { a.mode = t.dataset.m; }, true); },
   'aud-count'(t) { audSet(a => { a.count = +t.dataset.n; }, true); },
