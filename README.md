@@ -145,3 +145,9 @@ Zwei zusätzliche, direkt erreichbare Sets (`factory-foto`, `factory-foto-kompak
 FACTORY-Modelle zeigen graue Fronten, braune Griffe, Metallrahmen und einen stilisierten Schriftaufdruck. #143 hat zwei Türen links und drei Schubladen rechts, #106 drei Schubladen unter einem offenen Fach. Andere FACTORY-Schrankfronten bleiben schematisch. Shopbilder für #143 und #106 werden extern geladen. Preise sind Katalogstände, keine Live-Angebote; die Originalserie überschreitet das frühere 400-Euro-Budget.
 
 Zusätzlicher Browsertest: `tests/factory-browser.mjs` prüft Foto-Set-Auswahl, Übernahme, Sicherung und die Schrifttextur im echten WebGL-Modell.
+
+### Kollektionen ohne Aufdrucke
+
+Unter „Möbel finden“ öffnet „HEAVY INDUSTRY & RAILWAY · ohne Aufdrucke“ den lokalen Katalog mit 82 recherchierten Modellen und Farbvarianten (32 HEAVY INDUSTRY, 50 RAILWAY). Serien, Möbelarten und Farben sind filterbar. Produktlinks und Maße stammen von Massivmoebel24, recherchiert am 19.11.2026. Das ist keine vollständige oder live aktualisierte Herstellerliste. Fehlende Preise bleiben offen; fehlende Produktfotos werden ausdrücklich als schematische Ansichten gezeigt. Bestätigte Rollenmodelle sind standardmäßig ausgeblendet; unbekannte Standfuß-Ausführungen müssen im Shop geprüft werden. Die Daten liegen zusätzlich in `data/unprinted-catalog.json`.
+
+Alle Einrichtungsvorschläge verwenden wieder einen ergonomischen IKEA-MARKUS-Bürostuhl. Für bestehende Räume aktualisiert „Bürostuhl & Arbeitsplatz neben dem Fenster“ den Arbeitsplatz und sichert zuvor einen Variantenstand. Bereits gekaufte oder vorhandene Möbel werden geschützt. Die beiden FACTORY-Fotovorschläge verwenden die Fensterplatz-Anordnung.
