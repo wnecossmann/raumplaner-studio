@@ -1063,8 +1063,9 @@ function calc(r) {
   const retailers = [...new Set(counted.map(i => (i.retailer || '').trim() || 'Ohne Händler'))];
   let ship = 0, shipOpen = 0;
   for (const rt of retailers) { const v = r.shipping[rt]; if (v == null) shipOpen++; else ship += v; }
-  const total = goods + ship;
-  return { counted, byCat, goods, bought, missing, retailers, ship, shipOpen, total, rest: r.budget != null ? r.budget - total : null };
+  const extras=Object.values(r.accessoryCosts||{}).reduce((n,v)=>n+(Number.isFinite(+v)&&+v>0?+v:0),0);
+  const total = goods + ship + extras;
+  return { extras, counted, byCat, goods, bought, missing, retailers, ship, shipOpen, total, rest: r.budget != null ? r.budget - total : null };
 }
 function catColors(r) {
   const order = [];
@@ -1690,10 +1691,23 @@ function searchArgs() {
   return { ...S.search, styleKey: f.style, tier: f.tier, style: S.room ? styleWord() : '', min: own ? S.search.min : (b && b[0] ? String(b[0]) : ''), max: own ? S.search.max : (b ? String(b[1]) : '') };
 }
 const hasSets = r => !!(r && r.seed === 'konrad' && typeof KONRAD_SETS !== 'undefined' && KONRAD_SETS.length);
+const ROOM_SERIES = [
+ {id:'panama',name:'SIT PANAMA',style:'Industrial',desc:'Holz und antikschwarzes Metall; markante Beschläge. 55 Modelle im lokalen Katalog.',url:'https://sit-moebel.de/portfolio-item/panama/'},
+ {id:'rustic',name:'SIT RUSTIC',style:'Vintage',desc:'Rustikales Mangoholz mit geschmiedeten Beschlägen und Rollen. Warmer, stärker gealterter Look.',url:'https://sit-moebel.de/portfolio-item/rustic/'},
+ {id:'fjallbo',name:'IKEA FJÄLLBO',style:'Industrial',desc:'Holz, schwarzes Metall und offene Gitterfronten. Optisch leichter; Gerätebelüftung trotzdem am konkreten Möbel prüfen.',url:'https://www.ikea.com/de/de/cat/fjaellbo-serie-37320/'},
+ {id:'factory',name:'Massivmoebel24 FACTORY',style:'Industrial',desc:'Mangoholz und Eisen, teils bedruckte oder farbige Oberflächen. Auffälliger Loft-Look.',url:'https://www.massivmoebel24.de/Vorgeschlagene-Artikel/Sideboards-Couchtische/FACTORY-Sideboard-143-Eisen-u-Mangoholz.html'}
+];
+const VARIANT_FIELDS=['items','photos','activePhoto','furnish','inspiration','palette','budget','catBudgets','shipping','activeSet','plannedSeries','accessoryCosts'];
+function captureVariant(r){return JSON.parse(JSON.stringify(Object.fromEntries(VARIANT_FIELDS.map(k=>[k,r[k]??null]))));}
+function applyVariantData(r,data){for(const k of VARIANT_FIELDS)r[k]=JSON.parse(JSON.stringify(data[k]??null));r.items=r.items||[];r.photos=r.photos||[];r.shipping=r.shipping||{};r.catBudgets=r.catBudgets||{};}
+function variantMini(r){const ph=activePhoto(r);if(!ph?.plan)return '<p class="fine">Kein Grundriss gespeichert</p>';return `<svg viewBox="-10 -10 ${ph.plan.w+20} ${ph.plan.d+20}" style="width:100%;height:160px;background:#eee" aria-label="Gespeicherte Raumaufteilung"><polygon points="${planPoly(ph.plan).map(p=>p.join(',')).join(' ')}" fill="white" stroke="#555" stroke-width="3"/>${ph.placements.map(p=>{const it=r.items.find(i=>i.id===p.itemId);return it?`<polygon points="${plCorners(p,it,ph).map(p=>p.join(',')).join(' ')}" fill="#aa8c67" stroke="#443e36" stroke-width="2"/>`:'';}).join('')}</svg>`;}
+function variantsCompareDialog(){const r=S.room,current=calc(r),list=r.savedVariants||[];openDlg(dlg,`<div class="dlg-h"><h2>Serien & Raumvarianten</h2><button class="icon-btn" data-close aria-label="Schließen">${I('x')}</button></div><div class="dlg-b"><p class="hint">Eine Variante speichert Möbel, Preise, Raumaufteilung, Dachschräge, Audio und Beamer. Serienwahl setzt eine Suchrichtung; sie tauscht vorhandene Produkte nicht automatisch aus. Für RUSTIC, FJÄLLBO und FACTORY ergänzt du konkrete Produkte über ihre Shoplinks.</p><div class="set-grid">${ROOM_SERIES.map(s=>`<article class="idea-card"><h4>${s.name}</h4><p>${s.desc}</p><a href="${s.url}" target="_blank" rel="noopener">Serie ansehen</a><button class="btn sm" data-act="series-pick" data-id="${s.id}">${r.plannedSeries===s.id?'Ausgewählt':'Als Suchrichtung wählen'}</button></article>`).join('')}</div><h3>Aktuellen Stand speichern</h3><div class="inline"><input class="input" id="variant-name" maxlength="80" placeholder="z. B. PANAMA – Schrank unter Schräge"><button class="btn primary" data-act="variant-save">Speichern</button></div><p class="fine">Aktuell: ${eur(current.total)} bekannte Kosten · ${current.missing+current.shipOpen} offene Preis-/Versandangaben. Zusatzkosten werden mitgerechnet.</p>${r.variantBackup?'<button class="btn" data-act="variant-backup">Stand vor letzter Wiederherstellung zurückholen</button>':''}<h3>Gespeicherte Varianten (${list.length}/20)</h3><div class="set-grid">${list.map(v=>{const c=calc(v.data),ph=activePhoto(v.data);return `<article class="idea-card"><h4>${esc(v.name)}</h4>${variantMini(v.data)}<span>${esc(ROOM_SERIES.find(s=>s.id===v.data.plannedSeries)?.name||'Freie Kombination')}</span><strong>${eur(c.total)} bekannte Kosten</strong><span class="fine">${c.total-current.total>=0?'+':''}${eur(c.total-current.total)} zum aktuellen Stand · ${c.missing+c.shipOpen} offene Angaben</span><span class="fine">${v.data.items.length} Möbel · ${ph?.audio? 'Audio gespeichert':'Ohne Audio'} · ${ph?.projector?'Beamer gespeichert':'Ohne Beamer'}</span><button class="btn" data-act="variant-restore" data-id="${v.id}">Wiederherstellen</button><button class="btn ghost" data-act="variant-delete" data-id="${v.id}">Variante löschen</button></article>`;}).join('')||'<p>Noch keine Variante gespeichert.</p>'}</div><p class="fine">Kostenvergleich verwendet gespeicherte Preisstände, keine Live-Preise. Unbekannte Beträge sind nicht enthalten. Sicherung über Raumexport empfohlen.</p></div>`);dlg.querySelector('.dlg-in').classList.add('wide');}
+function accessoryDialog(){const r=S.room;openDlg(dlg,`<form id="accessory-form"><div class="dlg-h"><h2>Audio- und Zubehörkosten</h2><button type="button" class="icon-btn" data-close aria-label="Schließen">${I('x')}</button></div><div class="dlg-b"><p class="hint">Nur zusätzliche Beträge eintragen, die noch nicht als Möbel oder Versand erfasst sind. Leeres Feld zählt als 0 €.</p>${[['cables','Lautsprecher-, HDMI- und Stromkabel'],['stands','Boxenständer / Wandhalter'],['projector','Beamerhalterung / Leinwand'],['other','Weiteres Zubehör / Montage']].map(([k,label])=>`<label class="field"><span>${label} (€)</span><input class="input" type="number" min="0" step="0.01" data-accessory="${k}" value="${r.accessoryCosts?.[k]??''}"></label>`).join('')}</div><div class="dlg-f"><button class="btn primary">Kosten speichern</button></div></form>`);$('#accessory-form').onsubmit=e=>{e.preventDefault();r.accessoryCosts=Object.fromEntries([...dlg.querySelectorAll('[data-accessory]')].map(t=>[t.dataset.accessory,Number(t.value)||0]));touch();closeDlg(dlg);renderEditorAll();};}
+
 function furnishHTML() {
   const r = S.room, f = furnishOf(r), meta = STYLE_META[f.style];
   const band = f.tier ? tierBand(S.search.cat, f.tier) : null;
-  return `<section class="furnish"><h4>Einrichtungs-Assistent</h4><button class="btn" data-act="panama">SIT PANAMA · komplette Katalogauswahl (55)</button>
+  return `<section class="furnish"><h4>Einrichtungs-Assistent</h4><button class="btn primary" data-act="variants-compare">Serien & Raumvarianten vergleichen</button><button class="btn" data-act="accessory-costs">Audio- und Zubehörkosten</button><button class="btn" data-act="panama">SIT PANAMA · komplette Katalogauswahl (55)</button>
     <div class="field"><span>Stil</span><div class="style-grid">${STYLES.map(s => `<button type="button" class="style-card" data-act="fu-style" data-s="${esc(s)}" title="${esc(STYLE_META[s].desc)}" aria-pressed="${f.style === s}"><span class="sw-row">${STYLE_META[s].pal.map(h => `<i style="background:${h}"></i>`).join('')}</span><b>${esc(s)}</b></button>`).join('')}</div>
       ${meta ? `<p class="fine">${esc(meta.desc)}</p>` : ''}</div>
     <div class="field"><span>Preisklasse</span><div class="segbtns">${TIERS.map(t => `<button type="button" data-act="fu-tier" data-t="${t}" aria-pressed="${f.tier === t}">${t}</button>`).join('')}</div>
@@ -2218,7 +2232,7 @@ function renderBudget() {
       <div class="b-total">
         <label class="field"><span>Gesamtbudget für diesen Raum</span><div class="money"><input class="input" id="b-total" inputmode="decimal" value="${fnum(r.budget)}" placeholder="z. B. 2.000"><em>€</em></div></label>
         <div><div class="big">${eur(c.total)} ${r.budget != null ? `<small>von ${eur(r.budget)}</small>` : ''}</div>
-          <p class="fine" style="margin-top:6px">Möbel ${eur(c.goods)} + Versand ${eur(c.ship)}${c.shipOpen ? ` · ${c.shipOpen}× Versand offen` : ''}</p></div>
+          <p class="fine" style="margin-top:6px">Möbel ${eur(c.goods)} + Versand ${eur(c.ship)} + Zubehör ${eur(c.extras)}${c.shipOpen ? ` · ${c.shipOpen}× Versand offen` : ''}</p></div>
         <div class="stack-wrap">
           <div class="stack" role="img" aria-label="Verteilung der Kosten nach Kategorie">${cats.map(([k, v]) => `<i style="width:${v / scale * 100}%;background:${colors.get(k)}" title="${esc(k)}: ${eur(v)}"></i>`).join('')}${c.ship ? `<i style="width:${c.ship / scale * 100}%;background:var(--faint)" title="Versand: ${eur(c.ship)}"></i>` : ''}</div>
           ${r.budget && c.total > r.budget ? `<span class="stack-mark" style="left:${r.budget / scale * 100}%" title="Budgetgrenze"></span>` : ''}
@@ -3961,16 +3975,16 @@ function shoppingList() {
   }
   openDlg(dlg, `<div class="dlg-h"><div><p class="eyebrow">${esc(r.name)}</p><h2>Einkaufsliste</h2></div><button type="button" class="icon-btn flat" data-close aria-label="Schließen">${I('x')}</button></div>
     <div class="dlg-b">
-      ${c.counted.length ? `<div class="tbl-wrap"><table class="list-tbl"><thead><tr><th>Möbel</th><th class="r">Anzahl</th><th class="r">Einzeln</th><th class="r">Summe</th></tr></thead><tbody>${rows}</tbody></table></div>
-      <div class="list-total"><span class="muted">Gesamt inkl. Versand${r.budget != null ? ` · Budget ${eur(r.budget)}` : ''}</span><span class="big" style="font-size:28px">${eur(c.total)}</span></div>
+      ${(c.counted.length || c.extras) ? `<div class="tbl-wrap"><table class="list-tbl"><thead><tr><th>Möbel</th><th class="r">Anzahl</th><th class="r">Einzeln</th><th class="r">Summe</th></tr></thead><tbody>${rows}${c.extras?`<tr><td colspan="3">Audio- und Zubehörkosten</td><td class="r">${eur(c.extras)}</td></tr>`:''}</tbody></table></div>
+      <div class="list-total"><span class="muted">Gesamt inkl. Versand und Zubehör${r.budget != null ? ` · Budget ${eur(r.budget)}` : ''}</span><span class="big" style="font-size:28px">${eur(c.total)}</span></div>
       ${alts.length ? `<p class="hint">Nicht enthalten (Alternativen): ${alts.map(a => esc(a.name) + (a.price != null ? ' ' + eur(a.price) : '')).join(', ')}</p>` : ''}
       <textarea class="input copy-area" id="sl-text" readonly hidden></textarea>`
       : '<p class="muted">Noch keine Möbel im Budget. Füge Möbel hinzu oder nimm Alternativen ins Budget auf.</p>'}
     </div>
     <div class="dlg-f"><span class="grow"></span>
-      ${c.counted.length ? `<button class="btn" id="sl-copy">${I('copy')} Als Text kopieren</button><button class="btn primary" id="sl-csv">${I('download')} CSV für Excel</button>` : `<button class="btn" data-close>Schließen</button>`}
+      ${(c.counted.length || c.extras) ? `<button class="btn" id="sl-copy">${I('copy')} Als Text kopieren</button><button class="btn primary" id="sl-csv">${I('download')} CSV für Excel</button>` : `<button class="btn" data-close>Schließen</button>`}
     </div>`);
-  if (!c.counted.length) return;
+  if (!c.counted.length && !c.extras) return;
   const text = () => {
     let t = `Einkaufsliste – ${r.name}\n`;
     for (const [rt, items] of by) {
@@ -3978,7 +3992,7 @@ function shoppingList() {
       items.forEach(i => { t += `- ${i.qty > 1 ? i.qty + '× ' : ''}${i.name}: ${i.price == null ? 'Preis offen' : eur((i.price || 0) * (i.qty || 1))}${i.url ? `\n  ${i.url}` : ''}\n`; });
       t += `  Versand: ${r.shipping[rt] == null ? 'offen' : eur(r.shipping[rt])}\n`;
     }
-    t += `\nGesamt: ${eur(c.total)}${r.budget != null ? ` (Budget ${eur(r.budget)})` : ''}\n`;
+    t += `\nAudio- und Zubehörkosten: ${eur(c.extras)}\nGesamt: ${eur(c.total)}${r.budget != null ? ` (Budget ${eur(r.budget)})` : ''}\n`;
     return t;
   };
   $('#sl-copy').onclick = async () => {
@@ -3993,6 +4007,7 @@ function shoppingList() {
       items.forEach(i => lines.push([q(rt), q(i.name), q(i.cat), i.qty || 1, n(i.price), n((i.price || 0) * (i.qty || 1)), q({ idee: 'Idee', favorit: 'Favorit', gekauft: 'Gekauft' }[i.status]), n(i.dims?.w), n(i.dims?.d), n(i.dims?.h), q(i.url), q(i.note)].join(';')));
       lines.push([q(rt), q('Versand'), q(''), '', '', n(r.shipping[rt]), '', '', '', '', '', ''].join(';'));
     }
+    if(c.extras)lines.push(['',q('Audio- und Zubehörkosten'),q('Zubehör'),1,n(c.extras),n(c.extras),'','','','','',''].join(';'));
     lines.push(['', q('Gesamt'), '', '', '', n(c.total), '', '', '', '', '', ''].join(';'));
     saveFile(`einkaufsliste-${slug(r.name)}.csv`, '﻿' + lines.join('\r\n'), 'text/csv');
   };
@@ -4059,6 +4074,13 @@ const ACT = {
   projector() { projectorDialog(); },
   'projector-preview'(){const p=readProjector();if(p)projectorDialog(p);},
   'projector-preset'(t){const p=readProjector(),ph=activePhoto();if(!p)return;const {FL}=audFrame(ph.plan,p.wall);p.mount=t.dataset.mount;p.distance=Math.max(10,FL*(p.mount==='desk'?.45:p.mount==='shelf'?.85:.65));const point=audToPlan(ph.plan,p.wall,audFrame(ph.plan,p.wall).FW/2,p.distance);p.height=p.mount==='desk'?80:p.mount==='shelf'?150:Math.max(0,ceilAt(ph.plan,...point)-30);projectorDialog(p);},
+  'variants-compare'(){variantsCompareDialog();},
+  'accessory-costs'(){accessoryDialog();},
+  'series-pick'(t){const s=ROOM_SERIES.find(s=>s.id===t.dataset.id);if(!s)return;S.room.plannedSeries=s.id;S.room.furnish={...furnishOf(),style:s.style};S.search.term=s.name;LS.set('search',S.search);touch();renderSide();variantsCompareDialog();},
+  'variant-save'(){const r=S.room;if((r.savedVariants||[]).length>=20){toast('Maximal 20 Varianten. Bitte zuerst eine Variante löschen.');return;}const name=$('#variant-name').value.trim();if(!name){toast('Bitte einen Namen eingeben.');return;}r.savedVariants=r.savedVariants||[];r.savedVariants.push({id:uid(),name,created:Date.now(),data:captureVariant(r)});touch();variantsCompareDialog();},
+  async 'variant-restore'(t){const r=S.room,v=(r.savedVariants||[]).find(v=>v.id===t.dataset.id);if(!v)return;if(!await confirmBox('Variante wiederherstellen?', 'Möbel, Preise und Pläne werden ersetzt. Der aktuelle Stand wird als Rückkehrpunkt gesichert.', 'Wiederherstellen'))return;r.variantBackup=captureVariant(r);applyVariantData(r,v.data);S.undo=[];S.redo=[];S.sel=null;S.cmp=false;touch();closeDlg(dlg);renderEditorAll();},
+  'variant-backup'(){const r=S.room;if(!r.variantBackup)return;const current=captureVariant(r);applyVariantData(r,r.variantBackup);r.variantBackup=current;S.undo=[];S.redo=[];S.sel=null;S.cmp=false;touch();closeDlg(dlg);renderEditorAll();},
+  async 'variant-delete'(t){if(!await confirmBox('Variante löschen?', 'Nur die gespeicherte Variante wird gelöscht; die aktuelle Einrichtung bleibt.', 'Löschen'))return;S.room.savedVariants=(S.room.savedVariants||[]).filter(v=>v.id!==t.dataset.id);touch();variantsCompareDialog();},
   'aud-toggle'() { const ph = activePhoto(); if (!ph || !ph.plan) return; snapshot(); if (!ph.audio) ph.audio = AUD_DEF(); else ph.audio.on = !ph.audio.on; S.sel = null; touch(); renderToolbar(); renderStage(); renderInspector(); },
   'aud-mode'(t) { audSet(a => { a.mode = t.dataset.m; }, true); },
   'aud-count'(t) { audSet(a => { a.count = +t.dataset.n; }, true); },

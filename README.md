@@ -120,3 +120,9 @@ Im Nachher-Grundriss „Raumaufteilungen“ öffnen: links/rechts oder vorne/hin
 ### Beamer-Spots
 
 Im Grundriss „Beamer“ wählen: Tisch, hinteres Regal oder Decke als Startposition. Vier Projektionswände, Modellname, Objektivabstand, Projektionsverhältnis, Objektivhöhe und Höhe der Bildmitte sind einstellbar. Die 16:9-Bildfläche wird aus Abstand / Verhältnis berechnet; 1,5 ist ein editierbarer Beispielwert. Im Grundriss erscheinen Spot, Projektionsdreieck und Leinwandlinie, auch im Bildexport. Übernehmen wechselt zur Grundrissansicht. Einstellungen bleiben gespeichert und sind rückgängig machbar. Warnungen prüfen Wandbreite und Raum-/Schrägenhöhe; freie Sicht, Möbel, Fenster, Türen, Lens-Shift, Offset und Montagefreigaben werden nicht geprüft. Test: `node tests/projector.test.mjs`.
+
+### Serienvergleich und gespeicherte Varianten
+
+„Möbel finden“ → „Serien & Raumvarianten vergleichen“ bietet PANAMA, RUSTIC, FJÄLLBO und FACTORY als recherchierte Serienrichtungen mit Quellenlinks. Die Auswahl setzt Stil und Suchbegriff, ersetzt aber keine Produkte. PANAMA hat den lokalen Katalog; für die anderen Serien müssen konkrete Artikel ergänzt werden. Bis zu 20 benannte Varianten speichern Möbel, Pläne mit Dachschrägen, Audio, Beamer, Stil und Budgetdaten. Vorschau und Kostenunterschied zum aktuellen Stand erleichtern den Vergleich. Wiederherstellen legt einen Rückkehrpunkt an. Raumexport enthält die Varianten; Bilder werden mitgespeichert und benötigen lokalen Speicher.
+
+Audio- und Zubehörkosten (Kabel, Ständer, Beamerhalterung/Leinwand, sonstige Montage) werden separat eingegeben und in Restbudget, Variantenvergleich und Einkaufsliste inklusive CSV berücksichtigt. Keine Live-Preise und keine automatische Geräte- oder Laufwegprüfung. Tests: `node tests/saved-variants.test.mjs` und `node --test tests/recommendations.test.mjs`.
