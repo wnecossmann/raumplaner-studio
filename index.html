@@ -1713,7 +1713,7 @@ function furnishHTML() {
     <div class="field"><span>Preisklasse</span><div class="segbtns">${TIERS.map(t => `<button type="button" data-act="fu-tier" data-t="${t}" aria-pressed="${f.tier === t}">${t}</button>`).join('')}</div>
       ${band ? `<p class="fine">${esc(f.tier)} für ${esc(S.search.cat)}: ${band[0] ? eur0(band[0]) + '–' : 'bis '}${eur0(band[1])} – wird als Preisfilter in die Shop-Suche übernommen.</p>` : ''}</div>
     ${inspHTML(r)}
-    ${hasSets(r) ? `<button type="button" class="btn primary" data-act="sets">${I('sofa')} Fertige Vorschläge für dieses Zimmer (${KONRAD_SETS.length})</button>` : ''}
+    ${hasSets(r) ? `<button type="button" class="btn" data-act="factory-photo-sets">Dein Fotostil: FACTORY-Sets ansehen</button><button type="button" class="btn primary" data-act="sets">${I('sofa')} Fertige Vorschläge für dieses Zimmer (${KONRAD_SETS.length})</button>` : ''}
     <div class="field"><span>Gewünschte Möbelarten</span><div class="chips">${WANT.map(([k]) => `<button type="button" class="chip" data-act="fu-want" data-k="${esc(k)}" aria-pressed="${f.wanted.includes(k)}">${esc(k)}</button>`).join('')}</div></div>
     ${f.wanted.length ? `<div class="chips">${f.wanted.map(k => `<button type="button" class="btn sm" data-act="fu-search" data-k="${esc(k)}">${esc(k)} suchen →</button>`).join('')}</div>` : ''}
     <a class="btn sm" href="#product-ideas" data-act="ideas-show">Einzelvorschläge ansehen ↓</a><p class="fine">Stil und Preisklasse bestimmen die Einzelvorschläge. Dein Lieblingsstück ergänzt die Shop-Suche. Bereits gewählte Möbel bleiben unverändert.</p></section>`;
@@ -1972,6 +1972,9 @@ const COLLECTION_PRODUCTS = [
  {id:'ivar-small',key:'lowboard',cat:'Kommode',name:'IKEA IVAR Schrank Kiefer, 2 Türen',url:'https://www.ikea.com/de/de/p/ivar-schrank-kiefer-40033763/',price:69,dims:{w:80,d:30,h:83},color:'#d2b184',retailer:'IKEA Deutschland',note:'83 cm hoch: unter Dachschrägen die gesamte Tiefe prüfen. Wandbefestigung laut Anleitung.'},
  {id:'fjallbo-media',key:'lowboard',cat:'Kommode',name:'IKEA FJÄLLBO TV-Bank schwarz, Kiefer und Metall, Gittertüren',url:'https://www.ikea.com/de/de/p/fjaellbo-tv-bank-schwarz-90339290/',price:129,dims:{w:150,d:36,h:54},color:'#b78e61',retailer:'IKEA Deutschland',note:'Offene Rückseite für Kabel. Innenmaße und Lüftungsabstände des Verstärkers prüfen.'},
  {id:'fjallbo-storage',key:'sideboard',cat:'Kommode',name:'IKEA FJÄLLBO Sideboard schwarz, Kiefer und Metall, Gittertüren',url:'https://www.ikea.com/de/de/p/fjaellbo-sideboard-schwarz-00502799/',price:229,dims:{w:111,d:47,h:95},color:'#b78e61',retailer:'IKEA Deutschland'},
+ {id:'factory-photo',img:'https://www.massivmoebel24.de/images/product_images/thumbnail_images/16922_21236_09-330-559-0133-1.webp',key:'sideboard',cat:'Kommode',name:'FACTORY #143 Sideboard Mango und Eisen, 2 Türen links, 3 Schubladen rechts, Ledergriffe',url:'https://www.massivmoebel24.de/Vorgeschlagene-Artikel/Sideboards-Couchtische/FACTORY-Sideboard-143-Eisen-u-Mangoholz.html',price:509.91,dims:{w:145,d:40,h:85},color:'#b79469',retailer:'Massivmoebel24',note:'Passend zum Referenzfoto: graue bedruckte Fronten und Ledergriffe. Lieferzeit beim Abruf 6–16 Wochen. Darstellung im Plan vereinfacht.'},
+ {id:'factory-media',img:'https://www.massivmoebel24.de/images/product_images/thumbnail_images/16863_21057_09-313-559-0106-1.webp',key:'lowboard',cat:'Kommode',name:'FACTORY #106 TV-Board Mango und Eisen, 3 Schubladen, offenes Fach, Ledergriffe',url:'https://www.massivmoebel24.de/Wohnstile/Industrial/FACTORY-TV-Board-129-Eisen-u-Mangoholz.html?item=16863',price:239.94,dims:{w:150,d:40,h:60},color:'#b79469',retailer:'Massivmoebel24',note:'Produktseite nennt #106 trotz #129 im Link. Innenmaße, Kabelführung und Lüftungsabstände des Verstärkers prüfen; nicht als bestätigte Gerätepassung verstehen.'},
+ {id:'stefan-dark',key:'stuhl',cat:'Stuhl',name:'IKEA STEFAN Stuhl, braunschwarz, massive Kiefer, feste Beine',url:'https://www.ikea.com/de/de/p/stefan-stuhl-braunschwarz-00211088/',price:39.99,dims:{w:42,d:49,h:90},color:'#302823',retailer:'IKEA Deutschland',note:'Ohne Rollen, nicht höhenverstellbar. Sitzkomfort für längere Arbeit prüfen.'},
  {id:'factory-storage',key:'sideboard',cat:'Kommode',name:'FACTORY #131 Sideboard Mango und Eisen, 90 cm',url:'https://www.massivmoebel24.de/Moebel/Kommoden-Schraenke/FACTORY-Sideboard-131-Eisen-u-Mangoholz.html',price:382.41,dims:{w:90,d:40,h:85},color:'#ac8159',retailer:'Massivmoebel24',note:'Bedruckte Fronten; 3D zeigt eine vereinfachte Materialdarstellung.'},
  {id:'factory-cabinet',key:'schrank',cat:'Kleiderschrank',name:'FACTORY #137 Schrank Mango und Eisen, 2 Türen, 3 Schubladen',url:'https://www.massivmoebel24.de/Moebel/Kommoden-Schraenke/FACTORY-Schrank-137-Eisen-u-Mangoholz.html',price:849.91,dims:{w:100,d:50,h:190},color:'#ac8159',retailer:'Massivmoebel24',note:'Einlegeböden und Schubladen; keine Kleiderstange ausgewiesen. Für gefaltete Kleidung.'},
  {id:'logan-storage',key:'highboard',cat:'Kommode',name:'Vladon Logan V2 Schwarz matt/Eiche Natur, 4 Türen',url:'https://www.home24.de/produkt/bueroschrank-logan-v2-6d36',price:299.99,dims:{w:82,d:37,h:184},color:'#bc9666',retailer:'home24 / Vladon',note:'Fächerschrank ohne Kleiderstange. Hoher Schrank gehört an die hohe Wand.'}
@@ -1994,6 +1997,22 @@ for(const [id,base,title,products] of [
  const keys=new Set(add.map(p=>p.key));
  KONRAD_SETS.push({...original,id,title,layout:'bett-bestand',generated:true,summary:'Kompletter Einrichtungsvorschlag mit Schrank, Arbeitsplatz, Stauraum, Beleuchtung und Audio. Bestandsbett bleibt. Kombination mehrerer Serien; alle Einzelprodukte unten ansehen.',items:[...original.items.filter(p=>!keys.has(p.key)),...add]});
 }
+// Fertige Kombinationen zum Referenzfoto, bewusst ohne automatische Änderung vorhandener Räume.
+for (const [id, title, side, layout] of [
+ ['factory-foto','Dein Fotostil · FACTORY komplett','factory-photo','fensterplatz'],
+ ['factory-foto-kompakt','Dein Fotostil · FACTORY kompakt','factory-storage','bett-bestand']
+]) {
+ const base=KONRAD_SETS.find(s=>s.id==='ind_budget');
+ const replacements=[PANAMA_ITEMS.find(p=>p.key==='schrank'),PANAMA_DESK,
+  KONRAD_SETS.find(s=>s.id==='ind_panama').items.find(p=>p.key==='matratze'),
+  ...[side,'factory-media','stefan-dark'].map(id=>COLLECTION_PRODUCTS.find(p=>p.id===id))];
+ const keys=new Set(replacements.map(p=>p.key));
+ KONRAD_SETS.unshift({...base,id,title,layout,tier:'Mittel',generated:true,
+  palette:[{name:'Mangoholz natur',hex:'#b79469'},{name:'Metallgrau',hex:'#82817c'},{name:'Schwarzes Eisen',hex:'#252321'},{name:'Lederbraun',hex:'#9d6033'},{name:'Warmweiß',hex:'#e8e1d6'}],
+  summary:'Zum Foto: bedrucktes Mangoholz, graue Fronten, schwarzes Eisen und braune Griffe. FACTORY-Sideboard und TV-Board, schmaler PANAMA-Kleiderschrank mit Kleiderstange, schwarzer Arbeitsplatz, Stuhl ohne Rollen, Nachttisch, Licht und Stereo. Bett bleibt; weitere Produkte sind passende Ergänzungen anderer Serien.',
+  items:[...base.items.filter(p=>!keys.has(p.key)),...replacements]});
+}
+
 // Rollenfreie Vorschläge ändern keine bereits gespeicherten oder gekauften Möbel.
 for(const set of KONRAD_SETS) set.items=set.items.filter(p=>p.cat==='Stuhl'||!hasFurnitureWheels(p)).map(p=>hasFurnitureWheels(p)?{...FIXED_CHAIR,key:p.key,role:p.role}:p);
 
@@ -2006,11 +2025,11 @@ function setScore(set, ins) {
 }
 function setsDialog() {
   const r = S.room, ins = r.inspiration, flt = S.setFilter || (S.setFilter = { style: '', tier: '' });
-  let list = KONRAD_SETS.filter(s => (!flt.style || s.style === flt.style) && (!flt.tier || s.tier === flt.tier)).map(s => ({ s, sc: setScore(s, ins) }));
+  let list = KONRAD_SETS.filter(s => (!flt.photo || s.id.startsWith('factory-foto')) && (!flt.style || s.style === flt.style) && (!flt.tier || s.tier === flt.tier)).map(s => ({ s, sc: setScore(s, ins) }));
   if (flt.sort === 'price') list.sort((a,b)=>setTotal(a.s)-setTotal(b.s)); else if (ins) list.sort((a, b) => b.sc - a.sc);
   const best = ins ? [...KONRAD_SETS].sort((a, b) => setScore(b, ins) - setScore(a, ins))[0].id : null;
   const styles = [...new Set(KONRAD_SETS.map(s => s.style))];
-  const thumbs = s => ['schrank', 'schreibtisch', 'stuhl', 'lowboard'].map(k => s.items.find(i => i.key === k)).filter(Boolean)
+  const thumbs = s => (s.id.startsWith('factory-foto')?['sideboard','schrank','schreibtisch','lowboard']:['schrank', 'schreibtisch', 'stuhl', 'lowboard']).map(k => s.items.find(i => i.key === k)).filter(Boolean)
     .map(i => `<span><img src="${i.img || silhouette(i.cat, i.color)}" alt="" loading="lazy"></span>`).join('');
   openDlg(dlg, `<div class="dlg-h"><div><p class="eyebrow">${esc(r.name)} · Stil × Preisklasse</p><h2>Komplette Möbelsets ohne Rollen</h2></div><button type="button" class="icon-btn flat" data-close aria-label="Schließen">${I('x')}</button></div>
     <div class="dlg-b">
@@ -2020,7 +2039,7 @@ function setsDialog() {
       <p class="hint">${list.length} Sets · Bestandsbett bleibt · Rollenfreie neue Möbel, auch beim Stuhl. Vorhandene Möbel bleiben unverändert. Die Sets kombinieren passende Produkte mehrerer Serien.</p>
       <div class="chips">${[['','Empfohlene Reihenfolge'],['price','Preis aufsteigend']].map(([v,l])=>`<button class="chip" data-act="set-filter" data-f="sort" data-v="${v}" aria-pressed="${(flt.sort||'')===v}">${l}</button>`).join('')}</div>
       <p class="fine">Aufstellung bei Übernahme:</p><div class="chips">${[['','Originalvorschlag'],['bett-bestand','Bett bleibt · Arbeitsplatz rechts'],['fensterplatz','Arbeitsplatz am Fenster']].map(([v,l])=>`<button class="chip" data-act="set-filter" data-f="layout" data-v="${v}" aria-pressed="${(flt.layout||'')===v}">${l}</button>`).join('')}</div>
-      <div class="set-grid">${list.map(({ s }) => `<article class="set-card${r.activeSet === s.id ? ' active' : ''}">
+      <button class="btn sm" data-act="sets">Alle Sets anzeigen</button><div class="set-grid">${list.map(({ s }) => `<article class="set-card${r.activeSet === s.id ? ' active' : ''}">
         <div class="set-thumbs">${thumbs(s)}</div>
         <div class="set-b">
           <div class="set-top"><strong>${esc(s.title || s.style)}</strong><span class="pill tier">${esc(s.tier)}</span>${s.id === KONRAD_DEFAULT_SET ? '<span class="pill idee">Standard</span>' : ''}${best === s.id ? '<span class="pill match">passt zu deinem Stück</span>' : ''}${r.activeSet === s.id ? '<span class="pill gekauft">aktiv</span>' : ''}</div>
@@ -2760,6 +2779,7 @@ function kind3(it, dm) {
   if (/rollo|plissee|jalousie|vorhang|gardine/.test(n)) return 'rollo';
   if (/nachttisch|nachtkonsole|ablagetisch|beistelltisch/.test(n)) return 'nightstand';
   if (c === 'Bett') return /lattenrost/.test(n) ? 'slats' : /matratze|topper/.test(n) ? 'mattress' : 'bed';
+  if (/factory\s*#/.test(n) && ['Kommode','Kleiderschrank'].includes(c)) return 'factorycab';
   const framed = /\d+\s*(schublade|tür|klappe)/.test(n) && /altmetall|metallgestell|metallrahmen|panama/.test(n);   // Korpus im Metallrahmen, Fronten laut Name
   if (c === 'Kleiderschrank') return framed ? 'framecab' : 'wardrobe';
   if (/fjällbo/.test(n) && c === 'Kommode') return 'meshcab';
@@ -2933,6 +2953,23 @@ function makeKit(T, ctex, loadTex) {
           const nd = Math.max(1, Math.round(w / 50)), dw = w / nd, hc = mat(lum3(col) < .3 ? '#9a9da1' : '#232325', 'metal');
           for (let i = 0; i < nd; i++) { const x = -w / 2 + dw * (i + .5); B(dw - .5, ph, 1.8, mat(col, bk), x, pl + .5, d / 2 - 3.1, true); B(1, 16, 1.3, hc, x + (nd === 1 || i % 2 === 0 ? 1 : -1) * (dw / 2 - 3.5), Math.min(100, h * .5), d / 2 - 1.6); }
         }
+        break; }
+      case 'factorycab': {
+        const fm=mat('#242321','metal'), wm=mat(col,'wood'), grey=mat('#96928b','lack'), leather=mat('#9d6033','matte');
+        const leg=8,t=2.5,bw=w-2*t,front=d/2-1.5, low=/#106/.test(n), photo=/#143/.test(n), shelf=low?Math.min(20,h*.3):photo?Math.min(13,h*.15):0, bodyTop=h-2-shelf;
+        for(const sx of [-1,1]) for(const sz of [-1,1]) B(t,h,t,fm,sx*(w/2-t/2),0,sz*(d/2-t/2));
+        for(const y of [leg,h-2]) B(bw,2,d-1,wm,0,y,0);
+        B(bw,h-leg-4,1.4,wm,0,leg+2,-d/2+1);
+        if(shelf) B(bw,2,d-1,wm,0,bodyTop,0);
+        for(const sx of [-1,1]) B(1.5,h-leg-2,d-3,wm,sx*(bw/2-.75),leg,0);
+        const handle=(x,y,span)=>{B(span,2.1,1.3,leather,x,y,front+.8);for(const side of [-1,1])disc(.55,.2,fm,x+side*(span/2-1),y+1,front+1.55);};
+        const panel=(x,y,pw,ph)=>{B(pw-.7,ph-.7,1.4,grey,x,y+.35,front);handle(x,y+ph*.78,Math.min(12,pw*.35));};
+        const bh=bodyTop-leg;
+        if(low){for(let i=0;i<3;i++) panel(-bw/2+bw/3*(i+.5),leg,bw/3,bh);}
+        else if(photo){const dw=bw*.34,doors=bw-dw;for(let i=0;i<2;i++)panel(-bw/2+doors/2*(i+.5),leg,doors/2,bh);for(let i=0;i<3;i++)panel(bw/2-dw/2,leg+bh/3*i,dw,bh/3);}
+        else {for(let i=0;i<2;i++)panel(-bw/4+bw/2*i,leg,bw/2,bh*.72);for(let i=0;i<3;i++)panel(-bw/2+bw/3*(i+.5),leg+bh*.72,bw/3,bh*.28);}
+        const stencil=ctex('factory-stencil',()=>{const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='#22201c';ctx.font='bold 60px Georgia';ctx.textAlign='center';ctx.fillText('FACTORY',256,88);ctx.globalCompositeOperation='destination-out';for(let x=30;x<500;x+=37)ctx.clearRect(x,0,3,128);return c;});
+        if(stencil){const m=new T.MeshStandardMaterial({map:stencil,transparent:true,depthWrite:false,roughness:.9});const decal=new T.Mesh(new T.PlaneGeometry(Math.min(bw*.52,62),Math.min(14,bh*.22)),m);decal.position.set(photo?-bw*.16:0,leg+bh*.22,front+.73);g.add(decal);}
         break; }
       case 'meshcab': {
         const fm=mat('#252628','metal'), wm=mat(col,'wood'), leg=Math.min(12,h*.16), t=2, cols=Math.max(2,Math.round(w/50)), cw=(w-4)/cols;
@@ -4168,7 +4205,8 @@ const ACT = {
   'insp-add'() { const ins = S.room && S.room.inspiration; if (!ins) return; const b = dataUrlToBlob(ins.img); if (!b) { toast('Das Foto konnte nicht gelesen werden.'); return; } itemDialog(null, { imgFile: new File([b], 'lieblingsstueck.jpg', { type: b.type }), name: ins.item || '' }); },
   'insp-claude'() { const r = S.room, ins = r && r.inspiration; if (!ins) return; const b = inspFile && inspFile.roomId === r.id && inspFile.at === ins.at ? inspFile.file : dataUrlToBlob(ins.img); if (!b) { toast('Das Foto konnte nicht gelesen werden.'); return; } runClaudeInsp(r, b, ins.at); },
   async 'insp-del'() { const r = S.room; if (!r || !r.inspiration) return; if (!(await confirmBox('Lieblingsstück entfernen?', 'Foto und Analyse werden aus diesem Raum entfernt. Übernommener Stil und Farben bleiben.', 'Entfernen'))) return; delete r.inspiration; inspFile = null; touch(); renderSide(); },
-  sets() { if (hasSets(S.room)) setsDialog(); },
+  'factory-photo-sets'() { S.setFilter={style:'',tier:'',photo:true};setsDialog(); },
+  sets() { S.setFilter={...(S.setFilter||{}),photo:false}; if (hasSets(S.room)) setsDialog(); },
   'set-filter'(t) { S.setFilter = { ...(S.setFilter || {}), [t.dataset.f]: t.dataset.v }; setsDialog(); },
   async 'set-apply'(t) {
     const r = S.room, set = KONRAD_SETS.find(x => x.id === t.dataset.id); if (!set) return;

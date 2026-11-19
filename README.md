@@ -137,3 +137,11 @@ Audio- und Zubehörkosten (Kabel, Ständer, Beamerhalterung/Leinwand, sonstige M
 - Neue Produktdaten anhand der verlinkten Shopseiten geprüft; Preisstand 19.11.2026, ältere Setbestandteile behalten ihren eigenen Preisstand. Keine Live-Preise oder kostenpflichtige API.
 
 Prüfung: `node tests/collections.test.mjs`, `node tests/collections-browser.mjs` (Playwright), bestehende Empfehlungs-, Snapshot-, Modell- und WebGL-Tests.
+
+### Fotostil FACTORY (19.11.2026)
+
+Zwei zusätzliche, direkt erreichbare Sets (`factory-foto`, `factory-foto-kompakt`): breites FACTORY #143 Sideboard beziehungsweise kompakteres #131, jeweils TV-Board #106, PANAMA-Schrank mit Kleiderstange, schwarzer MITTZON-Arbeitsplatz und braunschwarzer STEFAN-Stuhl ohne Rollen. Licht, Stereo, Nachttisch und weitere Ergänzungen stammen aus bestehenden geprüften Katalogeinträgen; Bestandsbett bleibt. Keine automatische Überschreibung bestehender Raumpläne. Insgesamt 42 Sets.
+
+FACTORY-Modelle zeigen graue Fronten, braune Griffe, Metallrahmen und einen stilisierten Schriftaufdruck. #143 hat zwei Türen links und drei Schubladen rechts, #106 drei Schubladen unter einem offenen Fach. Andere FACTORY-Schrankfronten bleiben schematisch. Shopbilder für #143 und #106 werden extern geladen. Preise sind Katalogstände, keine Live-Angebote; die Originalserie überschreitet das frühere 400-Euro-Budget.
+
+Zusätzlicher Browsertest: `tests/factory-browser.mjs` prüft Foto-Set-Auswahl, Übernahme, Sicherung und die Schrifttextur im echten WebGL-Modell.

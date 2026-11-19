@@ -9,7 +9,7 @@ try{
  await p.goto('http://localhost:9880/');await p.locator('.room-card').last().click();
  await p.getByRole('tab',{name:/Möbel finden/}).click();
  await p.locator('[data-act="sets"]').first().click();
- assert.equal(await p.locator('.set-card').count(),40);
+ assert.equal(await p.locator('.set-card').count(),42);
  await p.locator('[data-act="set-filter"][data-f="sort"][data-v="price"]').click();
  await p.locator('.set-card details summary').first().click();
  assert.ok(await p.locator('.set-card details[open] a').count()>8);
@@ -17,5 +17,5 @@ try{
  assert.equal(await p.locator('[data-f="layout"][data-v="fensterplatz"]').getAttribute('aria-pressed'),'true');
  await p.setViewportSize({width:390,height:844});
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
- assert.deepEqual(errors,[]);console.log('PASS set browsing, 40 cards, full product lists, layout selection and mobile');
+ assert.deepEqual(errors,[]);console.log('PASS set browsing, 42 cards, full product lists, layout selection and mobile');
 }finally{await b.close()}
