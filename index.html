@@ -1965,6 +1965,38 @@ const PANAMA_DEKO = [
 }
 const PANAMA_REV = 4;   // Stand der PANAMA-Vorschläge; ältere Räume werden beim Laden einmal nachgezogen
 const setName = s => s.title || s.style + ' · ' + s.tier;
+/* Rollenfreie Ergänzungen: geprüfte Produktseiten, Preisstand 19.11.2026. */
+const COLLECTION_PRODUCTS = [
+ {id:'teodores-fixed',key:'stuhl',cat:'Stuhl',name:'IKEA TEODORES Stuhl, weiß, feste Beine',url:'https://www.ikea.com/de/de/p/teodores-stuhl-weiss-90350937/',price:39.99,dims:{w:46,d:54,h:80},color:'#eeeeea',retailer:'IKEA Deutschland',note:'Stapelstuhl ohne Rollen, nicht höhenverstellbar. Sitzkomfort für längere Arbeit prüfen.'},
+ {id:'kleppstad-small',key:'schrank',cat:'Kleiderschrank',name:'IKEA KLEPPSTAD Schrank mit 2 Türen, weiß',url:'https://www.ikea.com/de/de/p/kleppstad-schrank-mit-2-tueren-weiss-80437234/',price:69,dims:{w:79,d:55,h:176},color:'#eeeeea',retailer:'IKEA Deutschland'},
+ {id:'ivar-small',key:'lowboard',cat:'Kommode',name:'IKEA IVAR Schrank Kiefer, 2 Türen',url:'https://www.ikea.com/de/de/p/ivar-schrank-kiefer-40033763/',price:69,dims:{w:80,d:30,h:83},color:'#d2b184',retailer:'IKEA Deutschland',note:'83 cm hoch: unter Dachschrägen die gesamte Tiefe prüfen. Wandbefestigung laut Anleitung.'},
+ {id:'fjallbo-media',key:'lowboard',cat:'Kommode',name:'IKEA FJÄLLBO TV-Bank schwarz, Kiefer und Metall, Gittertüren',url:'https://www.ikea.com/de/de/p/fjaellbo-tv-bank-schwarz-90339290/',price:129,dims:{w:150,d:36,h:54},color:'#b78e61',retailer:'IKEA Deutschland',note:'Offene Rückseite für Kabel. Innenmaße und Lüftungsabstände des Verstärkers prüfen.'},
+ {id:'fjallbo-storage',key:'sideboard',cat:'Kommode',name:'IKEA FJÄLLBO Sideboard schwarz, Kiefer und Metall, Gittertüren',url:'https://www.ikea.com/de/de/p/fjaellbo-sideboard-schwarz-00502799/',price:229,dims:{w:111,d:47,h:95},color:'#b78e61',retailer:'IKEA Deutschland'},
+ {id:'factory-storage',key:'sideboard',cat:'Kommode',name:'FACTORY #131 Sideboard Mango und Eisen, 90 cm',url:'https://www.massivmoebel24.de/Moebel/Kommoden-Schraenke/FACTORY-Sideboard-131-Eisen-u-Mangoholz.html',price:382.41,dims:{w:90,d:40,h:85},color:'#ac8159',retailer:'Massivmoebel24',note:'Bedruckte Fronten; 3D zeigt eine vereinfachte Materialdarstellung.'},
+ {id:'factory-cabinet',key:'schrank',cat:'Kleiderschrank',name:'FACTORY #137 Schrank Mango und Eisen, 2 Türen, 3 Schubladen',url:'https://www.massivmoebel24.de/Moebel/Kommoden-Schraenke/FACTORY-Schrank-137-Eisen-u-Mangoholz.html',price:849.91,dims:{w:100,d:50,h:190},color:'#ac8159',retailer:'Massivmoebel24',note:'Einlegeböden und Schubladen; keine Kleiderstange ausgewiesen. Für gefaltete Kleidung.'},
+ {id:'logan-storage',key:'highboard',cat:'Kommode',name:'Vladon Logan V2 Schwarz matt/Eiche Natur, 4 Türen',url:'https://www.home24.de/produkt/bueroschrank-logan-v2-6d36',price:299.99,dims:{w:82,d:37,h:184},color:'#bc9666',retailer:'home24 / Vladon',note:'Fächerschrank ohne Kleiderstange. Hoher Schrank gehört an die hohe Wand.'}
+].map(p=>({...p,qty:1,role:'main',checkedAt:'2026-11-19',styles:p.id.startsWith('ivar')||p.id.startsWith('kleppstad')?['Skandinavisch','Japandi','Minimalistisch']:['Industrial','Eiche & Schwarz','Modern & Dunkel']}));
+function hasFurnitureWheels(p){return /rollcontainer|rollwagen|servierwagen|küchenwagen|auf rollen|mit rollen|bürostuhl|drehstuhl|gesture|masterback|futu|j[äa]rvfj[äa]llet/i.test(p.name||'');}
+const FIXED_CHAIR = COLLECTION_PRODUCTS[0];
+// Neue Vorschläge sind Kombinationen mehrerer Serien, keine vollständigen Herstellerkataloge.
+for(const [id,base,title,products] of [
+ ['loft-fjallbo','ind_budget','FJÄLLBO · Luftiges Audiozimmer',['fjallbo-media','fjallbo-storage']],
+ ['loft-factory','ind_premium','FACTORY · Mango & Eisen',['factory-cabinet','factory-storage','fjallbo-media']],
+ ['loft-logan','es_budget','Logan · Eiche & Schwarz',['logan-storage','fjallbo-media']],
+ ['nordic-compact','sk_budget','Nordisch · Kompakter Stauraum',['kleppstad-small','ivar-small']],
+ ['japandi-natural','variation-0-budget','Japandi · Helles Holz',['kleppstad-small','ivar-small']],
+ ['minimal-light','variation-3-budget','Minimalistisch · Weiß & Kiefer',['kleppstad-small','ivar-small']],
+ ['dark-audio','md_mittel','Dunkel · Audio & Stauraum',['logan-storage','fjallbo-media']],
+ ['vintage-mango','variation-4-mittel','Vintage · Mango-Akzente',['factory-storage','fjallbo-media']]
+]) {
+ const original=KONRAD_SETS.find(s=>s.id===base); if(!original)continue;
+ const add=products.map(id=>COLLECTION_PRODUCTS.find(p=>p.id===id));
+ const keys=new Set(add.map(p=>p.key));
+ KONRAD_SETS.push({...original,id,title,layout:'bett-bestand',generated:true,summary:'Kompletter Einrichtungsvorschlag mit Schrank, Arbeitsplatz, Stauraum, Beleuchtung und Audio. Bestandsbett bleibt. Kombination mehrerer Serien; alle Einzelprodukte unten ansehen.',items:[...original.items.filter(p=>!keys.has(p.key)),...add]});
+}
+// Rollenfreie Vorschläge ändern keine bereits gespeicherten oder gekauften Möbel.
+for(const set of KONRAD_SETS) set.items=set.items.filter(p=>p.cat==='Stuhl'||!hasFurnitureWheels(p)).map(p=>hasFurnitureWheels(p)?{...FIXED_CHAIR,key:p.key,role:p.role}:p);
+
 const SET_SHORT = { highboard: 'Highboard', kommode: 'Kommode', sideboard: 'Sideboard', schrank: 'Kleiderschrank', schreibtisch: 'Schreibtisch', stuhl: 'Stuhl', teppich: 'Teppich', lowboard: 'Lowboard', regal: 'Regal', nachttisch: 'Nachttisch', lautsprecher: 'Lautsprecher', lautsprecher_staender: 'Ständer', schreibtischlampe: 'Lampe', leseleuchte: 'Leselampe', matratze: 'Matratze', rollo: 'Rollo' };
 const setTotal = set => set.items.filter(i => i.role !== 'alternative').reduce((a, i) => a + (i.price || 0) * (i.qty || 1), 0);
 function setScore(set, ins) {
@@ -1975,26 +2007,30 @@ function setScore(set, ins) {
 function setsDialog() {
   const r = S.room, ins = r.inspiration, flt = S.setFilter || (S.setFilter = { style: '', tier: '' });
   let list = KONRAD_SETS.filter(s => (!flt.style || s.style === flt.style) && (!flt.tier || s.tier === flt.tier)).map(s => ({ s, sc: setScore(s, ins) }));
-  if (ins) list.sort((a, b) => b.sc - a.sc);
+  if (flt.sort === 'price') list.sort((a,b)=>setTotal(a.s)-setTotal(b.s)); else if (ins) list.sort((a, b) => b.sc - a.sc);
   const best = ins ? [...KONRAD_SETS].sort((a, b) => setScore(b, ins) - setScore(a, ins))[0].id : null;
   const styles = [...new Set(KONRAD_SETS.map(s => s.style))];
   const thumbs = s => ['schrank', 'schreibtisch', 'stuhl', 'lowboard'].map(k => s.items.find(i => i.key === k)).filter(Boolean)
     .map(i => `<span><img src="${i.img || silhouette(i.cat, i.color)}" alt="" loading="lazy"></span>`).join('');
-  openDlg(dlg, `<div class="dlg-h"><div><p class="eyebrow">${esc(r.name)} · Stil × Preisklasse</p><h2>Fertige Vorschläge</h2></div><button type="button" class="icon-btn flat" data-close aria-label="Schließen">${I('x')}</button></div>
+  openDlg(dlg, `<div class="dlg-h"><div><p class="eyebrow">${esc(r.name)} · Stil × Preisklasse</p><h2>Komplette Möbelsets ohne Rollen</h2></div><button type="button" class="icon-btn flat" data-close aria-label="Schließen">${I('x')}</button></div>
     <div class="dlg-b">
       <p class="hint">Die Vorschläge sind für Konrads Zimmer zusammengestellt (sein Bett bleibt). Neue Kombinationen sind gekennzeichnet; nach Übernahme die Passprüfung im Grundriss beachten. Übernehmen ersetzt nur die Produkte im Nachher-Plan – Bestand und selbst hinzugefügte Möbel bleiben.${ins ? ' Sortiert nach Ähnlichkeit zu deinem Lieblingsstück.' : ''}</p>
       <button type="button" class="btn" data-act="ideas-show">Alle ${STYLES.length} Stile: Einzelvorschläge ansehen</button><div class="chips"><button type="button" class="chip" data-act="set-filter" data-f="style" data-v="" aria-pressed="${!flt.style}">Alle Stile</button>${styles.map(s => `<button type="button" class="chip" data-act="set-filter" data-f="style" data-v="${esc(s)}" aria-pressed="${flt.style === s}">${esc(s)}</button>`).join('')}</div>
       <div class="chips"><button type="button" class="chip" data-act="set-filter" data-f="tier" data-v="" aria-pressed="${!flt.tier}">Alle Preisklassen</button>${TIERS.map(t => `<button type="button" class="chip" data-act="set-filter" data-f="tier" data-v="${t}" aria-pressed="${flt.tier === t}">${t}</button>`).join('')}</div>
+      <p class="hint">${list.length} Sets · Bestandsbett bleibt · Rollenfreie neue Möbel, auch beim Stuhl. Vorhandene Möbel bleiben unverändert. Die Sets kombinieren passende Produkte mehrerer Serien.</p>
+      <div class="chips">${[['','Empfohlene Reihenfolge'],['price','Preis aufsteigend']].map(([v,l])=>`<button class="chip" data-act="set-filter" data-f="sort" data-v="${v}" aria-pressed="${(flt.sort||'')===v}">${l}</button>`).join('')}</div>
+      <p class="fine">Aufstellung bei Übernahme:</p><div class="chips">${[['','Originalvorschlag'],['bett-bestand','Bett bleibt · Arbeitsplatz rechts'],['fensterplatz','Arbeitsplatz am Fenster']].map(([v,l])=>`<button class="chip" data-act="set-filter" data-f="layout" data-v="${v}" aria-pressed="${(flt.layout||'')===v}">${l}</button>`).join('')}</div>
       <div class="set-grid">${list.map(({ s }) => `<article class="set-card${r.activeSet === s.id ? ' active' : ''}">
         <div class="set-thumbs">${thumbs(s)}</div>
         <div class="set-b">
           <div class="set-top"><strong>${esc(s.title || s.style)}</strong><span class="pill tier">${esc(s.tier)}</span>${s.id === KONRAD_DEFAULT_SET ? '<span class="pill idee">Standard</span>' : ''}${best === s.id ? '<span class="pill match">passt zu deinem Stück</span>' : ''}${r.activeSet === s.id ? '<span class="pill gekauft">aktiv</span>' : ''}</div>
           <span class="sw-row">${s.palette.map(p => `<i title="${esc(p.name)}" style="background:${esc(p.hex)}"></i>`).join('')}</span>
           <p class="fine">${esc(s.summary || '')}</p>${s.generated ? '<span class="fine">Neue Kombination · Aufstellung prüfen</span>' : ''}${setWideWardrobe(s) ? '<span class="fine">Schrank 200 cm breit: schränkt den Fensterflügel in der Ecke ein</span>' : ''}${r.budget != null && setTotal(s) > r.budget ? `<span class="fine">${eur0(setTotal(s)-r.budget)} über dem Raumbudget (ohne Versand)</span>` : ''}
+          <details><summary>Alle Möbel und Shoplinks ansehen</summary><p class="fine">Maße: Breite × Tiefe × Höhe in cm. Preisstände je Produkt, ohne Versand.</p>${s.items.map(i=>`<div style="border-top:1px solid var(--line);padding:8px 0"><a href="${esc(i.url||'#')}" target="_blank" rel="noopener">${esc(i.name)}</a><div class="fine">${i.dims.w} × ${i.dims.d} × ${i.dims.h} cm · ${i.price==null?'Preis offen':eur(i.price)} × ${i.qty||1} · ${esc(i.checkedAt||'Preisstand offen')}${i.role==='alternative'?' · Alternative, nicht im Gesamtpreis':''}</div>${i.note?`<p class="fine">${esc(i.note)}</p>`:''}</div>`).join('')}</details>
           <div class="set-f"><b>${eur0(setTotal(s))}</b><span class="fine">${s.items.filter(i => i.role !== 'alternative').length} Produkte</span><span class="grow"></span>
             <button type="button" class="btn sm ${r.activeSet === s.id ? '' : 'primary'}" data-act="set-apply" data-id="${s.id}" aria-label="${esc(setName(s))} ${r.activeSet === s.id ? 'neu anordnen' : 'übernehmen'}">${r.activeSet === s.id ? 'Neu anordnen' : 'Übernehmen'}</button></div>
         </div></article>`).join('') || '<p class="muted">Kein Vorschlag für diese Auswahl.</p>'}</div>
-      <p class="fine">Katalogpreise vom 15.11.2026, ohne Versand. Preise und Lieferbarkeit vor dem Kauf prüfen. Neue Kombinationen nutzen vorhandene Produktmaße; ihre gesamte Aufstellung wurde nicht separat geprüft. Die Preisklasse ist keine feste Budgetzusage.</p>
+      <p class="fine">Katalogpreise vom 15.–19.11.2026, ohne Versand. Das Bestandsbett ist nicht im Preis enthalten. Preise und Lieferbarkeit vor dem Kauf prüfen. Neue Kombinationen nutzen vorhandene Produktmaße; ihre gesamte Aufstellung wurde nicht separat geprüft. Die Preisklasse ist keine feste Budgetzusage.</p>
     </div>`);
   dlg.querySelector('.dlg-in').classList.add('wide');
 }
@@ -2135,7 +2171,7 @@ function productCatalog() {
     if (prev) { if (!prev.styles.includes(set.style)) prev.styles.push(set.style); continue; }
     byUrl.set(item.url, {...item, id:'catalog-'+byUrl.size, styles:[set.style]});
   }
-  for (const p of [...EXTRA_PRODUCTS,...PANAMA_PRODUCTS]) byUrl.set(p.url,p);
+  for (const p of [...EXTRA_PRODUCTS,...PANAMA_PRODUCTS,...COLLECTION_PRODUCTS]) byUrl.set(p.url,p);
   return catalogCache = [...byUrl.values()];
 }
 function catalogHost(p) { try { return new URL(p.url).hostname.replace(/^www\./,''); } catch { return p.retailer; } }
@@ -2156,7 +2192,7 @@ function concreteIdeas(r, f, min = null, max = null, fallbackCat = 'Kleiderschra
     const high = own ? (max ?? Infinity) : (band?.[1] ?? Infinity);
     const cap = Math.min(cost.rest ?? Infinity, r.catBudgets?.[cat] != null ? r.catBudgets[cat]-(cost.byCat.get(cat)||0) : Infinity);
     const pal = STYLE_META[f.style]?.pal || [];
-    const candidates = productCatalog().filter(p => wantedMatches(p,k,cat) && !r.items.some(i=>i.url===p.url)).map(p=>{
+    const candidates = productCatalog().filter(p => !hasFurnitureWheels(p) && wantedMatches(p,k,cat) && !r.items.some(i=>i.url===p.url)).map(p=>{
       const exact = !!f.style && p.styles.includes(f.style);
       const distance = pal.length && /^#[0-9a-f]{6}$/i.test(p.color||'') ? Math.min(...pal.map(h=>cdist(hx(h),hx(p.color)))) : 0;
       return {p,exact,score:(exact?400:0)-distance};
@@ -2690,7 +2726,7 @@ function audioPanel(ph) {
 
 /* ================= 3D-Ansicht (Three.js, bei Bedarf geladen) ================= */
 let THREE_P = null, V3 = null;
-const V3OPT = { floor: 'wood', box: false, snap: false, roof: false, ...LS.get('v3opt', {}) };
+const V3OPT = { floor: 'wood', box: false, snap: false, roof: false, light: 'day', ...LS.get('v3opt', {}) };
 function loadThree() {
   if (!THREE_P) THREE_P = import('https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js').catch(e => { THREE_P = null; throw e; });
   return THREE_P;
@@ -2726,6 +2762,7 @@ function kind3(it, dm) {
   if (c === 'Bett') return /lattenrost/.test(n) ? 'slats' : /matratze|topper/.test(n) ? 'mattress' : 'bed';
   const framed = /\d+\s*(schublade|tür|klappe)/.test(n) && /altmetall|metallgestell|metallrahmen|panama/.test(n);   // Korpus im Metallrahmen, Fronten laut Name
   if (c === 'Kleiderschrank') return framed ? 'framecab' : 'wardrobe';
+  if (/fjällbo/.test(n) && c === 'Kommode') return 'meshcab';
   if (c === 'Kommode') return /rollcontainer/.test(n) ? 'rollcontainer' : /hi-?fi/.test(n) ? 'hifirack' : framed ? 'framecab' : /lowboard|tv-?bank|tv-?board|sideboard|phono/.test(n) || (h <= 60 && dm.w >= 100) ? 'lowboard' : h > 80 && dm.w <= 95 ? 'cupboard' : 'dresser';
   if (c === 'Vitrine') return 'vitrine';
   if (c === 'Regal') return h <= 6 || (/wandregal|wandboard/.test(n) && h <= 30) ? 'wallshelf' : /string/.test(n) ? 'string' : /würfel|kallax|eket/.test(n) ? 'cube' : /hochschrank|schubladen|türen/.test(n) ? 'tallcab' : 'shelf';
@@ -2803,7 +2840,7 @@ function makeKit(T, ctex, loadTex) {
     const mat = (color, kind = 'lack') => {
       const key = color + '|' + kind; if (mc.has(key)) return mc.get(key);
       const o = { color, roughness: .5 };
-      if (kind === 'wood') Object.assign(o, { map: wood(), roughness: .62 });
+      if (kind === 'wood') Object.assign(o, { map: wood(), bumpMap: wood(), bumpScale: .12, roughness: .68 });
       else if (kind === 'fabric') Object.assign(o, { map: fabric(), bumpMap: fabric(), bumpScale: .5, roughness: .97 });
       else if (kind === 'metal') Object.assign(o, { metalness: .78, roughness: .4 });
       else if (kind === 'glass') Object.assign(o, { transparent: true, opacity: .26, roughness: .05, depthWrite: false });
@@ -2895,6 +2932,22 @@ function makeKit(T, ctex, loadTex) {
         } else {
           const nd = Math.max(1, Math.round(w / 50)), dw = w / nd, hc = mat(lum3(col) < .3 ? '#9a9da1' : '#232325', 'metal');
           for (let i = 0; i < nd; i++) { const x = -w / 2 + dw * (i + .5); B(dw - .5, ph, 1.8, mat(col, bk), x, pl + .5, d / 2 - 3.1, true); B(1, 16, 1.3, hc, x + (nd === 1 || i % 2 === 0 ? 1 : -1) * (dw / 2 - 3.5), Math.min(100, h * .5), d / 2 - 1.6); }
+        }
+        break; }
+      case 'meshcab': {
+        const fm=mat('#252628','metal'), wm=mat(col,'wood'), leg=Math.min(12,h*.16), t=2, cols=Math.max(2,Math.round(w/50)), cw=(w-4)/cols;
+        legs4(t,leg,fm,2,2);
+        for(const y of [leg,h-2]) B(w,2,d,wm,0,y,0);
+        B(w-4,1.5,d-2,wm,0,leg+(h-leg)*.48,0);
+        for(const sx of [-1,1]) B(2,h-leg,2,fm,sx*(w/2-1),leg,-d/2+1);
+        for(let i=0;i<cols;i++) {
+          const x=-w/2+2+cw*(i+.5), z=d/2-1;
+          for(const side of [-1,1]) B(1.4,h-leg-2,1.4,fm,x+side*(cw/2-.7),leg,z);
+          for(const y of [leg,h-3]) B(cw,1.4,1.4,fm,x,y,z);
+          // Physical bars stay legible on mobile and preserve the open front.
+          for(let xx=-cw/2+4;xx<cw/2-2;xx+=4) B(.35,h-leg-4,.35,fm,x+xx,leg+2,z);
+          for(let yy=leg+5;yy<h-3;yy+=5) B(cw-2,.35,.35,fm,x,yy,z);
+          B(1,8,1,fm,x+cw/2-3,leg+(h-leg)*.5,z+.5);
         }
         break; }
       case 'lowboard': cabinet([{ f: 1, cols: Math.max(2, Math.round(w / 45)), t: 't' }], h >= 45 ? 12 : 5, /metall|stahl|schwarz|gestell|eisen/.test(n) ? 'metal' : 'wood'); break;
@@ -3081,7 +3134,7 @@ async function render3D() {
   disposeV3();
   const ph = activePhoto();
   stageEl.innerHTML = `<div class="v3-wrap"><canvas class="v3" id="v3" aria-label="3D-Ansicht des Raums. Ziehen dreht, Mausrad zoomt, Antippen wählt ein Möbel."></canvas>
-    <div class="v3-opts"><button class="btn sm" id="v3-reset">Ansicht zurücksetzen</button><button class="btn sm" id="v3-top">Draufsicht</button><button class="btn sm" id="v3-focus">Auswahl ansehen</button><label><input type="checkbox" id="v3-snap" ${V3OPT.snap?'checked':''}> 5-cm-Raster</label><label><input type="checkbox" id="v3-roof" ${V3OPT.roof?'checked':''}> Dach</label><button type="button" class="btn sm" data-act="v3-floor" title="Bodenbelag in der 3D-Ansicht wechseln">Boden: ${V3OPT.floor === 'plan' ? 'Plan' : 'Holz'}</button><button type="button" class="btn sm" data-act="v3-box" aria-pressed="${!!V3OPT.box}" title="Außenmaße aller Möbel als Rahmen in Prüffarbe zeigen">Maßrahmen</button></div>
+    <div class="v3-opts"><button class="btn sm" data-act="v3-light">Licht: ${V3OPT.light==='warm'?'Warm':V3OPT.light==='studio'?'Studio':'Tageslicht'}</button><button class="btn sm" id="v3-reset">Ansicht zurücksetzen</button><button class="btn sm" id="v3-top">Draufsicht</button><button class="btn sm" id="v3-focus">Auswahl ansehen</button><label><input type="checkbox" id="v3-snap" ${V3OPT.snap?'checked':''}> 5-cm-Raster</label><label><input type="checkbox" id="v3-roof" ${V3OPT.roof?'checked':''}> Dach</label><button type="button" class="btn sm" data-act="v3-floor" title="Bodenbelag in der 3D-Ansicht wechseln">Boden: ${V3OPT.floor === 'plan' ? 'Plan' : 'Holz'}</button><button type="button" class="btn sm" data-act="v3-box" aria-pressed="${!!V3OPT.box}" title="Außenmaße aller Möbel als Rahmen in Prüffarbe zeigen">Maßrahmen</button></div>
     <div class="v3-legend"><span><i style="background:#e3ac36"></i>gelber Rahmen: Auswahl</span><span><i style="background:#c0392b"></i>roter Rahmen: Kollision, Wand, Schräge, Tür oder Fenster</span><span><i style="background:#9aa09c"></i>grauer Bodenrahmen: Standardmaße, bitte messen</span><span id="v3-leg-ok" ${V3OPT.box ? '' : 'hidden'}><i style="background:#2f7a48"></i>passt</span><span class="hide-sm">· Ziehen verschiebt · Pfeiltasten: 1 cm, Umschalt: 10 cm · R: drehen</span></div>
     <p class="v3-msg" id="v3-msg">3D-Ansicht wird geladen …</p></div>`;
   let T;
@@ -3106,7 +3159,7 @@ async function render3D() {
   // Licht: weiches Umgebungslicht, Sonne aus Fensterrichtung mit Schatten, sanftes Licht von oben für Kontaktschatten
   let environmentTarget;
   { const et = new T.CanvasTexture(texCanvas('env')); et.colorSpace = T.SRGBColorSpace; et.mapping = T.EquirectangularReflectionMapping; const pm = new T.PMREMGenerator(renderer), rt = pm.fromEquirectangular(et); scene.environment = rt.texture; environmentTarget=rt; et.dispose(); pm.dispose(); }
-  scene.environmentIntensity = .35;
+  scene.environmentIntensity = V3OPT.light==='studio'?.65:.35;
   scene.add(new T.HemisphereLight(0xffffff, 0xcabfae, .45));
   const poly = planPoly(pl), sl = slopeOf(pl), cx = W / 2, cz = D / 2;
   const along = (wall, from, len) => ({ top: [[from, 0], [from + len, 0]], bottom: [[from, D], [from + len, D]], left: [[0, from], [0, from + len]], right: [[W, from], [W, from + len]] })[wall];
@@ -3116,7 +3169,7 @@ async function render3D() {
     l.castShadow = true; l.shadow.mapSize.set(size, size); const sc = l.shadow.camera; sc.left = sc.bottom = -diag * .62; sc.right = sc.top = diag * .62; sc.near = 10; sc.far = diag * 3.2; l.shadow.bias = -.0006; l.shadow.normalBias = soft ? 3 : 1.2;
     scene.add(l, l.target); return l;
   };
-  mkSun(0xfff0dc, 2.6, [so[0] * .9 + so[1] * .35, 1.25, so[1] * .9 - so[0] * .35], 2048, false);
+  mkSun(V3OPT.light==='warm'?0xffca8a:0xfff0dc, V3OPT.light==='studio'?1.5:2.6, [so[0] * .9 + so[1] * .35, 1.25, so[1] * .9 - so[0] * .35], 2048, false);
   mkSun(0xffffff, .6, [.06, 1, .1], 1024, true);
   { const f = new T.DirectionalLight(0xf2f5ff, .7); f.position.set(cx - so[0] * diag, diag * .7, cz - so[1] * diag); f.target.position.set(cx, 0, cz); scene.add(f, f.target); }
   // Raumhülle: Boden, dicke Wände (zur Kamera hin ausgeblendet), Decke
@@ -4053,7 +4106,7 @@ const ACT = {
   async 'del-room'(t, e) {
     e.stopPropagation();
     const r = S.rooms.find(x => x.id === t.dataset.id); if (!r) return;
-    if (!(await confirmBox('Raum löschen?', `„${r.name}“ mit allen Fotos und Möbeln wird aus diesem Browser gelöscht. Das lässt sich nicht rückgängig machen.`))) return;
+    if (!(await confirmBox('Raum löschen?', `„${r.name}“ mit allen Fotos und Möbeln wird aus diesem Browser gelöscht. Der vorherige Stand wird im Variantenvergleich gesichert.`))) return;
     S.rooms = S.rooms.filter(x => x !== r); S.storage && await DB.del(r.id); renderHome(); toast('Raum gelöscht');
   },
   'export-backup'() { exportBackup(); },
@@ -4067,6 +4120,7 @@ const ACT = {
   'new-scan'() { $('#file-scan').click(); },
   'v3d'() { S.v3d = !S.v3d; renderToolbar(); renderStage(); renderInspector(); },
   // Boden und Maßrahmen schalten in der laufenden Szene um (kein Neuaufbau, Kamera und Auswahl bleiben stehen)
+  'v3-light'() {const a=['day','warm','studio']; V3OPT.light=a[(a.indexOf(V3OPT.light)+1)%a.length];LS.set('v3opt',V3OPT);render3D();},
   'v3-floor'(t) { V3OPT.floor = V3OPT.floor === 'plan' ? 'wood' : 'plan'; LS.set('v3opt', V3OPT); if (!V3 || !V3.setFloor) return render3D(); V3.setFloor(); t.textContent = 'Boden: ' + (V3OPT.floor === 'plan' ? 'Plan' : 'Holz'); V3.draw(); },
   'v3-box'(t) { V3OPT.box = !V3OPT.box; LS.set('v3opt', V3OPT); if (!V3) return render3D(); t.setAttribute('aria-pressed', V3OPT.box); const l = $('#v3-leg-ok'); if (l) l.hidden = !V3OPT.box; V3.buildDyn(); V3.draw(); },
   'audio-preset'(t) { audSet(a=>{a.mode=t.dataset.preset==='room'?'coverage':'cinema';a.count=4;a.system=t.dataset.preset==='movie'?'5.1':'2.0';a.listener=null;a.cables=true;},true); },
@@ -4118,8 +4172,10 @@ const ACT = {
   'set-filter'(t) { S.setFilter = { ...(S.setFilter || {}), [t.dataset.f]: t.dataset.v }; setsDialog(); },
   async 'set-apply'(t) {
     const r = S.room, set = KONRAD_SETS.find(x => x.id === t.dataset.id); if (!set) return;
-    if (!(await confirmBox(`„${setName(set)}“ übernehmen?`, `Die bisherigen Vorschlags-Produkte werden durch diesen Vorschlag ersetzt (${eur0(setTotal(set))}) und im Nachher-Plan neu angeordnet. Als „gekauft“ markierte Produkte, Bestand und selbst hinzugefügte Möbel bleiben. Das lässt sich nicht rückgängig machen.`, 'Übernehmen'))) return;
+    if (!(await confirmBox(`„${setName(set)}“ übernehmen?`, `Die bisherigen Vorschlags-Produkte werden durch diesen Vorschlag ersetzt (${eur0(setTotal(set))}) und im Nachher-Plan neu angeordnet. Als „gekauft“ markierte Produkte, Bestand und selbst hinzugefügte Möbel bleiben. Der vorherige Stand wird im Variantenvergleich gesichert.`, 'Übernehmen'))) return;
+    r.variantBackup = captureVariant(r);
     if (!applyKonradSet(r, set.id)) { toast('Für diesen Raum gibt es keinen Nachher-Grundriss.'); return; }
+    if (S.setFilter?.layout) layoutKonradSet(r,new Set(r.items.filter(i=>i.bestand||i.status==='gekauft').map(i=>i.id)),S.setFilter.layout);
     r.setPicked = true;
     S.undo = []; S.redo = [];
     const after = r.photos.find(x => x.plan && !x.plan.before); if (after) r.activePhoto = after.id;

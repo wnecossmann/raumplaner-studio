@@ -126,3 +126,14 @@ Im Grundriss „Beamer“ wählen: Tisch, hinteres Regal oder Decke als Startpos
 „Möbel finden“ → „Serien & Raumvarianten vergleichen“ bietet PANAMA, RUSTIC, FJÄLLBO und FACTORY als recherchierte Serienrichtungen mit Quellenlinks. Die Auswahl setzt Stil und Suchbegriff, ersetzt aber keine Produkte. PANAMA hat den lokalen Katalog; für die anderen Serien müssen konkrete Artikel ergänzt werden. Bis zu 20 benannte Varianten speichern Möbel, Pläne mit Dachschrägen, Audio, Beamer, Stil und Budgetdaten. Vorschau und Kostenunterschied zum aktuellen Stand erleichtern den Vergleich. Wiederherstellen legt einen Rückkehrpunkt an. Raumexport enthält die Varianten; Bilder werden mitgespeichert und benötigen lokalen Speicher.
 
 Audio- und Zubehörkosten (Kabel, Ständer, Beamerhalterung/Leinwand, sonstige Montage) werden separat eingegeben und in Restbudget, Variantenvergleich und Einkaufsliste inklusive CSV berücksichtigt. Keine Live-Preise und keine automatische Geräte- oder Laufwegprüfung. Tests: `node tests/saved-variants.test.mjs` und `node --test tests/recommendations.test.mjs`.
+
+### Rollenfreie Möbelsets und 3D-Materialien (19.11.2026)
+
+- 40 Einrichtungsvorschläge für das Beispielzimmer, davon acht neue Kombinationen mit FJÄLLBO, FACTORY, Logan, KLEPPSTAD und IVAR. Sets kombinieren verschiedene Serien und behalten das Bestandsbett; sie sind keine vollständigen Hersteller-Sortimente.
+- Rollenfreie neue Vorschläge einschließlich festem TEODORES-Stuhl. Vorhandene/gekaufte Möbel werden nicht automatisch entfernt. Der Stuhl ist nicht höhenverstellbar; Komfort für lange Arbeit separat prüfen.
+- Alle Produktlinks, Mengen, Maße, Preisstände und Alternativen lassen sich pro Set aufklappen. Preisaufsteigende Sortierung und Original-/Bestandsbett-/Fensteraufstellung. Neue Aufstellungen sind Vorschläge und müssen mit der vorhandenen Passprüfung geprüft werden.
+- Vor einer Setübernahme wird eine Sicherung für den Variantenvergleich angelegt.
+- FJÄLLBO mit offenen Gitterfronten in 3D, leichte Holzstruktur als Relief und drei Lichtstimmungen. Modelle bleiben schematische Annäherungen; insbesondere bedruckte FACTORY-Fronten sind keine maßgetreuen Hersteller-Modelle.
+- Neue Produktdaten anhand der verlinkten Shopseiten geprüft; Preisstand 19.11.2026, ältere Setbestandteile behalten ihren eigenen Preisstand. Keine Live-Preise oder kostenpflichtige API.
+
+Prüfung: `node tests/collections.test.mjs`, `node tests/collections-browser.mjs` (Playwright), bestehende Empfehlungs-, Snapshot-, Modell- und WebGL-Tests.

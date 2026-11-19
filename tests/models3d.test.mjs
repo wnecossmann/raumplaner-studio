@@ -17,6 +17,7 @@ const build = makeKit(T, () => null, () => null);   // Texturen brauchen ein Can
 const cases = [], seen = new Set();
 for (const s of KONRAD_SETS) for (const it of s.items) { const k = it.name + '|' + JSON.stringify(it.dims || {}); if (!seen.has(k)) { seen.add(k); cases.push({ name: it.name, cat: it.cat, dims: it.dims || {}, color: it.color }); } }
 const catalog = cases.length;
+cases.push({name:'IKEA FJÄLLBO TV-Bank schwarz, Kiefer und Metall, Gittertüren',cat:'Kommode',dims:{w:150,d:36,h:54},color:'#b78e61'});
 cases.push(...CATS.map(c => ({ name: c.q || c.k, cat: c.k })),
   { name: 'Bett EGHOLM mit Kopfteil', cat: 'Bett', dims: { w: 126, d: 206, h: 90 } }, { name: 'Kleiderschrank 3-türig', cat: 'Kleiderschrank', dims: { w: 150, d: 60, h: 205 } },
   { name: 'Tisch rund', cat: 'Tisch', dims: { w: 90, d: 90, h: 74 } }, { name: 'Hocker', cat: 'Stuhl', dims: { w: 35, d: 35, h: 45 } }, { name: 'Bank Eiche', cat: 'Stuhl', dims: { w: 120, d: 35, h: 45 } },
